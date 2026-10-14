@@ -1,16 +1,14 @@
+import { SegmentCard } from "@web/components/segment-card";
+import { StationSheet } from "@web/components/station-sheet";
+import { TrainCars } from "@web/components/train-cars";
+import { VerdictCard } from "@web/components/verdict-card";
+import { DAY_TYPE_LABEL, ERROR_TEXT, LOAD_FAILED_TEXT } from "@web/constants/seat-finder-copy";
+import { useSeatFinder } from "@web/hooks/use-seat-finder";
+import { formatClock } from "@web/utils/format-clock";
 import type { CSSProperties } from "react";
-import { DAY_TYPE_LABEL, ERROR_TEXT, LOAD_FAILED_TEXT } from "./seat-finder-copy";
-import styles from "./seat-finder-screen.module.css";
-import { SegmentCard } from "./segment-card";
-import { StationSheet } from "./station-sheet";
-import { TrainCars } from "./train-cars";
-import { useSeatFinder } from "./use-seat-finder";
-import { VerdictCard } from "./verdict-card";
+import styles from "./seat-finder-page.module.css";
 
-const formatClock = (minute: number) =>
-  `${String(Math.floor(minute / 60)).padStart(2, "0")}:${String(minute % 60).padStart(2, "0")}`;
-
-export function SeatFinderScreen() {
+export function SeatFinderPage() {
   const finder = useSeatFinder();
   const success = finder.result?.status === "ok" ? finder.result : null;
   const errorText = finder.result?.status === "error" ? ERROR_TEXT[finder.result.error] : null;

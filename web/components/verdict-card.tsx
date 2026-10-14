@@ -1,4 +1,3 @@
-import type { RecommendSuccess } from "@web/recommend/recommend";
 import {
   CAN_SIT_TEXT,
   DAY_TYPE_LABEL,
@@ -6,7 +5,8 @@ import {
   GRADE_PIPS,
   missingStationsText,
   WEAK_GAP_TEXT,
-} from "./seat-finder-copy";
+} from "@web/constants/seat-finder-copy";
+import type { RecommendSuccess } from "@web/recommend/recommend";
 import styles from "./verdict-card.module.css";
 
 export type VerdictCardProps = {

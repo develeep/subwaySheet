@@ -3,7 +3,7 @@ import { type CarScoreResult, scoreCars } from "./car-score";
 import { FORMULA_VERSION } from "./formula";
 
 /**
- * recommend — 추천 모듈의 단일 진입점. 화면 훅(`web/seat-finder/use-seat-finder.ts`)이 부른다.
+ * recommend — 추천 모듈의 단일 진입점. 화면 훅(`web/hooks/use-seat-finder.ts`)이 부른다.
  * 노선 결정, 방향 기본값, 중간 역, 칸 점수, 앉을 가능성, 화면 규칙(칸 차이 작음·바로 앉음·2등 칸)을 모두 여기서 정한다.
  * **화면은 이 결과를 그리기만 한다**(AGENTS.md). 오류도 같은 결과 형식으로 돌려준다.
  * 현재 시각·오늘 요일유형을 직접 읽지 않는다. 화면 훅이 구해 넘긴다.

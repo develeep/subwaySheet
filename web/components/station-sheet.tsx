@@ -1,6 +1,6 @@
+import { stationNotFoundText } from "@web/constants/seat-finder-copy";
 import type { StationOption } from "@web/recommend/recommend";
 import { useEffect, useRef } from "react";
-import { stationNotFoundText } from "./seat-finder-copy";
 import styles from "./station-sheet.module.css";
 
 export type StationSheetProps = {

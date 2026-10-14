@@ -1,7 +1,7 @@
 import { type RefinedData, refinedDataSchema } from "@shared/refined-data";
 
 /**
- * fetchRefinedData — 배치가 만든 정적 정제 데이터(`public/data/refined-data.json`)를 읽는다. `use-seat-finder.ts`가 부른다.
+ * fetchRefinedData — 배치가 만든 정적 정제 데이터(`public/data/refined-data.json`)를 읽는다. `web/hooks/use-seat-finder.ts`가 부른다.
  * 본문은 zod로 계약을 검증하고, 실패하면 기본값으로 진행하지 않고 `failed`를 돌려준다(coding-convention "화면의 fetch").
  */
 
