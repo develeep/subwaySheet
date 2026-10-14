@@ -1,9 +1,9 @@
 import type { DayType, Direction, Periods, RefinedData, Route } from "@shared/refined-data";
-import { type Grade, scoreCars } from "./car-score";
+import { type CarScoreResult, scoreCars } from "./car-score";
 import { FORMULA_VERSION } from "./formula";
 
 /**
- * recommend — 추천 모듈의 단일 진입점. 화면 훅(`web/route-picker/use-route-picker.ts`)이 부른다.
+ * recommend — 추천 모듈의 단일 진입점. 화면 훅(`web/seat-finder/use-seat-finder.ts`)이 부른다.
  * 노선 결정, 방향 기본값, 중간 역, 칸 점수, 앉을 가능성, 화면 규칙(칸 차이 작음·바로 앉음·2등 칸)을 모두 여기서 정한다.
  * **화면은 이 결과를 그리기만 한다**(AGENTS.md). 오류도 같은 결과 형식으로 돌려준다.
  * 현재 시각·오늘 요일유형을 직접 읽지 않는다. 화면 훅이 구해 넘긴다.
@@ -35,17 +35,9 @@ export type RecommendSuccess = {
   stops: string[];
   /** 출발역부터 도착역까지 정거장 수. */
   stopCount: number;
-  /** 추천 칸 번호(1부터, 그 방향 승강장 번호의 앞자리). 1등 칸이 먼저다. */
-  picks: number[];
-  grade: Grade;
-  reason: { station: string; stopsAfter: number };
-  missingStations: string[];
-  evenlySpreadStations: string[];
-  isWeakGap: boolean;
-  canSitAtOrigin: boolean;
   periods: Periods;
   formulaVersion: string;
-};
+} & CarScoreResult;
 
 export type RecommendResult = RecommendSuccess | { status: "error"; error: RecommendError };
 

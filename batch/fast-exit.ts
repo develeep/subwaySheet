@@ -1,12 +1,12 @@
 import type { Direction, Facility, FacilityKind, FastExitSide } from "@shared/refined-data";
 import { z } from "zod";
-import { normalizeCode } from "./csv";
+import { DIRECTION_BY_SIDE, stationKey } from "./station-key";
 
 /**
  * refineFastExit — 빠른하차 `getFstExit` 응답 행을 역·방향별 출입설비 칸 목록과 표시 플래그로 정제한다. `refine`이 부른다.
  * - 칸 번호는 그 행의 방향 기준 번호(`qckgffVhclDoorNo`, "칸-문")를 그대로 쓴다. 0번 칸은 없다(프로토타입 FINDINGS).
  * - 형식 이상("3-2,3-3 사이", "NA-NA")과 노선 칸 수를 넘는 값은 버린다(스펙 #2).
- * - 방향: 2호선도 상행/하행으로 오고, 하행 = 역번호 증가 = down이다. 내선/외선 값이 오면 내선 = down.
+ * - 방향은 `station-key.ts` DIRECTION_BY_SIDE로 맞춘다(2호선도 상행/하행으로 오고 하행 = down).
  * - 퍼짐 같은 공식 값은 넣지 않는다(ADR 0001). 엘리베이터뿐·한 방향 없음 표시까지만 한다.
  */
 
@@ -20,7 +20,6 @@ const itemSchema = z.object({
 });
 
 const KINDS: Record<string, FacilityKind> = { 계단: "stairs", 에스컬레이터: "escalator", 엘리베이터: "elevator" };
-const SIDES: Record<string, Direction> = { 하행: "down", 상행: "up", 내선: "down", 외선: "up" };
 
 export type FastExitResult = {
   /** 키 "호선|역번호" → 방향별 설비. 행이 하나도 없는 역은 키가 없다. */
@@ -37,7 +36,7 @@ export function refineFastExit(items: unknown[], carCounts: Map<string, number>)
     const item = itemSchema.parse(raw);
     if (item.crtrYmd > latest) latest = item.crtrYmd;
     const carCount = carCounts.get(item.lineNm);
-    const direction = SIDES[item.upbdnbSe];
+    const direction = DIRECTION_BY_SIDE[item.upbdnbSe];
     const kind = KINDS[item.plfmCmgFac];
     const match = /^(\d+)-(\d+)$/.exec(item.qckgffVhclDoorNo);
     if (carCount === undefined || !direction || !kind || !match) continue;
@@ -45,7 +44,7 @@ export function refineFastExit(items: unknown[], carCounts: Map<string, number>)
     const door = Number(match[2]);
     if (car < 1 || car > carCount || door < 1) continue;
 
-    const key = `${item.lineNm}|${normalizeCode(item.stnCd)}`;
+    const key = stationKey(item.lineNm, item.stnCd);
     const sides = byStation.get(key) ?? { down: [], up: [] };
     byStation.set(key, sides);
     sides[direction].push({ car, door, kind });

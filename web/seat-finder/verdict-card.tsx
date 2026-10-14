@@ -47,7 +47,7 @@ export function VerdictCard({ from, to, result, clockText, onBack }: VerdictCard
         </div>
       </div>
       <div>
-        <h1 className={styles.cars}>{result.picks.join("·")}번째 칸</h1>
+        <h1 className={styles.cars}>{[...result.picks].sort((a, b) => a - b).join("·")}번째 칸</h1>
         <div className={styles.grade}>
           <div className={styles.pips} aria-hidden="true">
             {[1, 2, 3].map((n) => (

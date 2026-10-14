@@ -111,6 +111,11 @@ describe("refine — 잘못된 원본은 멈춘다", () => {
     expect(broken({ congestion: { period: "2026-06", csv: "머리\n평일,2호선,201,시청,내선,1,2" } })).toThrow(/시간 칸/);
   });
 
+  it("혼잡도 한 방향에 요일유형이 빠지면 0으로 채우지 않고 멈춘다", () => {
+    const csv = `머리\n${["평일", "2호선", "201", "시청", "내선", ...new Array(39).fill("1")].join(",")}`;
+    expect(broken({ congestion: { period: "2026-06", csv } })).toThrow(/요일유형/);
+  });
+
   it("역번호가 숫자가 아니면 멈춘다", () => {
     const csv = `머리\n${["평일", "2호선", "ABC", "시청", "내선", ...new Array(39).fill("1")].join(",")}`;
     expect(broken({ congestion: { period: "2026-06", csv } })).toThrow(/역번호/);

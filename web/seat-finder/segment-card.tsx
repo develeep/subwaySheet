@@ -1,6 +1,6 @@
-import styles from "./route-card.module.css";
+import styles from "./segment-card.module.css";
 
-export type RouteCardProps = {
+export type SegmentCardProps = {
   from: string;
   to: string;
   lineNumber: number | null;
@@ -15,9 +15,9 @@ export type RouteCardProps = {
   onFlipDirection: () => void;
 };
 
-export function RouteCard(props: RouteCardProps) {
+export function SegmentCard(props: SegmentCardProps) {
   return (
-    <section className={styles.route} aria-label="구간">
+    <section className={styles.segment} aria-label="구간">
       <div className={styles.stops}>
         <button className={styles.stopButton} type="button" onClick={props.onPickFrom}>
           <small>출발</small>

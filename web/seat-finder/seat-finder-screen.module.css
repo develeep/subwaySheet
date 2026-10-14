@@ -75,7 +75,7 @@
   position: sticky;
   bottom: 0;
   z-index: 5;
-  padding: var(--space-3) 0 calc(14px + env(safe-area-inset-bottom, 0px));
+  padding: var(--space-3) 0 calc(var(--space-3) + env(safe-area-inset-bottom, 0px));
   background: var(--color-bg);
 }
 
@@ -102,7 +102,7 @@
 .notice {
   margin: 0;
   padding: var(--space-3);
-  border-radius: 12px;
+  border-radius: var(--radius-inset);
   background: var(--color-warn-bg);
   color: var(--color-warn-text);
 }

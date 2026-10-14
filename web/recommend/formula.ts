@@ -25,6 +25,10 @@ export const FORMULA = {
   directionShare: 0.5,
   /** 시간대별 배차 간격(분). 추정값, 미검증(스펙 #2 Further Notes). */
   headway: { peak: 2.5, shoulder: 4, day: 5.5, night: 8 },
+  /** 평일 첨두·준첨두 시(그 시의 1시간), 심야가 시작하는 시. 06시 이전도 심야로 본다. 주말은 첨두 없이 평시. */
+  peakHours: [7, 8, 18] as readonly number[],
+  shoulderHours: [6, 9, 17, 19] as readonly number[],
+  nightFromHour: 22,
   /** 앉을 가능성 기준: 빈자리 ÷ 서 있는 사람. */
   gradeHigh: 1.0,
   gradeMid: 0.4,

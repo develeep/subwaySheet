@@ -49,7 +49,7 @@ export function StationSheet(props: StationSheetProps) {
           onChange={(event) => props.onQueryChange(event.target.value)}
         />
         <ul className={styles.list} aria-label="역 목록">
-          {props.matches.length > 0 ? (
+          {props.matches.length > 0 || props.query.trim() === "" ? (
             props.matches.map((option) => (
               <li key={option.name}>
                 <button type="button" onClick={() => props.onPick(option.name)}>

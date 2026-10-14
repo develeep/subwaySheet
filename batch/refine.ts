@@ -1,8 +1,9 @@
 import { type RefinedData, refinedDataSchema, type StationData } from "@shared/refined-data";
 import { refineCongestion } from "./congestion";
-import { baseStationName, parseCsv } from "./csv";
+import { parseCsv } from "./csv";
 import { refineFastExit, toFastExitSide } from "./fast-exit";
 import { refineRidership } from "./ridership";
+import { baseStationName, stationKey } from "./station-key";
 
 /**
  * refine — 원본 공공데이터를 공식 없는 정제 데이터(`shared/refined-data.ts`)로 만든다. `batch/main.ts`가 부른다.
@@ -36,7 +37,9 @@ export type RawSources = {
 
 export function refine(raw: RawSources, config: RefineConfig): RefinedData {
   const lineLabel = (route: RouteDefinition) => `${route.lineNumber}호선`;
-  const wanted = new Set(config.routes.flatMap((route) => route.codes.map((code) => `${lineLabel(route)}|${code}`)));
+  const wanted = new Set(
+    config.routes.flatMap((route) => route.codes.map((code) => stationKey(lineLabel(route), code))),
+  );
   const ridership = refineRidership(raw.ridershipCsv, wanted);
   const congestion = refineCongestion(raw.congestion.csv);
   const fastExit = refineFastExit(
@@ -53,7 +56,7 @@ export function refine(raw: RawSources, config: RefineConfig): RefinedData {
     carCount: route.carCount,
     isLoop: route.isLoop,
     stops: route.codes.map((code) => {
-      const key = `${lineLabel(route)}|${code}`;
+      const key = stationKey(lineLabel(route), code);
       const name = ridership.byStation.get(key)?.name ?? congestion.get(key)?.name;
       if (!name) throw new Error(`${key} 역 이름을 어느 원본에서도 찾지 못했다`);
       stations[name] = {

@@ -1,6 +1,7 @@
-import { dayTypeOfYmd } from "@shared/day-type";
 import { DAY_TYPES, type DayType, type StationData, TIME_SLOT_COUNT } from "@shared/refined-data";
-import { baseStationName, normalizeCode, parseCsv } from "./csv";
+import { parseCsv } from "./csv";
+import { dayTypeOfYmd } from "./day-type";
+import { baseStationName, stationKey } from "./station-key";
 
 /**
  * refineRidership — 승하차 OA-12921(날짜 × 역 × 1시간)을 역·요일유형·시간대별 하루 평균으로 줄인다. `refine`이 부른다.
@@ -31,7 +32,7 @@ export function refineRidership(csv: string, wanted: Set<string>): RidershipResu
     if (start === "" || ymd < start) start = ymd;
     if (ymd > end) end = ymd;
 
-    const key = `${line}|${normalizeCode(code)}`;
+    const key = stationKey(line, code);
     if (!wanted.has(key)) continue;
     const acc = sums.get(key) ?? { name: baseStationName(name), on: emptyByDayType(), off: emptyByDayType() };
     sums.set(key, acc);

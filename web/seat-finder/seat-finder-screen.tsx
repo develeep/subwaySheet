@@ -1,7 +1,7 @@
 import type { CSSProperties } from "react";
-import { RouteCard } from "./route-card";
 import { DAY_TYPE_LABEL, ERROR_TEXT, LOAD_FAILED_TEXT } from "./seat-finder-copy";
 import styles from "./seat-finder-screen.module.css";
+import { SegmentCard } from "./segment-card";
 import { StationSheet } from "./station-sheet";
 import { TrainCars } from "./train-cars";
 import { useSeatFinder } from "./use-seat-finder";
@@ -40,7 +40,12 @@ export function SeatFinderScreen() {
       </header>
 
       <div className={styles.tabs} role="tablist" aria-label="단계">
-        <button role="tab" type="button" aria-selected={finder.tab === "route"} onClick={() => finder.setTab("route")}>
+        <button
+          role="tab"
+          type="button"
+          aria-selected={finder.tab === "segment"}
+          onClick={() => finder.setTab("segment")}
+        >
           구간 선택
         </button>
         <button
@@ -56,7 +61,7 @@ export function SeatFinderScreen() {
 
       {finder.dataStatus === "failed" ? <p className={styles.notice}>{LOAD_FAILED_TEXT}</p> : null}
 
-      {finder.tab === "route" || !success ? (
+      {finder.tab === "segment" || !success ? (
         <main className={styles.panel}>
           <section className={styles.hero}>
             <h1>
@@ -65,7 +70,7 @@ export function SeatFinderScreen() {
             </h1>
             <p>내 구간에서 많이 내리는 역과 그 역의 빠른하차 칸으로 계산해요.</p>
           </section>
-          <RouteCard
+          <SegmentCard
             from={finder.from}
             to={finder.to}
             lineNumber={success?.route.lineNumber ?? null}
@@ -109,7 +114,7 @@ export function SeatFinderScreen() {
             to={finder.to}
             result={success}
             clockText={clockText}
-            onBack={() => finder.setTab("route")}
+            onBack={() => finder.setTab("segment")}
           />
           <TrainCars carCount={success.route.carCount} picks={success.picks} />
           <p className={styles.foot}>

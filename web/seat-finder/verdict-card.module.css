@@ -84,7 +84,7 @@
   font-weight: 700;
   background: color-mix(in srgb, var(--color-line-current) 22%, transparent);
   border-radius: 4px;
-  padding: 0 3px;
+  padding: 0 var(--space-1);
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
 }
@@ -93,6 +93,6 @@
   margin: 0;
   background: var(--color-warn-bg);
   color: var(--color-warn-text);
-  border-radius: 12px;
+  border-radius: var(--radius-inset);
   padding: var(--space-3);
 }

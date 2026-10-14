@@ -1,7 +1,7 @@
-import type { DayType } from "./refined-data";
+import type { DayType } from "@shared/refined-data";
 
 /**
- * dayTypeOfYmd — 날짜(`YYYY-MM-DD`)를 요일유형으로 바꾼다. 배치가 승하차 OA-12921의 날짜를 나눌 때 쓴다.
+ * dayTypeOfYmd — 날짜(`YYYY-MM-DD`)를 요일유형으로 바꾼다. `ridership.ts`가 승하차 OA-12921의 날짜를 나눌 때 쓴다.
  * 공휴일은 일요일·공휴일 유형으로 묶는다(ADR 0003). **목록에 없는 해의 공휴일은 평일로 잡힌다** —
  * 승하차 원본 연도가 바뀌면 그 해 목록을 더한다. 화면의 오늘 요일유형과 그 공휴일 목록은 #4에서 다룬다.
  */

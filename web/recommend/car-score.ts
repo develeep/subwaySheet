@@ -1,4 +1,12 @@
-import type { DayType, Direction, FastExitSide, Route, RouteStop, StationData } from "@shared/refined-data";
+import {
+  type DayType,
+  type Direction,
+  type FastExitSide,
+  type Route,
+  type RouteStop,
+  type StationData,
+  TIME_SLOT_COUNT,
+} from "@shared/refined-data";
 import { FORMULA, FULL_LOAD_PER_CAR, SEATS_PER_CAR } from "./formula";
 
 /**
@@ -24,6 +32,7 @@ export type CarScoreInput = {
 };
 
 export type CarScoreResult = {
+  /** 추천 칸 번호(1부터, 그 방향 승강장 번호의 앞자리). 1등 칸이 먼저다. */
   picks: number[];
   grade: Grade;
   isWeakGap: boolean;
@@ -110,17 +119,23 @@ export function scoreCars(input: CarScoreInput): CarScoreResult | null {
 
 /** 분(0시 기준)을 시간대 인덱스로. 0 = 06시 이전, 1 = 06~07시, …, 18 = 23~24시, 19 = 24시 이후(0시대). */
 export function slotOfMinute(minute: number): number {
-  const hour = Math.floor((((minute % 1440) + 1440) % 1440) / 60);
-  if (hour === 0) return 19;
-  return hour < 6 ? 0 : hour - 5;
+  const hour = Math.floor((((minute % MINUTES_PER_DAY) + MINUTES_PER_DAY) % MINUTES_PER_DAY) / 60);
+  if (hour === 0) return AFTER_MIDNIGHT_SLOT;
+  return hour < FIRST_HOUR ? 0 : hour - FIRST_HOUR + 1;
 }
 
+const MINUTES_PER_DAY = 24 * 60;
+/** 시간대 1이 시작하는 시(06시). 그 앞은 시간대 0(06시 이전)이다. */
+const FIRST_HOUR = 6;
+const AFTER_MIDNIGHT_SLOT = TIME_SLOT_COUNT - 1;
+const hourOfSlot = (slot: number) => slot + FIRST_HOUR - 1;
+
 function headway(dayType: DayType, slot: number): number {
-  const hour = slot + 5;
-  if (slot === 0 || slot >= 17) return FORMULA.headway.night;
+  const hour = hourOfSlot(slot);
+  if (slot === 0 || hour >= FORMULA.nightFromHour) return FORMULA.headway.night;
   if (dayType !== "weekday") return FORMULA.headway.day;
-  if (hour === 7 || hour === 8 || hour === 18) return FORMULA.headway.peak;
-  if (hour === 6 || hour === 9 || hour === 17 || hour === 19) return FORMULA.headway.shoulder;
+  if (FORMULA.peakHours.includes(hour)) return FORMULA.headway.peak;
+  if (FORMULA.shoulderHours.includes(hour)) return FORMULA.headway.shoulder;
   return FORMULA.headway.day;
 }
 
