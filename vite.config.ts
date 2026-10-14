@@ -13,7 +13,7 @@ export default defineConfig({
       provider: "v8",
       // 화면 컴포넌트는 단위 테스트하지 않는다(스펙 #2). 추천 모듈·배치·공통 형식만 잰다.
       include: ["shared/**/*.ts", "batch/**/*.ts", "web/recommend/**/*.ts"],
-      exclude: ["**/*.test.ts", "batch/main.ts", "batch/fetch-fast-exit.ts"],
+      exclude: ["**/*.test.ts", "**/fixtures/**", "batch/main.ts", "batch/fetch-fast-exit.ts"],
       thresholds: { lines: 80, functions: 80, branches: 80, statements: 80 },
     },
   },
