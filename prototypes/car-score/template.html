@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>칸 점수 프로토타입</title>
+<!-- PROTOTYPE: 버리는 코드. template.html을 고치고 prep.py로 car-score-prototype.html을 다시 만든다. -->
+<style>
+  :root {
+    --bg: #fafaf8; --panel: #ffffff; --ink: #1b1d1c; --muted: #6b706d; --line: #e4e6e3;
+    --accent: #00a84d; --accent-soft: #e3f4ea; --warn: #b5541b; --warn-soft: #fbeee4;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.55 -apple-system, "Apple SD Gothic Neo", "Pretendard", "Noto Sans KR", sans-serif; }
+  main { max-width: 1080px; margin: 0 auto; padding: 32px 16px 80px; }
+  h1 { font-size: 24px; margin: 0 0 6px; }
+  h2 { font-size: 16px; margin: 0 0 12px; }
+  .lede { color: var(--muted); margin: 0 0 6px; max-width: 760px; }
+  .proto { display: inline-block; font-size: 12px; color: var(--warn); background: var(--warn-soft); padding: 2px 8px; border-radius: 99px; margin-bottom: 12px; }
+  section { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 18px; margin-top: 16px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+  label { display: block; font-size: 13px; color: var(--muted); }
+  select, input[type=time], input[type=number] { width: 100%; font: inherit; padding: 6px 8px; border: 1px solid var(--line); border-radius: 8px; background: #fff; color: var(--ink); }
+  button { font: inherit; padding: 6px 12px; border: 1px solid var(--line); border-radius: 8px; background: #fff; color: var(--ink); cursor: pointer; }
+  button:hover { border-color: var(--accent); }
+  button.on, .tab.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .muted { color: var(--muted); font-size: 13px; }
+  .big { font-size: 28px; font-weight: 700; }
+  .grade { display: inline-block; padding: 2px 10px; border-radius: 99px; font-weight: 600; font-size: 14px; }
+  .g-high { background: var(--accent-soft); color: #00733a; }
+  .g-mid { background: #f1f1ea; color: #6a6a2e; }
+  .g-low { background: var(--warn-soft); color: var(--warn); }
+  .changed { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+  .cars { display: grid; grid-template-columns: repeat(10, 1fr); gap: 6px; align-items: end; height: 150px; margin-top: 8px; }
+  .car { display: flex; flex-direction: column; justify-content: flex-end; align-items: center; height: 100%; font-size: 12px; }
+  .bar { width: 100%; background: #cfd6d1; border-radius: 4px 4px 0 0; min-height: 2px; }
+  .bar.top { background: var(--accent); }
+  .carno { font-weight: 600; margin-top: 4px; }
+  .train { display: grid; grid-template-columns: repeat(10, 1fr); gap: 6px; margin-top: 2px; }
+  .train div { text-align: center; font-size: 11px; color: var(--muted); border-top: 3px solid var(--line); padding-top: 2px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--muted); font-weight: 500; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .tab { padding: 6px 10px; border: 1px solid var(--line); border-radius: 8px; background: #fff; cursor: pointer; font-size: 13px; }
+  .steps { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+  .steps button { text-align: left; }
+  .steps button.done { color: var(--muted); text-decoration: line-through; }
+  .steps button.next { border-color: var(--accent); }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 760px) { .two { grid-template-columns: 1fr; } .cars, .train { gap: 2px; } }
+  details summary { cursor: pointer; font-weight: 600; }
+</style>
+</head>
+<body>
+<main>
+  <span class="proto">프로토타입 · 버리는 코드</span>
+  <h1>2호선 본선 칸 점수, 그럴듯한가?</h1>
+  <p class="lede">실제 공공데이터(승하차 2024년, 혼잡도 2026-06, 환승인원 2026-06, 빠른하차 2024-12-31 기준)로 칸 점수를 계산해 봅니다. 질문은 두 가지예요. <b>추천 칸이 상식과 맞나?</b> 그리고 <b>가중치·퍼짐·등급 기준을 어떤 값으로 시작할까?</b></p>
+  <p class="muted" id="period"></p>
+
+  <section>
+    <h2>시나리오</h2>
+    <div class="tabs" id="tabs"></div>
+    <div id="scenario"></div>
+  </section>
+
+  <section>
+    <h2>구간 고르기</h2>
+    <div class="grid">
+      <div><label>출발역</label><select id="from"></select></div>
+      <div><label>도착역</label><select id="to"></select></div>
+      <div><label>요일유형</label><select id="dayType"><option value="wkd">평일</option><option value="sat">토요일</option><option value="sun">일요일·공휴일</option></select></div>
+      <div><label>출발 시각</label><input type="time" id="time" step="600"></div>
+    </div>
+    <div class="row" style="margin-top:12px">
+      <button id="swap">출발·도착 바꾸기</button>
+      <button id="flipDir">반대 방향으로 돌아가기</button>
+      <span class="muted" id="dirNote"></span>
+    </div>
+  </section>
+
+  <section id="result"></section>
+
+  <section>
+    <h2>중간 역별로 보기</h2>
+    <p class="muted">열차 한 대 기준 추정. "앉아 있던 비율"은 내리는 사람 중 앉아 있던 사람의 비율(좌석 54 ÷ 도착 때 칸당 인원)이에요.</p>
+    <div style="overflow-x:auto"><table id="stops"></table></div>
+  </section>
+
+  <section>
+    <details>
+      <summary>가정값 바꿔 보기</summary>
+      <p class="muted">여기 값이 칸 점수 세부값 질문의 후보예요. 바꾸면 결과가 바로 다시 계산됩니다.</p>
+      <div class="grid" id="params"></div>
+      <div class="row" style="margin-top:12px"><button id="resetParams">기본값으로</button></div>
+    </details>
+  </section>
+</main>
+
+<script>const DATA = /*DATA*/null;</script>
+
+<!-- 계산 모듈: DOM을 모른다. 실제 앱의 칸 점수 모듈로 옮길 수 있는 부분. -->
+<script>
+const CarScore = (() => {
+  const N_CARS = 10;
+  const SEATS_PER_CAR = 54;     // 2호선 칸당 좌석(7인석 6개 + 노약자석 3인석 4개)
+  const FULL_LOAD = 160;        // 혼잡도 100% = 칸당 160명(좌석 정원 기준)
+  const SLOT_LABELS = ['06시 이전'].concat(Array.from({ length: 18 }, (_, i) => `${i + 6}~${i + 7}시`), ['24시 이후']);
+
+  const DEFAULT_PARAMS = {
+    minutesPerStop: 2.0,
+    weightShape: 'remaining',   // remaining: 남은 정거장 비례 / flat: 모두 같게 / halflife: 앞쪽 역일수록 반감
+    halfLifeStops: 4,
+    spreadCars: 0.8,            // 출입설비에서 몇 칸 떨어지면 1/e로 줄어드는지
+    uniformShare: 0.3,          // 출입설비와 상관없이 고르게 퍼지는 몫
+    elevatorWeight: 0.2,        // 계단·에스컬레이터 1 대비 엘리베이터 가중치
+    includeTransfer: true,
+    dirSplit: 'half',           // half: 반반 / cong: 혼잡도 비례
+    thinFacility: 'uniform',    // 계단·에스컬레이터 없이 엘리베이터뿐인 역·방향: uniform(고르게) / use(그대로) / skip(데이터 없는 역)
+    headwayPeak: 2.5, headwayShoulder: 4, headwayDay: 5.5, headwayNight: 8,
+    gradeHigh: 1.0, gradeMid: 0.4,
+    peakDowngradeCong: 0,       // 출발역 혼잡도가 이 % 이상이면 한 단계 낮춤(0 = 끔). 서 있는 사람 수로 이미 반영돼 기본은 끔
+    weakBelow: 1.15,            // 1등 칸이 평균보다 이 배수 미만이면 "칸 차이가 작음"
+    secondCarWithin: 0.1,       // 1등과 이 비율 안이면 두 번째 칸도 추천
+  };
+
+  // 환승역에서 2호선 본선을 포함해 만나는 노선 수. 환승인원(역 합계)을 2호선 하차 몫으로 나눌 때 쓴다.
+  const LINES_AT = { 시청: 2, 을지로3가: 2, 을지로4가: 2, 동대문역사문화공원: 3, 신당: 2, 왕십리: 4, 성수: 2, 건대입구: 2,
+    잠실: 2, 종합운동장: 2, 선릉: 2, 강남: 2, 교대: 2, 사당: 2, 신림: 2, 대림: 2, 신도림: 3, 영등포구청: 2, 당산: 2,
+    합정: 2, 홍대입구: 3, 충정로: 2 };
+
+  function slotOfMinute(min) {
+    const h = Math.floor(((min % 1440) + 1440) % 1440 / 60);
+    if (h === 0) return 19;
+    return h < 6 ? 0 : h - 5;
+  }
+
+  function fmtClock(min) {
+    const m = ((Math.round(min) % 1440) + 1440) % 1440;
+    return `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
+  }
+
+  // 순환선이라 인덱스를 n으로 감는다. step +1 = 하행(역번호 증가), -1 = 상행.
+  function walk(n, from, to, step) {
+    const out = [from];
+    let i = from;
+    while (i !== to) { i = (i + step + n) % n; out.push(i); }
+    return out;
+  }
+
+  function shorterStep(n, from, to) {
+    const down = (to - from + n) % n;
+    return down <= n - down ? 1 : -1;
+  }
+
+  function headway(dayType, slot, p) {
+    const h = slot + 5; // slot 1 = 06시
+    if (slot === 0 || slot >= 17) return p.headwayNight;
+    if (dayType !== 'wkd') return p.headwayDay;
+    if (h === 7 || h === 8 || h === 18) return p.headwayPeak;
+    if (h === 6 || h === 9 || h === 17 || h === 19) return p.headwayShoulder;
+    return p.headwayDay;
+  }
+
+  // 그 역을 떠나는 열차의 칸당 인원(혼잡도 기준). 2호선 하행 = 내선으로 가정.
+  function loadAt(st, dayType, slot, step) {
+    const c = st.cong && st.cong[dayType] && st.cong[dayType][step === 1 ? 'in' : 'out'];
+    return c ? (c[slot] / 100) * FULL_LOAD : null;
+  }
+
+  function dirShare(stations, i, dayType, slot, step, p) {
+    if (p.dirSplit === 'half') return 0.5;
+    const n = stations.length;
+    const arr = s => loadAt(stations[(i - s + n) % n], dayType, slot, s);
+    const a = arr(step), b = arr(-step);
+    return a == null || b == null || a + b === 0 ? 0.5 : a / (a + b);
+  }
+
+  function transferOff(st, dayType, slot) {
+    if (!st.transferPerDay) return 0;
+    const r = st.ride[dayType];
+    const both = r.on.map((v, i) => v + r.off[i]);
+    const total = both.reduce((a, b) => a + b, 0) || 1;
+    return (st.transferPerDay[dayType] * both[slot] / total) / (LINES_AT[st.name] || 2);
+  }
+
+  // 엘리베이터 1대만 있는 역은 실제 계단이 빠진 것이라 분포를 믿을 수 없다(한양대·을지로3가 등).
+  function isThin(facs) {
+    return !facs || !facs.some(f => f.kind !== '엘리베이터');
+  }
+
+  // 출입설비 위치에서 칸별로 퍼지는 분포(합 1).
+  function carSpread(facs, p) {
+    if (isThin(facs) && p.thinFacility === 'uniform') return new Array(N_CARS).fill(1 / N_CARS);
+    const k = new Array(N_CARS).fill(0);
+    for (const f of facs || []) {
+      const w = f.kind === '엘리베이터' ? p.elevatorWeight : 1;
+      for (let c = 1; c <= N_CARS; c++) k[c - 1] += w * Math.exp(-Math.abs(c - f.car) / p.spreadCars);
+    }
+    const sum = k.reduce((a, b) => a + b, 0);
+    if (!sum) return new Array(N_CARS).fill(1 / N_CARS);
+    return k.map(v => (1 - p.uniformShare) * v / sum + p.uniformShare / N_CARS);
+  }
+
+  function stopWeight(k, total, p) {
+    // k: 출발역 다음부터 1, 2, ...  total: 도착역까지 정거장 수
+    if (p.weightShape === 'flat') return 1;
+    if (p.weightShape === 'halflife') return Math.pow(0.5, (k - 1) / p.halfLifeStops);
+    return (total - k) / (total - 1 || 1);
+  }
+
+  function grade(ratio, p) {
+    return ratio >= p.gradeHigh ? 'high' : ratio >= p.gradeMid ? 'mid' : 'low';
+  }
+  const DOWN = { high: 'mid', mid: 'low', low: 'low' };
+
+  function compute(data, input, p) {
+    const stations = data.stations;
+    const n = stations.length;
+    const { from, to, dayType, departMinute } = input;
+    if (from === to) return { error: '출발역과 도착역이 같아요.' };
+    const step = input.step || shorterStep(n, from, to);
+    const path = walk(n, from, to, step);
+    const total = path.length - 1;
+    const dirKey = step === 1 ? 'down' : 'up';
+    const toward = stations[(from + step + n) % n].name;
+
+    // 출발역: 서 있는 사람 = 이미 타고 있던 사람(칸마다 고르게) + 출발역에서 탄 사람(출입설비 쪽으로 몰림)
+    const o = stations[from];
+    const oSlot = slotOfMinute(departMinute);
+    const oLoad = loadAt(o, dayType, oSlot, step);
+    const standingAvg = oLoad == null ? 0 : Math.max(0, oLoad - SEATS_PER_CAR);
+    const oShare = dirShare(stations, from, dayType, oSlot, step, p);
+    const boardAvg = o.ride && o.ride[dayType] ? o.ride[dayType].on[oSlot] * oShare * headway(dayType, oSlot, p) / 60 / N_CARS : 0;
+    const fromOrigin = Math.min(standingAvg, boardAvg);
+    const oSpread = carSpread(o.fac && o.fac[dirKey], p);
+    const standing = oSpread.map(s => standingAvg - fromOrigin + fromOrigin * N_CARS * s);
+
+    const freed = new Array(N_CARS).fill(0);
+    const missing = [];
+    const thin = [];
+    const stops = [];
+    for (let k = 1; k < total; k++) {
+      const i = path[k];
+      const st = stations[i];
+      const minute = departMinute + k * p.minutesPerStop;
+      const slot = slotOfMinute(minute);
+      const facs = st.fac && st.fac[dirKey];
+      if (!st.ride || !st.ride[dayType] || (isThin(facs) && p.thinFacility === 'skip')) { missing.push(st.name); continue; }
+      if (isThin(facs) && p.thinFacility === 'uniform') thin.push(st.name);
+      const share = dirShare(stations, i, dayType, slot, step, p);
+      const xfer = p.includeTransfer ? transferOff(st, dayType, slot) : 0;
+      const perTrain = (st.ride[dayType].off[slot] + xfer) * share * headway(dayType, slot, p) / 60;
+      const prevLoad = loadAt(stations[path[k - 1]], dayType, slot, step);
+      const seatedFrac = prevLoad == null ? 0.5 : Math.min(1, SEATS_PER_CAR / Math.max(prevLoad, 1));
+      const spread = carSpread(facs, p);
+      const w = stopWeight(k, total, p);
+      const byCar = spread.map(s => perTrain * s * seatedFrac);
+      byCar.forEach((v, c) => { freed[c] += w * v; });
+      stops.push({ k, name: st.name, clock: fmtClock(minute), slotLabel: SLOT_LABELS[slot], perTrain, xferPerTrain: xfer * share * headway(dayType, slot, p) / 60,
+        seatedFrac, weight: w, thin: isThin(facs), facCars: (facs || []).map(f => `${f.car}-${f.door}${f.kind === '엘리베이터' ? '(엘)' : f.kind === '에스컬레이터' ? '(에)' : ''}`), byCar });
+    }
+
+    const ratio = freed.map((f, c) => f / Math.max(1, standing[c]));
+    const order = ratio.map((r, c) => c).sort((a, b) => ratio[b] - ratio[a]);
+    const top = order[0];
+    const picks = [top];
+    if (ratio[order[1]] >= ratio[top] * (1 - p.secondCarWithin)) picks.push(order[1]);
+
+    const oCong = oLoad == null ? null : (oLoad / FULL_LOAD) * 100;
+    const seatNow = oLoad != null && oLoad < SEATS_PER_CAR;
+    let g = seatNow ? 'high' : grade(ratio[top], p);
+    const downgraded = !seatNow && p.peakDowngradeCong > 0 && oCong != null && oCong >= p.peakDowngradeCong && g !== 'low';
+    if (downgraded) g = DOWN[g];
+
+    const mean = ratio.reduce((a, b) => a + b, 0) / N_CARS;
+    const lift = mean ? ratio[top] / mean : 1;
+    return { step, toward, total, path: path.map(i => stations[i].name), stops, missing, thin, freed, standing, ratio, picks, grade: g, lift, weak: lift < p.weakBelow,
+      seatNow, downgraded, originCong: oCong, originSlot: SLOT_LABELS[oSlot] };
+  }
+
+  return { DEFAULT_PARAMS, N_CARS, compute, shorterStep, fmtClock };
+})();
+</script>
+
+<!-- 화면: 버리는 껍데기 -->
+<script>
+const $ = id => document.getElementById(id);
+const names = DATA.stations.map(s => s.name);
+const idx = name => names.indexOf(name);
+const GRADE_TEXT = { high: '높음', mid: '보통', low: '낮음' };
+const DAY_TEXT = { wkd: '평일', sat: '토요일', sun: '일요일·공휴일' };
+
+const PARAM_UI = [
+  ['minutesPerStop', '정거장당 소요(분)', 'number', 0.1],
+  ['weightShape', '앞쪽 역 가중치 모양', ['remaining:남은 정거장 비례', 'flat:모두 같게', 'halflife:반감(아래 값)']],
+  ['halfLifeStops', '반감 정거장 수', 'number', 1],
+  ['spreadCars', '하차 퍼짐(칸)', 'number', 0.1],
+  ['uniformShare', '고르게 퍼지는 몫(0~1)', 'number', 0.05],
+  ['elevatorWeight', '엘리베이터 가중치', 'number', 0.1],
+  ['includeTransfer', '환승 하차 포함', ['true:포함', 'false:빼기']],
+  ['dirSplit', '방향 나누기', ['half:반반', 'cong:혼잡도 비례']],
+  ['thinFacility', '엘리베이터뿐인 역', ['uniform:고르게 퍼뜨림', 'use:그대로 씀', 'skip:데이터 없는 역으로']],
+  ['headwayPeak', '배차 첨두(분, 평일 7·8·18시)', 'number', 0.5],
+  ['headwayShoulder', '배차 준첨두(분, 평일 6·9·17·19시)', 'number', 0.5],
+  ['headwayDay', '배차 평시·주말(분)', 'number', 0.5],
+  ['headwayNight', '배차 심야(분)', 'number', 0.5],
+  ['gradeHigh', '높음 기준(빈자리÷서 있는 사람)', 'number', 0.1],
+  ['gradeMid', '보통 기준', 'number', 0.1],
+  ['peakDowngradeCong', '피크 하향 혼잡도(%, 0=끔)', 'number', 10],
+  ['weakBelow', '칸 차이 작음 기준(평균 대비 배수)', 'number', 0.05],
+  ['secondCarWithin', '두 번째 칸 추천 범위(0~1)', 'number', 0.05],
+];
+
+const initial = () => ({ from: idx('신도림'), to: idx('강남'), dayType: 'wkd', departMinute: 8 * 60, step: 0, params: { ...CarScore.DEFAULT_PARAMS } });
+
+// 상태 변경은 전부 이 reducer를 거친다.
+function reducer(s, a) {
+  switch (a.type) {
+    case 'route': return { ...s, from: idx(a.from), to: idx(a.to), step: 0 };
+    case 'from': return { ...s, from: a.value, step: 0 };
+    case 'to': return { ...s, to: a.value, step: 0 };
+    case 'swap': return { ...s, from: s.to, to: s.from, step: 0 };
+    case 'flipDir': {
+      const cur = s.step || CarScore.shorterStep(names.length, s.from, s.to);
+      return { ...s, step: -cur };
+    }
+    case 'dayType': return { ...s, dayType: a.value };
+    case 'time': return { ...s, departMinute: a.value };
+    case 'param': return { ...s, params: { ...s.params, [a.key]: a.value } };
+    case 'resetParams': return { ...s, params: { ...CarScore.DEFAULT_PARAMS } };
+    case 'reset': return initial();
+    default: return s;
+  }
+}
+
+let state = initial();
+let prevResult = null;
+
+const SCENARIOS = [
+  { title: '신도림→강남 평일 8시', text: '핸드오프 예시. 사당·교대·서울대입구처럼 출근길에 많이 내리는 역을 지나요. 강남은 도착역이라 점수에 안 들어가요. 추천 칸이 사당·교대의 빠른하차 칸 근처인지 보세요.',
+    steps: [['처음 상태로', { type: 'reset' }], ['신도림→강남, 평일 08:00', { type: 'route', from: '신도림', to: '강남' }],
+      ['가중치를 "모두 같게"로', { type: 'param', key: 'weightShape', value: 'flat' }], ['가중치를 "반감"으로', { type: 'param', key: 'weightShape', value: 'halflife' }]] },
+  { title: '홍대입구→잠실 평일 8시', text: '시청·을지로를 지나 강북 도심을 가로질러요. 도심 역(을지로입구·시청)에서 대량 하차가 있어 앞쪽에서 자리가 날 수 있어요. 등급이 출발역 혼잡도 때문에 깎이는지 보세요.',
+    steps: [['처음 상태로', { type: 'reset' }], ['홍대입구→잠실', { type: 'route', from: '홍대입구', to: '잠실' }],
+      ['피크 하향 끄기', { type: 'param', key: 'peakDowngradeCong', value: 0 }]] },
+  { title: '반대로 타면 번호가 뒤집힘', text: '강남→신도림은 같은 선로를 반대로 가요. 칸 번호는 방향마다 진행 방향 앞쪽부터 세서, 같은 물리 칸도 번호가 바뀌어요(1↔10). 저녁 18시로 퇴근길도 같이 봐요.',
+    steps: [['처음 상태로', { type: 'reset' }], ['신도림→강남 08시 결과 보기', { type: 'route', from: '신도림', to: '강남' }], ['출발·도착 바꾸기', { type: 'swap' }], ['18:00으로', { type: 'time', value: 18 * 60 }]] },
+  { title: '중간 역 하나뿐', text: '강남→선릉은 중간 역이 역삼 하나예요. 남은 정거장 비례 가중치는 중간 역이 하나면 1로 둬요. 추천이 역삼 빠른하차 칸 하나에 쏠리는지 봐요.',
+    steps: [['처음 상태로', { type: 'reset' }], ['강남→선릉', { type: 'route', from: '강남', to: '선릉' }]] },
+  { title: '주말 낮, 밤늦게', text: '토요일 14시와 평일 23시. 열차가 비어 있으면 출발역에서 바로 앉을 수 있어 등급이 높음이 돼야 해요.',
+    steps: [['처음 상태로', { type: 'reset' }], ['홍대입구→잠실', { type: 'route', from: '홍대입구', to: '잠실' }], ['토요일로', { type: 'dayType', value: 'sat' }],
+      ['14:00으로', { type: 'time', value: 14 * 60 }], ['평일 23:00으로', { type: 'dayType', value: 'wkd' }], ['23:00', { type: 'time', value: 23 * 60 }]] },
+  { title: '먼 쪽으로 돌아가기', text: '2호선은 정거장 수가 적은 방향이 기본이에요. 신도림→강남을 반대쪽(홍대·시청·잠실)으로 돌면 31정거장. 그래도 계산이 깨지지 않는지 봐요.',
+    steps: [['처음 상태로', { type: 'reset' }], ['신도림→강남', { type: 'route', from: '신도림', to: '강남' }], ['반대 방향으로', { type: 'flipDir' }]] },
+];
+let activeTab = 0, stepDone = -1;
+
+function dispatch(a) { prevResult = lastResult; state = reducer(state, a); render(); }
+
+function renderTabs() {
+  $('tabs').innerHTML = SCENARIOS.map((s, i) => `<span class="tab ${i === activeTab ? 'on' : ''}" data-tab="${i}">${s.title}</span>`).join('');
+  const sc = SCENARIOS[activeTab];
+  $('scenario').innerHTML = `<p style="margin:0">${sc.text}</p><div class="steps">${sc.steps.map((st, i) =>
+    `<button data-step="${i}" class="${i <= stepDone ? 'done' : i === stepDone + 1 ? 'next' : ''}">${i + 1}. ${st[0]}</button>`).join('')}</div>`;
+}
+
+function renderInputs() {
+  const opts = names.map((n, i) => `<option value="${i}">${n}</option>`).join('');
+  if (!$('from').options.length) { $('from').innerHTML = opts; $('to').innerHTML = opts; }
+  $('from').value = state.from; $('to').value = state.to; $('dayType').value = state.dayType;
+  $('time').value = CarScore.fmtClock(state.departMinute);
+  $('params').innerHTML = PARAM_UI.map(([key, label, type, stepv]) => {
+    const v = state.params[key];
+    if (Array.isArray(type)) return `<div><label>${label}</label><select data-param="${key}">${type.map(o => { const [val, t] = o.split(':'); return `<option value="${val}" ${String(v) === val ? 'selected' : ''}>${t}</option>`; }).join('')}</select></div>`;
+    return `<div><label>${label}</label><input type="number" step="${stepv}" data-param="${key}" value="${v}"></div>`;
+  }).join('');
+}
+
+let lastResult = null;
+function renderResult() {
+  const r = CarScore.compute(DATA, state, state.params);
+  lastResult = r;
+  if (r.error) { $('result').innerHTML = `<p>${r.error}</p>`; $('stops').innerHTML = ''; return; }
+  const max = Math.max(...r.ratio, 0.0001);
+  const prev = prevResult && !prevResult.error ? prevResult : null;
+  const changedPick = prev && prev.picks.join() !== r.picks.join();
+  const changedGrade = prev && prev.grade !== r.grade;
+  $('dirNote').textContent = `${r.toward} 방면 · ${r.total}정거장${state.step ? ' (직접 고른 방향)' : ' (가까운 쪽)'}`;
+  $('result').innerHTML = `
+    <h2>결과</h2>
+    <div class="row" style="gap:24px">
+      <div><div class="muted">추천 칸</div><div class="big ${changedPick ? 'changed' : ''}">${r.picks.map(c => c + 1 + '번').join(', ')} 칸</div></div>
+      <div><div class="muted">앉을 가능성</div><span class="grade g-${r.grade} ${changedGrade ? 'changed' : ''}">${GRADE_TEXT[r.grade]}</span>
+        ${r.seatNow ? '<span class="muted"> 출발역에서 바로 앉을 수 있음</span>' : ''}${r.downgraded ? '<span class="muted"> 피크 하향 적용됨</span>' : ''}</div>
+      <div><div class="muted">출발역 혼잡도</div><b>${r.originCong == null ? '없음' : Math.round(r.originCong) + '%'}</b> <span class="muted">${r.originSlot}</span></div>
+      <div><div class="muted">${DAY_TEXT[state.dayType]} · ${r.toward} 방면</div><span class="muted">${r.path[0]} → ${r.path[r.path.length - 1]}</span></div>
+    </div>
+    <p class="muted">1등 칸이 칸 평균보다 <b>${r.lift.toFixed(2)}배</b>${r.weak ? ' · <b style="color:var(--warn)">칸 차이가 작아요. 어느 칸이든 비슷함</b>' : ''}</p>
+    ${changedPick || changedGrade ? `<p class="muted">방금 바뀜: ${changedPick ? `추천 ${prev.picks.map(c => c + 1).join(',')} → ${r.picks.map(c => c + 1).join(',')}번 칸 ` : ''}${changedGrade ? `등급 ${GRADE_TEXT[prev.grade]} → ${GRADE_TEXT[r.grade]}` : ''}</p>` : ''}
+    ${r.missing.length ? `<p class="muted">데이터 없는 역(계산에서 빠짐): ${r.missing.join(', ')}</p>` : ''}
+    ${r.thin.length ? `<p class="muted">빠른하차가 엘리베이터뿐이라 칸마다 고르게 퍼뜨린 역: ${r.thin.join(', ')}</p>` : ''}
+    <div class="muted" style="margin-top:12px">칸별 "빈자리 ÷ 서 있는 사람" (높을수록 좋음). 아래 숫자: 가중 빈자리 / 서 있는 사람</div>
+    <div class="cars">${r.ratio.map((v, c) => `<div class="car"><div class="muted">${v.toFixed(2)}</div><div class="bar ${r.picks.includes(c) ? 'top' : ''}" style="height:${(v / max) * 100}%"></div></div>`).join('')}</div>
+    <div class="train">${r.ratio.map((_, c) => `<div><span class="carno" style="color:var(--ink)">${c + 1}</span><br>${r.freed[c].toFixed(1)} / ${r.standing[c].toFixed(0)}</div>`).join('')}</div>
+    <p class="muted">← 진행 방향 앞(1번 칸)</p>`;
+  $('stops').innerHTML = `<tr><th>#</th><th>중간 역</th><th>도착 예상</th><th class="num">열차당 하차</th><th class="num">그중 환승</th><th class="num">앉아 있던 비율</th><th class="num">가중치</th><th>빠른하차 칸(문)</th><th>많이 비는 칸</th></tr>` +
+    r.stops.map(s => {
+      const best = s.byCar.map((v, c) => [v, c]).sort((a, b) => b[0] - a[0]).slice(0, 3).map(([v, c]) => `${c + 1}번 ${v.toFixed(1)}`).join(', ');
+      return `<tr><td>${s.k}</td><td>${s.name}</td><td>${s.clock} <span class="muted">${s.slotLabel}</span></td><td class="num">${s.perTrain.toFixed(0)}</td><td class="num">${s.xferPerTrain.toFixed(0)}</td><td class="num">${Math.round(s.seatedFrac * 100)}%</td><td class="num">${s.weight.toFixed(2)}</td><td>${s.thin ? '<span class="muted">(엘리베이터뿐) </span>' : ''}${s.facCars.join(' ') || '없음'}</td><td>${best}</td></tr>`;
+    }).join('');
+}
+
+function render() { renderTabs(); renderInputs(); renderResult(); }
+
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-tab],[data-step]');
+  if (!t) return;
+  if (t.dataset.tab) { activeTab = +t.dataset.tab; stepDone = -1; renderTabs(); return; }
+  const i = +t.dataset.step;
+  stepDone = i;
+  dispatch(SCENARIOS[activeTab].steps[i][1]);
+});
+$('from').onchange = e => dispatch({ type: 'from', value: +e.target.value });
+$('to').onchange = e => dispatch({ type: 'to', value: +e.target.value });
+$('dayType').onchange = e => dispatch({ type: 'dayType', value: e.target.value });
+$('time').onchange = e => { const [h, m] = e.target.value.split(':').map(Number); dispatch({ type: 'time', value: h * 60 + m }); };
+$('swap').onclick = () => dispatch({ type: 'swap' });
+$('flipDir').onclick = () => dispatch({ type: 'flipDir' });
+$('resetParams').onclick = () => dispatch({ type: 'resetParams' });
+$('params').addEventListener('change', e => {
+  const key = e.target.dataset.param;
+  if (!key) return;
+  const raw = e.target.value;
+  const value = raw === 'true' ? true : raw === 'false' ? false : isNaN(+raw) ? raw : +raw;
+  dispatch({ type: 'param', key, value });
+});
+$('period').textContent = `승하차 기준 기간 ${DATA.period} · 요일유형별 일수 평일 ${DATA.dayCounts.wkd} / 토 ${DATA.dayCounts.sat} / 일·공휴일 ${DATA.dayCounts.sun} · 2호선 하행 = 혼잡도 내선(데이터로 확인)`;
+render();
+</script>
+</body>
+</html>
