@@ -78,53 +78,32 @@ function transferCsv(): string {
   return ["연번,출발역명,평일,토요일,일요일", "1,시청,52690,42575,29750", "2,을지로3가,69864,54543,37099"].join("\n");
 }
 
-function fastExit(
-  code: string,
-  name: string,
-  side: string,
-  door: string,
-  kind: string,
-  crtrYmd = "20241231",
-): Record<string, string | null> {
-  return {
-    qckgffMngNo: "1",
-    lineNm: "2호선",
-    stnCd: `0${code}`,
-    stnNm: name,
-    stnNo: code,
-    crtrYmd,
-    upbdnbSe: side,
-    drtnInfo: "",
-    qckgffVhclDoorNo: door,
-    plfmCmgFac: kind,
-    facNo: null,
-    elvtrNo: null,
-    fwkPstnNm: null,
-    facPstnNm: null,
-  };
+// ponytail: getFstExit 응답 중 배치가 읽는 필드만 둔다(fast-exit.ts itemSchema).
+function fastExit(code: string, side: string, door: string, kind: string, crtrYmd = "20241231") {
+  return { lineNm: "2호선", stnCd: `0${code}`, crtrYmd, upbdnbSe: side, qckgffVhclDoorNo: door, plfmCmgFac: kind };
 }
 
 function fastExitItems(): unknown[] {
   return [
     // 시청: 정상 행
-    fastExit("201", "시청", "하행", "3-2", "계단"),
-    fastExit("201", "시청", "하행", "8-1", "에스컬레이터"),
-    fastExit("201", "시청", "상행", "4-3", "계단"),
-    fastExit("201", "시청", "상행", "6-1", "엘리베이터", "20241130"),
+    fastExit("201", "하행", "3-2", "계단"),
+    fastExit("201", "하행", "8-1", "에스컬레이터"),
+    fastExit("201", "상행", "4-3", "계단"),
+    fastExit("201", "상행", "6-1", "엘리베이터", "20241130"),
     // 을지로입구: 형식 이상·칸 수 초과 행은 걸러져야 한다.
-    fastExit("202", "을지로입구", "하행", "3-2,3-3 사이", "계단"),
-    fastExit("202", "을지로입구", "하행", "NA-NA", "계단"),
-    fastExit("202", "을지로입구", "하행", "11-1", "계단"),
-    fastExit("202", "을지로입구", "하행", "7-4", "계단"),
-    fastExit("202", "을지로입구", "상행", "4-1", "계단"),
+    fastExit("202", "하행", "3-2,3-3 사이", "계단"),
+    fastExit("202", "하행", "NA-NA", "계단"),
+    fastExit("202", "하행", "11-1", "계단"),
+    fastExit("202", "하행", "7-4", "계단"),
+    fastExit("202", "상행", "4-1", "계단"),
     // 을지로3가: 양방향 엘리베이터뿐
-    fastExit("203", "을지로3가", "하행", "3-1", "엘리베이터"),
-    fastExit("203", "을지로3가", "상행", "8-4", "엘리베이터"),
+    fastExit("203", "하행", "3-1", "엘리베이터"),
+    fastExit("203", "상행", "8-4", "엘리베이터"),
     // 을지로4가: 하행은 계단 없이 에스컬레이터·엘리베이터, 상행은 통째로 없음
-    fastExit("204", "을지로4가", "하행", "5-2", "에스컬레이터"),
-    fastExit("204", "을지로4가", "하행", "6-1", "엘리베이터"),
+    fastExit("204", "하행", "5-2", "에스컬레이터"),
+    fastExit("204", "하행", "6-1", "엘리베이터"),
     // 다른 호선은 무시
-    { ...fastExit("426", "사당", "하행", "1-1", "계단"), lineNm: "4호선" },
+    { ...fastExit("426", "하행", "1-1", "계단"), lineNm: "4호선" },
   ];
 }
 

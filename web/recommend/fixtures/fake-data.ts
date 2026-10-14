@@ -29,7 +29,6 @@ export const MISSING_SIDE: FastExitSide = { isMissing: true, isElevatorOnly: fal
 function stop(name: string): RouteStop {
   return {
     name,
-    code: name,
     // 혼잡도 75% = 칸당 120명. 좌석 54석이라 서 있는 사람이 있다.
     congestion: { down: byDay(() => flat(75)), up: byDay(() => flat(75)) },
     // 계단이 칸 1·4번에 있어 양 끝으로 고르게 내린다.

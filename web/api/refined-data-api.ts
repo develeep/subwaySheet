@@ -7,7 +7,7 @@ import { type RefinedData, refinedDataSchema } from "@shared/refined-data";
 
 export const REFINED_DATA_ENDPOINT = "/data/refined-data.json";
 
-export type RefinedDataResult = { status: "ok"; data: RefinedData } | { status: "failed" };
+type RefinedDataResult = { status: "ok"; data: RefinedData } | { status: "failed" };
 
 export async function fetchRefinedData(): Promise<RefinedDataResult> {
   try {

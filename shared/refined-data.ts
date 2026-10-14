@@ -14,8 +14,7 @@ export type DayType = (typeof DAY_TYPES)[number];
  * 방향. 노선 역 순서열의 앞→뒤가 `down`이다. 공공데이터 하행과 같고, 2호선은 하행 = 역번호 증가 = 혼잡도 내선이다
  * (프로토타입 FINDINGS, 스펙 #2 "방향 맞추기").
  */
-export const DIRECTIONS = ["down", "up"] as const;
-export type Direction = (typeof DIRECTIONS)[number];
+export type Direction = "down" | "up";
 
 /** 시간대 개수. 0 = 06시 이전, 1 = 06~07시, …, 18 = 23~24시, 19 = 24시 이후(OA-12921 열 구성). */
 export const TIME_SLOT_COUNT = 20;
@@ -44,7 +43,6 @@ const fastExitSideSchema = z.object({
 /** 노선 위의 역. 혼잡도는 칸당 정원 대비 %(OA-12928)를 1시간 시간대로 합친 값이고, 없으면 null이다. */
 const routeStopSchema = z.object({
   name: z.string().min(1),
-  code: z.string().min(1),
   congestion: z.object({ down: byDayType(slotValuesSchema).nullable(), up: byDayType(slotValuesSchema).nullable() }),
   fastExit: z.object({ down: fastExitSideSchema, up: fastExitSideSchema }),
 });
@@ -88,5 +86,4 @@ export type Route = z.infer<typeof routeSchema>;
 export type StationData = z.infer<typeof stationSchema>;
 export type Periods = z.infer<typeof periodsSchema>;
 export type RefinedData = z.infer<typeof refinedDataSchema>;
-export type SlotValues = number[];
 export type ByDayType<T> = Record<DayType, T>;

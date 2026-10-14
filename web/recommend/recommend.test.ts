@@ -57,7 +57,6 @@ describe("recommend — 노선과 방향", () => {
     const down = ok(recommend(input("가", "다"), fakeData()));
     expect(down).toMatchObject({
       direction: "down",
-      isDefaultDirection: true,
       canChangeDirection: true,
       towardStation: "나",
       stops: ["나"],
@@ -74,7 +73,6 @@ describe("recommend — 노선과 방향", () => {
     const result = ok(recommend(input("가", "다", { direction: "up" }), fakeData()));
     expect(result).toMatchObject({
       direction: "up",
-      isDefaultDirection: false,
       towardStation: "바",
       stops: ["바", "마", "라"],
       stopCount: 4,

@@ -26,7 +26,6 @@ export type RecommendSuccess = {
   route: { id: string; lineNumber: number; name: string; carCount: number };
   dayType: DayType;
   direction: Direction;
-  isDefaultDirection: boolean;
   /** 방향을 반대로 바꿀 수 있는지(순환 노선만). */
   canChangeDirection: boolean;
   /** "○○ 방면"의 ○○. 진행 방향 다음 역이다(빠른하차 drtnInfo·승강장 바닥 표기와 같다). */
@@ -68,7 +67,6 @@ export function recommend(input: RecommendInput, data: RefinedData): RecommendRe
     route: { id: route.id, lineNumber: route.lineNumber, name: route.name, carCount: route.carCount },
     dayType: input.dayType,
     direction,
-    isDefaultDirection: direction === defaultDirection,
     canChangeDirection: route.isLoop,
     towardStation: nameAt(path[1]),
     stops: path.slice(1, -1).map(nameAt),

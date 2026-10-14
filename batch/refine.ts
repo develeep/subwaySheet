@@ -66,7 +66,6 @@ export function refine(raw: RawSources, config: RefineConfig): RefinedData {
       const sides = fastExit.byStation.get(key);
       return {
         name,
-        code,
         congestion: congestion.get(key)?.congestion ?? { down: null, up: null },
         fastExit: { down: toFastExitSide(sides?.down), up: toFastExitSide(sides?.up) },
       };
