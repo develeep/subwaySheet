@@ -1,0 +1,741 @@
+<title>subwaySheet</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="tokens.css">
+<style>
+/* 레이아웃: 한 손 조작용 세로 컬럼 + 2단계 탭(구간 선택 → 칸 추천). 주요 버튼은 화면 아래 엄지 영역에 고정. */
+/* 색·크기·반경 토큰은 tokens.css (tokens.json에서 생성). 면은 선·그림자 대신 톤 단계(bg → surface → fill)로 나눈다. */
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; } /* .panel·.pending의 display:flex가 hidden 속성을 덮어쓰지 않게 */
+body {
+  margin: 0; background: var(--color-bg); color: var(--color-text);
+  font: 400 var(--text-body)/var(--leading-body) var(--font-sans);
+  padding-left: max(var(--space-4), env(safe-area-inset-left, 0px));
+  padding-right: max(var(--space-4), env(safe-area-inset-right, 0px));
+  padding-top: var(--space-3);
+  -webkit-font-smoothing: antialiased;
+  word-break: keep-all; /* 한국어를 어절 단위로 줄바꿈 */
+  text-wrap: pretty;
+}
+.app { max-width: 440px; margin: 0 auto; display: flex; flex-direction: column; gap: var(--space-3); }
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+.num { font-variant-numeric: var(--font-numeric); }
+.card { background: var(--color-surface); border-radius: var(--radius-card); padding: var(--space-4); }
+.sub { font-size: var(--text-note); color: var(--color-text-muted); }
+
+header { display: flex; align-items: center; min-height: 40px; }
+.brand { font-weight: 700; font-size: var(--text-title); letter-spacing: -0.02em; display: flex; align-items: center; gap: var(--space-2); }
+.brand svg { color: var(--color-line-current); }
+
+/* 공통 컨트롤: 테두리 없는 면 + 완전히 둥근 모서리 */
+.primary, .ghost, .chip, .choice, .swap, .back, .stop-btn, .search {
+  border: 0; border-radius: var(--radius-control);
+  transition: background-color var(--motion-fast), transform var(--motion-fast);
+}
+.primary { min-height: var(--button-primary-height); background: var(--button-primary-bg); color: var(--button-primary-text); font-weight: 700; width: 100%; display: flex; align-items: center; justify-content: center; gap: var(--space-2); }
+.primary svg { transition: translate var(--motion-base) var(--motion-ease-standard); }
+.ghost { min-height: 48px; background: var(--button-secondary-bg); font-weight: 600; width: 100%; }
+.chip { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 14px; background: var(--color-fill); }
+.ghost:hover, .chip:hover, .choice:hover, .swap:hover, .back:hover, .stop-btn:hover { background: var(--color-fill-hover); }
+
+/* 단계 탭: 선택된 탭이 직접 면을 갖는다 */
+.tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; background: var(--color-surface); border-radius: var(--radius-control); padding: 4px; }
+.tabs button { min-height: var(--touch-min); border: 0; background: transparent; border-radius: var(--radius-control); font-weight: 600; color: var(--color-text-muted);
+  transition: background-color var(--motion-base) var(--motion-ease-standard), color var(--motion-base); }
+.tabs button[aria-selected="true"] { background: var(--tab-indicator-bg); color: var(--tab-active-text); }
+
+main { view-transition-name: panel; }
+.panel { display: flex; flex-direction: column; gap: var(--space-3); }
+
+/* 히어로: 승강장 그림 + 제목. 그림은 그라디언트 없는 평면 색면 */
+.hero { padding: 0; overflow: hidden; }
+.hero svg { display: block; width: 100%; height: auto; }
+.hero-copy { padding: var(--space-4) var(--space-4) var(--space-5); }
+.hero-copy h1 { margin: 0; font-size: var(--text-headline); line-height: 1.2; letter-spacing: -0.03em; text-wrap: balance; }
+.hero-copy p { margin: var(--space-2) 0 0; }
+.ill-text { font-family: var(--font-sans); font-weight: 600; }
+
+/* 경로 입력: 왼쪽 노선 띠에 출발·도착 역이 매달린 모양 */
+.route { display: grid; grid-template-columns: 1fr auto; gap: var(--space-2) 10px; align-items: center; }
+.stops { display: grid; gap: var(--space-2); position: relative; padding-left: 24px; }
+.stops::before { content: ""; position: absolute; left: 6px; top: 28px; bottom: 28px; width: 4px; background: var(--color-line-current); border-radius: 2px; }
+.stop-btn { position: relative; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; width: 100%; min-height: 60px; padding: 4px 20px; background: var(--color-fill); text-align: left; line-height: 1.3; }
+.stop-btn::before { content: ""; position: absolute; left: -24px; top: 50%; translate: 0 -50%; width: 16px; height: 16px; border-radius: 50%; background: var(--color-surface); border: 4px solid var(--color-line-current); }
+.stop-btn small { font-size: var(--text-note); color: var(--color-text-muted); }
+.stop-btn span { font-size: var(--text-title); font-weight: 700; letter-spacing: -0.02em; }
+.swap { width: 48px; height: 48px; background: var(--color-fill); display: grid; place-items: center; }
+.swap svg { transition: rotate .35s var(--motion-ease-standard); }
+.swap.spun svg { rotate: 180deg; }
+.meta { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; padding-top: var(--space-1); }
+.meta .chip input { font: inherit; font-variant-numeric: var(--font-numeric); border: 0; background: transparent; color: inherit; padding: 0; min-width: 7.5em; }
+.ln-dot { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--color-line-current); color: var(--color-on-line); font-size: var(--text-note); font-weight: 700; font-style: normal; flex: none; }
+.line-badge { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; margin-right: var(--space-1); }
+
+.recent h2 { margin: 0 0 var(--space-3); font-size: var(--text-body); font-weight: 700; }
+.recent-list { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.recent-list .chip { min-height: var(--touch-min); font-weight: 500; }
+
+/* 하단 고정 버튼 (떠 있는 막대라 바닥 색 면만 깐다) */
+.dock { position: sticky; bottom: 0; z-index: 5; padding: var(--space-3) 0 calc(14px + env(safe-area-inset-bottom, 0px)); background: var(--color-bg); }
+
+/* 지난 추천 설문 카드: 반전된 면으로 화면에서 가장 먼저 보이게 */
+.pending { background: var(--color-text); color: var(--color-bg); display: flex; flex-direction: column; gap: var(--space-3); }
+.pending p { margin: 0; font-size: var(--text-title); font-weight: 700; line-height: 1.3; }
+.pending .sub { display: block; margin-top: var(--space-1); font-weight: 400; color: inherit; opacity: .8; }
+.pending .row { display: flex; gap: var(--space-2); }
+.pending .row > * { flex: 1; min-height: 48px; }
+.pending .ghost { background: transparent; color: inherit; }
+.pending .ghost:hover { background: color-mix(in srgb, var(--color-bg) 12%, transparent); }
+.pending .primary { background: var(--color-bg); color: var(--color-text); }
+
+/* 추천 결과: 칸 번호가 화면에서 가장 큰 것 */
+.summary { display: flex; align-items: center; gap: var(--space-3); }
+.back { width: 44px; height: 44px; background: var(--color-fill); display: grid; place-items: center; flex: none; }
+.summary strong { display: block; font-size: var(--text-body); }
+.verdict, #verdict { display: flex; flex-direction: column; gap: var(--space-4); }
+.answer { margin-top: var(--space-2); }
+.answer h1 { margin: 0; font-size: var(--text-display); line-height: var(--leading-tight); font-weight: 700; letter-spacing: -0.04em; font-variant-numeric: var(--font-numeric); }
+.grade { display: flex; align-items: center; gap: var(--space-3); margin-top: var(--space-3); font-weight: 700; }
+.pips { display: flex; gap: 4px; }
+.pips span { width: 28px; height: 8px; border-radius: 4px; background: var(--grade-pip-off); }
+.pips span.on { background: var(--grade-pip-on); }
+.reason { margin: 0; font-size: var(--text-title); line-height: 1.4; letter-spacing: -0.01em; }
+.reason em { font-style: normal; font-weight: 700; background: color-mix(in srgb, var(--color-line-current) 22%, transparent); border-radius: 4px; padding: 0 3px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.warn { background: var(--color-warn-bg); color: var(--color-warn-text); border-radius: 12px; padding: var(--space-3); display: flex; gap: var(--space-2); }
+.warn svg { flex: none; margin-top: 4px; }
+
+.sec-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-2); flex-wrap: wrap; }
+.sec-head h2 { margin: 0; font-size: var(--text-title); letter-spacing: -0.02em; }
+.sec-head span { font-size: var(--text-note); color: var(--color-text-muted); }
+
+/* 미니맵: 칸 위치 바로가기 */
+.mini { display: flex; gap: 3px; height: 36px; align-items: center; margin-top: var(--space-2); }
+.mini button { flex: 1; height: 100%; border: 0; background: none; padding: 0; display: grid; align-items: center; }
+.mini button::before { content: ""; height: 12px; border-radius: 3px; background: var(--color-fill-hover); transition: height var(--motion-base) var(--motion-ease-standard); }
+.mini button:first-child::before { border-top-left-radius: 8px; }
+.mini button.pick::before { background: var(--color-line-current); }
+.mini button[aria-current="true"]::before { height: 22px; }
+
+/* 열차 일러스트 (스크롤 가능한 승강장): 벽 → 바닥 → 점자블록을 평면 색 띠로 쌓는다 */
+.train-scroll { position: relative; margin: var(--space-1) calc(-1 * var(--space-4)) 0; padding: 66px var(--space-4) 0; overflow-x: auto; scrollbar-width: none; /* scroll-snap 금지: 진입 애니메이션 중 움직이는 칸을 따라가 스크롤이 0으로 끌려간다 */ background: var(--color-ill-wall1); }
+.train-scroll::-webkit-scrollbar { display: none; }
+.train { position: relative; display: flex; gap: 5px; width: max-content; padding-bottom: 12px; }
+.train::before { content: ""; position: absolute; left: -16px; right: -16px; top: 66px; bottom: 0; background: var(--color-ill-floor1); }
+.train::after { content: ""; position: absolute; left: -16px; right: -16px; top: 80px; height: 6px; background: var(--color-ill-tactile); pointer-events: none; }
+.car { position: relative; flex: none; width: var(--car-width); display: flex; flex-direction: column; border: 0; padding: 0; background: none; text-align: center; }
+.car + .car::before { content: ""; position: absolute; left: -5px; top: 26px; width: 5px; height: 20px; background: var(--color-ill-wheel); border-radius: 1px; }
+.cbody { position: relative; height: var(--car-body-height); border-radius: var(--radius-car) var(--radius-car) 6px 6px; display: flex; gap: 3px; padding: 8px 6px 0; background: var(--color-ill-body1); outline: 3px solid transparent; outline-offset: 2px; transition: outline-color .4s; }
+.cbody::before { content: ""; position: absolute; left: 10px; right: 2px; top: -6px; height: 6px; background: var(--color-ill-roof); border-radius: 4px 4px 0 0; transform: skewX(-40deg); transform-origin: bottom; }
+.cbody::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 6px; border-radius: 0 0 6px 6px; background: var(--color-ill-body2); }
+.car:first-child .cbody { border-top-left-radius: 28px; }
+.car:first-child .cbody::before { left: 26px; }
+.stripe { position: absolute; left: 0; right: 0; bottom: 13px; height: 5px; background: var(--color-line-current); }
+.door { position: relative; z-index: 1; flex: none; width: 13px; height: 48px; border-radius: 3px 3px 0 0; background: var(--color-ill-door); }
+.door::after { content: ""; position: absolute; top: 6px; left: 2px; right: 2px; height: 15px; border-radius: 2px; background: var(--color-ill-glass1); }
+.win { position: relative; flex: 1; height: 25px; margin-top: 4px; border-radius: 4px; overflow: hidden; display: flex; align-items: flex-end; justify-content: center; gap: 2px; background: var(--color-ill-cabin1); }
+.win i { width: 7px; height: 12px; border-radius: 4px 4px 1px 1px; background: var(--color-ill-head); transition: opacity .45s, translate .45s; }
+.win i.gone { opacity: 0; translate: 0 8px; }
+.bogie { display: flex; justify-content: space-between; height: 7px; margin: -1px 16px 0; }
+.bogie i { width: 26px; border-radius: 4px; background: var(--color-ill-wheel); }
+.marks { position: relative; z-index: 1; display: flex; justify-content: space-between; padding: 0 6px; margin-top: 4px; }
+.marks span { width: 13px; height: 4px; border-radius: 2px; background: var(--color-ill-mark); }
+.label { position: relative; z-index: 1; margin-top: 14px; display: flex; align-items: center; justify-content: center; gap: 6px; }
+.label b { font-size: var(--text-body); font-weight: 700; font-variant-numeric: var(--font-numeric); min-width: 32px; padding: 4px 8px; border-radius: var(--radius-control); color: var(--color-text); transition: background-color var(--motion-base), color var(--motion-base); }
+.dots { display: flex; gap: 2px; }
+.dots span { width: 6px; height: 6px; border-radius: 50%; background: color-mix(in srgb, var(--color-text) 22%, transparent); }
+.dots span.on { background: var(--color-text); }
+.car[aria-pressed="true"] .label b { background: var(--color-text); color: var(--color-surface); }
+.car:hover .cbody { outline-color: color-mix(in srgb, var(--color-text) 25%, transparent); }
+
+.car.pick .cbody { outline-color: var(--car-pick-ring); }
+.car.pick .marks span { background: var(--color-line-current); }
+.pin { position: absolute; top: -60px; left: 50%; translate: -50% 0; display: flex; align-items: center; gap: 4px; white-space: nowrap; z-index: 2;
+  background: var(--car-pin-bg); color: var(--car-pin-text); font-size: var(--text-note); font-weight: 700; padding: 6px 12px; border-radius: var(--radius-control); }
+.pin::after { content: ""; position: absolute; bottom: -5px; left: 50%; translate: -50% 0; border: 5px solid transparent; border-bottom: 0; border-top-color: var(--car-pin-bg); }
+.pin svg { color: var(--color-line-current); }
+.chairs { position: absolute; top: -26px; left: 0; right: 0; display: flex; justify-content: center; gap: 3px; color: var(--color-line-current); height: 18px; }
+.walker { position: absolute; top: 22px; z-index: 3; color: var(--color-text); pointer-events: none; }
+
+.car-info { margin: var(--space-4) 0 0; min-height: 3.1em; }
+.car-info b { font-variant-numeric: var(--font-numeric); }
+
+/* 구간 따라가 보기 */
+.journey { display: grid; grid-template-columns: 56px 1fr; gap: var(--space-3); align-items: center; margin-top: var(--space-3); }
+.play { width: 56px; height: 56px; border-radius: 50%; border: 0; background: var(--color-line-current); color: var(--color-on-line); display: grid; place-items: center; transition: transform var(--motion-fast); }
+.scrub { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.scrub label { font-weight: 700; }
+.scrub small { font-size: var(--text-note); color: var(--color-text-muted); min-height: 1.5em; }
+.scrub input { width: 100%; accent-color: var(--color-line-current); height: 28px; margin: 0; }
+
+.foot { font-size: var(--text-note); color: var(--color-text-muted); margin: var(--space-2) 0 0; }
+.foot button { background: none; border: 0; padding: 0; text-decoration: underline; text-underline-offset: 3px; color: var(--color-text); font-size: inherit; min-height: var(--touch-min); }
+
+/* 바텀시트 */
+dialog { width: 100%; max-width: 440px; margin: auto auto 0; border: 0; padding: 0; border-radius: var(--radius-sheet) var(--radius-sheet) 0 0; background: var(--color-surface); color: var(--color-text); max-height: 85dvh; }
+dialog::backdrop { background: rgb(0 0 0 / 0.45); }
+.sheet { padding: var(--space-3) var(--space-4) calc(20px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; gap: var(--space-4); }
+.grab { width: 40px; height: 4px; border-radius: 2px; background: var(--color-fill-hover); margin: 0 auto; }
+.sheet h2 { margin: 0; font-size: var(--text-headline); line-height: 1.2; letter-spacing: -0.03em; text-wrap: balance; }
+.progress { display: flex; gap: 4px; }
+.progress span { flex: 1; height: 6px; border-radius: 3px; background: var(--color-fill-hover); }
+.progress span.on { background: var(--color-text); }
+.choices { display: grid; gap: var(--space-2); }
+.choices.cols { grid-template-columns: repeat(2, 1fr); }
+.choice { min-height: 56px; background: var(--color-fill); font-weight: 600; text-align: left; padding: 0 20px; }
+.search { width: 100%; min-height: 52px; font: inherit; padding: 0 20px; background: var(--color-fill); color: var(--color-text); }
+.hint { font-size: var(--text-note); color: var(--color-text-muted); margin: calc(-1 * var(--space-2)) 0 0; }
+.list { list-style: none; margin: 0; padding: 0; overflow-y: auto; max-height: 50dvh; display: grid; gap: 2px; }
+.list button { width: 100%; min-height: 52px; display: flex; align-items: center; gap: var(--space-3); border: 0; border-radius: 12px; background: transparent; text-align: left; padding: 0 var(--space-2); }
+.list button:hover { background: var(--color-fill); }
+.list mark { background: none; color: inherit; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+.empty { padding: var(--space-4) var(--space-1); color: var(--color-text-muted); }
+
+/* 움직임: 줄이기 설정이면 이동은 끄고 내용은 그대로 */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-train { transform-box: view-box; transform-origin: 245px 140px; animation: approach var(--motion-arrive) var(--motion-ease-arrive) both; }
+  .glow { animation: flicker 2.6s ease-in-out infinite; }
+  .beam { animation: beam 2.6s ease-in-out infinite; }
+  .marker { transform-box: fill-box; transform-origin: center; animation: pulse 1.8s ease-out infinite; }
+  .bubble { animation: bob 3s ease-in-out infinite, fadein .5s 1.4s both; }
+  .pin { animation: drop .5s 1.4s var(--motion-ease-spring) both, bobx 2.4s 2s ease-in-out infinite; }
+  .car.pick .marks span { animation: blink 1.6s 1.4s ease-in-out infinite; }
+  .pips span.on { transform-origin: left; animation: pip .3s calc(var(--i) * .15s + .4s) var(--motion-ease-standard) both; }
+  .chairs svg.pop { animation: pop .45s var(--motion-ease-spring) both; }
+  .rise { animation: rise .5s var(--motion-ease-arrive) both; animation-delay: calc(var(--d, 0) * 80ms); }
+  .primary:active, .choice:active, .chip:active, .ghost:active, .play:active, .swap:active, .back:active { transform: scale(0.97); }
+  .primary:hover svg { translate: 3px 0; }
+  ::view-transition-old(panel) { animation: var(--motion-slide) var(--motion-ease-standard) both slide-out; }
+  ::view-transition-new(panel) { animation: var(--motion-slide) var(--motion-ease-standard) both slide-in; }
+  html[data-dir="back"]::view-transition-old(panel) { animation-name: slide-out-back; }
+  html[data-dir="back"]::view-transition-new(panel) { animation-name: slide-in-back; }
+}
+@keyframes approach { from { transform: scale(.3); opacity: 0; } 25% { opacity: 1; } }
+@keyframes flicker { 50% { opacity: .55; } }
+@keyframes beam { 50% { opacity: .5; } }
+@keyframes pulse { 0% { transform: scale(.8); opacity: .9; } 100% { transform: scale(1.5); opacity: 0; } }
+@keyframes bob { 50% { translate: 0 -4px; } }
+@keyframes bobx { 50% { translate: -50% -4px; } }
+@keyframes fadein { from { opacity: 0; } }
+@keyframes drop { from { translate: -50% -30px; opacity: 0; } }
+@keyframes blink { 50% { opacity: .35; } }
+@keyframes pip { from { transform: scaleX(.3); opacity: 0; } }
+@keyframes pop { from { transform: scale(.6) translateY(8px); opacity: 0; } }
+@keyframes rise { from { transform: translateY(20px); opacity: 0; } }
+@keyframes slide-out { to { transform: translateX(-24%); opacity: 0; } }
+@keyframes slide-in { from { transform: translateX(24%); opacity: 0; } }
+@keyframes slide-out-back { to { transform: translateX(24%); opacity: 0; } }
+@keyframes slide-in-back { from { transform: translateX(-24%); opacity: 0; } }
+</style>
+
+<div class="app">
+  <header>
+    <div class="brand">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><rect x="4" y="3" width="16" height="14" rx="3"/><path d="M4 11h16M8 21l2-4M16 21l-2-4"/></svg>
+      subwaySheet
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist" id="tabs" data-at="route" aria-label="단계">
+    <button role="tab" id="tab-route" aria-selected="true" aria-controls="panel-route" type="button">구간 선택</button>
+    <button role="tab" id="tab-rec" aria-selected="false" aria-controls="panel-rec" type="button">칸 추천</button>
+  </nav>
+
+  <main>
+    <!-- 1단계: 구간 선택 -->
+    <section class="panel" id="panel-route" role="tabpanel" aria-labelledby="tab-route">
+      <section class="card pending" id="pending" hidden aria-labelledby="pending-q">
+        <p id="pending-q">지난 추천, 앉아서 가셨나요?<span id="pending-route" class="sub"></span></p>
+        <div class="row">
+          <button class="ghost" id="pending-skip" type="button">건너뛰기</button>
+          <button class="primary" id="pending-go" type="button">답하기 (3문항)</button>
+        </div>
+      </section>
+
+      <section class="card hero">
+        <svg viewBox="0 0 360 200" role="img" aria-label="승강장으로 들어오는 열차와 탑승 위치에서 기다리는 사람">
+          <rect width="360" height="140" fill="var(--color-ill-wall1)"/>
+          <rect y="92" width="360" height="48" fill="var(--color-ill-wall2)"/>
+          <g>
+            <rect x="18" y="20" width="118" height="32" rx="7" fill="var(--color-ill-sign)"/>
+            <circle cx="36" cy="36" r="9" fill="var(--color-line-current)"/>
+            <text id="ill-line" x="36" y="40" text-anchor="middle" font-size="11" fill="var(--color-on-line)" class="ill-text">2</text>
+            <text id="ill-dir" x="52" y="40.5" font-size="11.5" fill="var(--color-on-line)" class="ill-text">강남 방면</text>
+          </g>
+          <path d="M190 140V88a55 55 0 0 1 110 0v52z" fill="var(--color-ill-tunnel-edge)"/>
+          <path d="M200 140V90a45 45 0 0 1 90 0v50z" fill="var(--color-ill-tunnel-core)"/>
+          <rect y="140" width="360" height="60" fill="var(--color-ill-floor1)"/>
+          <path d="M190 140h110l60 60H130z" fill="var(--color-ill-track)"/>
+          <path d="M210 152h70M200 168h92M188 186h116" stroke="#000" stroke-opacity=".25" stroke-width="3"/>
+          <path d="M216 140l-38 60M274 140l38 60" stroke="var(--color-ill-rail)" stroke-width="3"/>
+          <path d="M0 140h190l-60 60H0z" fill="var(--color-ill-floor1)"/>
+          <path d="M176 140h10l-60 60h-14z" fill="var(--color-ill-tactile)"/>
+          <g class="hero-train">
+            <ellipse cx="245" cy="142" rx="52" ry="5" fill="#000" fill-opacity=".35"/>
+            <path class="beam" d="M222 128 172 200h56z" fill="var(--color-ill-headlight)" fill-opacity=".22"/>
+            <path class="beam" d="M268 128 262 200h56z" fill="var(--color-ill-headlight)" fill-opacity=".22"/>
+            <rect x="200" y="52" width="90" height="88" rx="20" fill="var(--color-ill-body1)"/>
+            <rect x="200" y="52" width="12" height="88" rx="6" fill="var(--color-ill-body2)"/>
+            <rect x="278" y="52" width="12" height="88" rx="6" fill="var(--color-ill-body2)"/>
+            <rect x="207" y="55" width="76" height="5" rx="2.5" fill="var(--color-on-line)" fill-opacity=".55"/>
+            <rect x="208" y="65" width="74" height="37" rx="9" fill="var(--color-ill-glass1)"/>
+            <path d="M222 65h16l-20 37h-10z" fill="var(--color-on-line)" fill-opacity=".12"/>
+            <rect x="221" y="69" width="48" height="12" rx="2" fill="var(--color-ill-led-bg)"/>
+            <text id="ill-sign" x="245" y="78" text-anchor="middle" font-size="8" fill="var(--color-ill-led)" class="ill-text">강남</text>
+            <rect x="200" y="108" width="90" height="7" fill="var(--color-line-current)"/>
+            <circle class="glow" cx="216" cy="124" r="11" fill="var(--color-ill-headlight)" fill-opacity=".35"/>
+            <circle class="glow" cx="274" cy="124" r="11" fill="var(--color-ill-headlight)" fill-opacity=".35"/>
+            <circle cx="216" cy="124" r="4.5" fill="var(--color-ill-bulb)"/>
+            <circle cx="274" cy="124" r="4.5" fill="var(--color-ill-bulb)"/>
+            <rect x="211" y="132" width="68" height="6" rx="3" fill="var(--color-ill-wheel)"/>
+          </g>
+          <ellipse class="marker" cx="72" cy="186" rx="24" ry="6" fill="var(--color-line-current)" fill-opacity=".45"/>
+          <ellipse cx="72" cy="186" rx="17" ry="4" fill="var(--color-line-current)" fill-opacity=".7"/>
+          <g>
+            <rect x="64" y="158" width="6" height="27" rx="3" fill="var(--color-ill-pants)"/>
+            <rect x="74" y="158" width="6" height="27" rx="3" fill="var(--color-ill-pants)"/>
+            <rect x="59" y="126" width="26" height="38" rx="10" fill="var(--color-ill-shirt)"/>
+            <path d="M62 130l18 26" stroke="var(--color-ill-pants)" stroke-width="2.5" stroke-linecap="round"/>
+            <rect x="80" y="132" width="6" height="18" rx="3" fill="var(--color-ill-shirt)" transform="rotate(-35 83 141)"/>
+            <rect x="85" y="124" width="8" height="12" rx="1.8" fill="var(--color-ill-wheel)"/>
+            <rect x="86.5" y="125.5" width="5" height="8" rx="1" fill="var(--color-line-current)" fill-opacity=".8"/>
+            <circle cx="72" cy="115" r="10" fill="var(--color-ill-skin)"/>
+            <path d="M62 114a10 10 0 0 1 20 0q-5-4-10-3.5T62 114z" fill="var(--color-ill-hair)"/>
+          </g>
+          <g class="bubble">
+            <rect x="92" y="80" width="88" height="28" rx="14" fill="var(--color-surface)"/>
+            <path d="M100 104l-8 10 14-6z" fill="var(--color-surface)"/>
+            <path d="M104 87h3v8h7a2 2 0 0 1 2 2v1.5h-2V102h-1.8v-3.5H107V102h-1.8v-3.5H103V89a2 2 0 0 1 1-2z" fill="var(--color-line-current)"/>
+            <text x="121" y="98" font-size="11" fill="var(--color-text)" class="ill-text">곧 자리 날 칸</text>
+          </g>
+        </svg>
+        <div class="hero-copy">
+          <h1>덜 붐비는 칸 말고, 곧 자리가 나는 칸</h1>
+          <p>내 구간에서 많이 내리는 역과 그 역의 빠른하차 칸으로 계산해요.</p>
+        </div>
+      </section>
+
+      <section class="card route" aria-label="경로">
+        <div class="stops">
+          <button class="stop-btn" id="from-btn" type="button"><small>출발</small><span id="from-name"></span></button>
+          <button class="stop-btn" id="to-btn" type="button"><small>도착</small><span id="to-name"></span></button>
+        </div>
+        <button class="swap" id="swap" type="button" aria-label="출발역과 도착역 바꾸기">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4v16M3 8l4-4 4 4M17 20V4M13 16l4 4 4-4"/></svg>
+        </button>
+        <div class="meta">
+          <span class="line-badge" id="line-badge"></span>
+          <label class="chip" for="time">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            평일 <input id="time" type="time" step="1800" aria-label="출발 시각">
+          </label>
+        </div>
+      </section>
+
+      <section class="card recent">
+        <h2 id="recent-title">예시 구간</h2>
+        <div class="recent-list" id="recent"></div>
+      </section>
+
+      <div class="dock">
+        <button class="primary" id="find" type="button">앉을 칸 찾기
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- 2단계: 칸 추천 -->
+    <section class="panel" id="panel-rec" role="tabpanel" aria-labelledby="tab-rec" hidden>
+      <section class="card verdict" aria-live="polite">
+        <div class="summary">
+          <button class="back" id="back" type="button" aria-label="구간 다시 고르기">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+          </button>
+          <div><strong id="sum-route"></strong><span class="sub" id="sum-meta"></span></div>
+        </div>
+        <div id="verdict"></div>
+      </section>
+
+      <section class="card">
+        <div class="sec-head"><h2>열차 칸</h2><span id="train-meta"></span></div>
+        <div class="mini" id="mini" aria-label="칸 위치로 이동"></div>
+        <div class="train-scroll" id="scroller">
+          <div class="train" id="train"></div>
+        </div>
+        <p class="car-info" id="car-info" aria-live="polite"></p>
+      </section>
+
+      <section class="card">
+        <div class="sec-head"><h2>구간 따라가 보기</h2><span>역마다 내리는 사람</span></div>
+        <div class="journey">
+          <button class="play" id="play" type="button" aria-label="재생"></button>
+          <div class="scrub">
+            <label for="stop-range" id="stop-label"></label>
+            <input type="range" id="stop-range" min="0" max="1" step="1" value="0">
+            <small id="stop-sub"></small>
+          </div>
+        </div>
+      </section>
+
+      <p class="foot">예시 데이터로 계산한 화면입니다. 실제 서비스는 서울교통공사 공공데이터(승하차·혼잡도·빠른하차)를 매월 다시 계산하고, 이 자리에 기준 월을 적습니다.
+        <br><button type="button" id="demo-pending">다음 방문 설문 카드 미리보기</button></p>
+
+      <div class="dock">
+        <button class="primary" id="arrived" type="button">도착했어요</button>
+      </div>
+    </section>
+  </main>
+</div>
+
+<dialog id="picker" aria-labelledby="picker-title">
+  <form method="dialog" class="sheet">
+    <div class="grab"></div>
+    <h2 id="picker-title">출발역</h2>
+    <input class="search" id="q" type="search" placeholder="역 이름 검색" autocomplete="off" aria-label="역 이름 검색">
+    <p class="hint" id="picker-hint"></p>
+    <ul class="list" id="list" aria-label="역 목록"></ul>
+  </form>
+</dialog>
+
+<dialog id="survey" aria-labelledby="survey-title">
+  <div class="sheet" id="survey-body"></div>
+</dialog>
+
+<script>
+// 예시 데이터. 실제로는 월별 배치로 만든 칸 점수 표(정적 JSON)를 읽는다.
+const LINES = {
+  2: { cars: 10, loop: true, names: ["시청","을지로입구","을지로3가","을지로4가","동대문역사문화공원","신당","상왕십리","왕십리","한양대","뚝섬","성수","건대입구","구의","강변","잠실나루","잠실","잠실새내","종합운동장","삼성","선릉","역삼","강남","교대","서초","방배","사당","낙성대","서울대입구","봉천","신림","신대방","구로디지털단지","대림","신도림","문래","영등포구청","당산","합정","홍대입구","신촌","이대","아현","충정로"] },
+  7: { cars: 8, loop: false, names: ["장암","도봉산","수락산","마들","노원","중계","하계","공릉","태릉입구","먹골","중화","상봉","면목","사가정","용마산","중곡","군자","어린이대공원","건대입구","뚝섬유원지","청담","강남구청","학동","논현","반포","고속터미널","내방","이수","남성","숭실대입구","상도","장승배기","신대방삼거리","보라매","신풍","대림","남구로","가산디지털단지","철산","광명사거리","천왕","온수"] },
+};
+// 하차 규모(1=보통). T가 붙은 역은 환승역이라 "환승통로" 이유를 붙인다.
+const BIG = { 강남:9, 신도림:"8T", 잠실:"8T", 홍대입구:"7T", 사당:"7T", 교대:"6T", 선릉:"6T", 삼성:5, 역삼:6, 을지로입구:5, 시청:"5T", 왕십리:"6T", 건대입구:"6T", 구로디지털단지:6, 신림:5, 서울대입구:4, 합정:"4T", 당산:"4T", 영등포구청:"4T", 대림:"4T", 동대문역사문화공원:"5T", 고속터미널:"8T", 가산디지털단지:"7T", 노원:"6T", 군자:"5T", 이수:"5T", 강남구청:"4T", 논현:4, 상봉:"4T", 태릉입구:"4T", 온수:"3T", 반포:3, 성수:4, 을지로3가:"3T", 충정로:"3T", 신당:"3T", 도봉산:"3T" };
+const EXAMPLES = [[2, "신도림", "강남"], [7, "노원", "고속터미널"], [2, "홍대입구", "잠실"]];
+const GR = ["", "낮음", "보통", "높음"];
+const CHAIR = `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 3h3v9h8a2 2 0 0 1 2 2v2h-2v5h-2v-5H9v5H7v-5H5V5a2 2 0 0 1 1-2z"/></svg>`;
+const WALKER = `<svg width="10" height="18" viewBox="0 0 10 18" fill="currentColor" aria-hidden="true"><circle cx="5" cy="3" r="2.7"/><rect x="2" y="6.5" width="6" height="11" rx="3"/></svg>`;
+const ICON_PLAY = `<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>`;
+const ICON_PAUSE = `<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>`;
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+const big = n => { const v = BIG[n]; return v ? { a: parseInt(v), t: String(v).endsWith("T") } : { a: 1, t: false }; };
+const hash = s => [...s].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7);
+const exitCar = (name, dir, cars) => (hash(name + dir) % cars) + 1;
+const kernel = (c, e) => Math.exp(-((c - e) ** 2) / 2);
+const range = n => Array.from({ length: n }, (_, i) => i);
+const carEls = () => [...$("train").querySelectorAll(".car")];
+
+function trip(line, from, to) {
+  const L = LINES[line], n = L.names.length;
+  const i = L.names.indexOf(from), j = L.names.indexOf(to);
+  let step = j > i ? 1 : -1, len = Math.abs(j - i);
+  if (L.loop) { const fwd = (j - i + n) % n; step = fwd <= n / 2 ? 1 : -1; len = step > 0 ? fwd : n - fwd; }
+  const path = range(len).map(k => L.names[((i + step * (k + 1)) % n + n) % n]);
+  const dirLabel = L.loop ? (step > 0 ? "내선순환" : "외선순환") : `${step > 0 ? L.names.at(-1) : L.names[0]} 방면`;
+  return { path, dir: step > 0 ? "f" : "b", dirLabel };
+}
+
+// 칸 점수 = Σ(중간 역 하차 × 앞쪽 가중치 × 빠른하차 칸 근접도) − 출발역 동반 승차
+function score(line, from, to, hour) {
+  const cars = LINES[line].cars, { path, dir, dirLabel } = trip(line, from, to);
+  const steps = path.slice(0, -1).map((st, k) => {
+    const w = 1 / (1 + 0.25 * k), { a } = big(st), e = exitCar(st, dir, cars);
+    return { st, k, e, vals: range(cars).map(c => w * a * kernel(c + 1, e)) };
+  });
+  const cum = [Array(cars).fill(0)];
+  steps.forEach(s => cum.push(cum.at(-1).map((v, c) => v + s.vals[c])));
+  const freedMax = Math.max(...cum.at(-1)) || 1;
+  const o = big(from), oe = exitCar(from, "in", cars);
+  const s = cum.at(-1).map((v, c) => v - 0.5 * o.a * kernel(c + 1, oe));
+  const order = range(cars).sort((a, b) => s[b] - s[a]);
+  const top = Math.max(s[order[0]], 0.01);
+  const picks = [order[0] + 1];
+  if (s[order[1]] >= top * 0.85) picks.push(order[1] + 1);
+  const peak = (hour >= 7 && hour < 9) || (hour >= 18 && hour < 20);
+  let lvl = top > 5 ? 3 : top > 2.2 ? 2 : 1;
+  if (peak) lvl = Math.max(1, lvl - 1);
+  const levels = s.map(v => (v >= top * 0.85 ? 3 : v >= top * 0.45 ? 2 : 1));
+  const crowdedAtStart = range(cars).map(c => kernel(c + 1, oe) > 0.5);
+  const heads = range(cars).map(c => 4 + (crowdedAtStart[c] ? 2 : hash(from + c) % 2));
+  const whyFor = c => steps.map(x => ({ ...x, v: x.vals[c - 1] })).sort((a, b) => b.v - a.v).filter(x => x.v > 0.4).slice(0, 3);
+  return { cars, picks: picks.sort((a, b) => a - b), lvl, peak, steps, cum, freedMax, levels, heads, crowdedAtStart, whyFor, path, dirLabel, short: steps.length < 2 };
+}
+
+const store = { get(k) { try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } },
+                set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} } };
+const $ = id => document.getElementById(id);
+function nowHHMM() { const d = new Date(); d.setMinutes(d.getMinutes() < 30 ? 0 : 30); return d.toTimeString().slice(0, 5); }
+
+let state = { line: 2, from: "신도림", to: "강남", time: nowHHMM() };
+let lastRec = null, R = null, stepAt = 0, playTimer = null;
+
+/* ---------- 1단계: 구간 선택 ---------- */
+function renderRoute() {
+  document.documentElement.className = `line${state.line}`;
+  $("from-name").textContent = state.from + "역";
+  $("to-name").textContent = state.to + "역";
+  const { dirLabel } = trip(state.line, state.from, state.to);
+  $("line-badge").innerHTML = `<i class="ln-dot">${state.line}</i>${state.line}호선 · ${dirLabel}`;
+  $("ill-line").textContent = state.line;
+  $("ill-dir").textContent = `${state.to} 방면`;
+  $("ill-sign").textContent = state.to.length > 4 ? state.to.slice(0, 4) : state.to;
+  const recent = store.get("recent");
+  $("recent-title").textContent = recent?.length ? "최근 구간" : "예시 구간";
+  $("recent").innerHTML = (recent?.length ? recent : EXAMPLES).map(([ln, f, t], i) =>
+    `<button class="chip" type="button" data-i="${i}"><i class="ln-dot" style="background:var(--color-line-${ln})">${ln}</i>${f} → ${t}</button>`).join("");
+  $("recent").onclick = e => {
+    const b = e.target.closest("button[data-i]"); if (!b) return;
+    const [line, from, to] = (recent?.length ? recent : EXAMPLES)[+b.dataset.i];
+    state = { ...state, line, from, to }; renderRoute(); findSeat();
+  };
+}
+
+/* ---------- 탭 전환 (View Transitions API, 미지원이면 즉시 전환) ---------- */
+let current = "route";
+function go(tab, before, after) {
+  const swap = () => {
+    before?.();
+    current = tab;
+    $("panel-route").hidden = tab !== "route";
+    $("panel-rec").hidden = tab !== "rec";
+    $("tab-route").setAttribute("aria-selected", tab === "route");
+    $("tab-rec").setAttribute("aria-selected", tab === "rec");
+    $("tabs").dataset.at = tab;
+    scrollTo(0, 0);
+  };
+  document.documentElement.dataset.dir = tab === "rec" ? "fwd" : "back";
+  if (document.startViewTransition && !reduced) document.startViewTransition(swap).finished.then(() => after?.());
+  else { swap(); after?.(); }
+}
+
+function findSeat() {
+  const recent = (store.get("recent") || []).filter(([l, f, t]) => !(l === state.line && f === state.from && t === state.to));
+  store.set("recent", [[state.line, state.from, state.to], ...recent].slice(0, 3));
+  go("rec", renderRec, arrive);
+}
+
+/* ---------- 2단계: 칸 추천 ---------- */
+function renderRec() {
+  stopPlay();
+  R = score(state.line, state.from, state.to, parseInt(state.time));
+  const carTxt = R.picks.join("·");
+  const lead = R.whyFor(R.picks[0])[0];
+  $("sum-route").textContent = `${state.from} → ${state.to}`;
+  $("sum-meta").textContent = `${state.line}호선 ${R.dirLabel} · 평일 ${state.time} · ${R.path.length}정거장`;
+  const reason = lead
+    ? `<em>${lead.k + 1}정거장 뒤 ${lead.st}역</em>에서 이 칸 근처로 많이 내려요${big(lead.st).t ? " (환승통로와 가까운 칸)" : ""}.`
+    : "구간 안에 많이 내리는 역이 없어요. 어느 칸이든 비슷해요.";
+  const warn = R.peak
+    ? `<div class="warn" role="note"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3 2 21h20L12 3zM12 10v5M12 18h.01"/></svg><span>출퇴근 피크 시간이라 어느 칸도 앉기 어려워요. 등급을 한 단계 낮춰 보여드려요.</span></div>`
+    : R.short ? `<div class="warn" role="note"><span>구간이 짧아 추천 근거가 적어요.</span></div>` : "";
+  $("verdict").innerHTML = `
+    <div class="answer rise">
+      <h1>${carTxt}번째 칸</h1>
+      <div class="grade">
+        <div class="pips" aria-hidden="true">${[1, 2, 3].map(n => `<span class="${n <= R.lvl ? "on" : ""}" style="--i:${n}"></span>`).join("")}</div>
+        <span>앉을 가능성 ${GR[R.lvl]}</span>
+      </div>
+    </div>
+    <p class="reason rise" style="--d:1">${reason}</p>${warn}`;
+  $("train-meta").textContent = `${R.cars}량 · 왼쪽이 진행 방향 맨 앞`;
+  $("mini").innerHTML = range(R.cars).map(i => `<button type="button" data-c="${i + 1}" class="${R.picks.includes(i + 1) ? "pick" : ""}" aria-label="${i + 1}번째 칸 보기"></button>`).join("");
+  $("train").innerHTML = range(R.cars).map(i => carHTML(i + 1)).join("");
+  if (!reduced) $("train").style.transform = "translateX(70%)";
+  selectCar(R.picks[0], false);
+  const M = R.steps.length;
+  $("stop-range").max = Math.max(M, 1);
+  $("stop-range").disabled = M === 0;
+  setStep(reduced ? M : 0, false);
+  lastRec = { line: state.line, from: state.from, to: state.to, picks: R.picks, at: Date.now(), answered: false };
+  store.set("lastRec", lastRec);
+}
+
+function carHTML(c) {
+  const pick = R.picks.includes(c), lvl = R.levels[c - 1];
+  const win = w => `<span class="win">${[0, 1].map(j => `<i data-h="${w * 2 + j}"></i>`).join("")}</span>`;
+  return `<button class="car${pick ? " pick" : ""}" type="button" data-c="${c}" aria-pressed="false" aria-label="${c}번째 칸, 가능성 ${GR[lvl]}${pick ? ", 추천" : ""}">
+    ${pick ? `<span class="pin">${CHAIR}여기 타세요</span>` : ""}
+    <span class="chairs" aria-hidden="true"></span>
+    <span class="cbody" aria-hidden="true"><span class="door"></span>${win(0)}<span class="door"></span>${win(1)}<span class="door"></span>${win(2)}<span class="door"></span><span class="stripe"></span></span>
+    <span class="bogie" aria-hidden="true"><i></i><i></i></span>
+    <span class="marks" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+    <span class="label"><b>${c}</b><span class="dots" aria-hidden="true">${[1, 2, 3].map(n => `<span class="${n <= lvl ? "on" : ""}"></span>`).join("")}</span></span>
+  </button>`;
+}
+
+function centerOn(cs, smooth) {
+  const cars = cs.map(c => carEls()[c - 1]);
+  const mid = (cars[0].offsetLeft + cars.at(-1).offsetLeft + cars.at(-1).offsetWidth) / 2;
+  $("scroller").scrollTo({ left: mid + 16 - $("scroller").clientWidth / 2, behavior: smooth && !reduced ? "smooth" : "auto" });
+}
+
+function selectCar(c, scroll = true) {
+  carEls().forEach(el => el.setAttribute("aria-pressed", +el.dataset.c === c));
+  [...$("mini").children].forEach(el => el.setAttribute("aria-current", +el.dataset.c === c));
+  if (scroll) centerOn([c], true);
+  const why = R.whyFor(c)[0];
+  const lvl = R.levels[c - 1];
+  let txt;
+  if (R.picks.includes(c)) txt = `<b>${c}</b>번째 칸은 추천 칸이에요. ${why ? `${why.st}역에서 이 칸 근처로 많이 내려요.` : ""}`;
+  else if (why) txt = `<b>${c}</b>번째 칸은 가능성 ${GR[lvl]}. ${why.st}역에서 내리는 사람이 ${lvl > 1 ? "꽤" : "조금"} 있지만 추천 칸보다 적어요.`;
+  else txt = `<b>${c}</b>번째 칸은 가능성 낮음. 내 구간에서 이 칸 근처로 내리는 사람이 적어요.`;
+  if (R.crowdedAtStart[c - 1]) txt += ` ${state.from}역에서 이 칸으로 함께 타는 사람이 많아요.`;
+  $("car-info").innerHTML = txt;
+}
+
+// 구간 재생: k번째 역까지 내린 사람만큼 창문 속 사람이 줄고, 칸 위에 빈자리 아이콘이 생긴다
+function setStep(k, animate) {
+  const prev = stepAt; stepAt = k;
+  $("stop-range").value = k;
+  const M = R.steps.length;
+  if (M === 0) { $("stop-label").textContent = "중간 역이 없어요"; $("stop-sub").textContent = "바로 다음 역이 도착역이에요."; }
+  else if (k === 0) { $("stop-label").textContent = `${state.from}역 출발`; $("stop-sub").textContent = "재생하면 역마다 내리는 사람을 보여드려요."; }
+  else {
+    const s = R.steps[k - 1];
+    $("stop-label").textContent = `${k}정거장 · ${s.st}역`;
+    $("stop-sub").textContent = big(s.st).a >= 4 ? `${s.e}번째 칸 근처로 많이 내려요${big(s.st).t ? " (환승)" : ""}` : "내리는 사람이 적은 역이에요";
+  }
+  if (k === M && M > 0) $("stop-sub").textContent += ` · 도착 전까지 자리가 가장 많이 나는 칸: ${R.picks.join("·")}번째`;
+  carEls().forEach((car, i) => {
+    const freed = R.cum[k][i] / R.freedMax;
+    const gone = Math.min(R.heads[i], Math.round(freed * 5));
+    car.querySelectorAll(".win i").forEach(h => {
+      const j = +h.dataset.h;
+      h.hidden = j >= R.heads[i];
+      h.classList.toggle("gone", j >= R.heads[i] - gone);
+    });
+    const chairs = car.querySelector(".chairs"), want = Math.round(freed * 3), have = chairs.children.length;
+    if (want < have) chairs.replaceChildren(...[...chairs.children].slice(0, want));
+    for (let n = have; n < want; n++) { chairs.insertAdjacentHTML("beforeend", CHAIR); chairs.lastElementChild.classList.toggle("pop", animate); }
+  });
+  if (animate && k === prev + 1 && !reduced) spawnWalkers(R.steps[k - 1]);
+}
+
+function spawnWalkers(step) {
+  const train = $("train"), tr = train.getBoundingClientRect();
+  carEls().forEach((car, i) => {
+    const n = Math.min(3, Math.round(step.vals[i] / 2));
+    const doors = car.querySelectorAll(".door");
+    for (let m = 0; m < n; m++) {
+      const d = doors[(m + i) % doors.length].getBoundingClientRect();
+      const el = document.createElement("span");
+      el.className = "walker"; el.innerHTML = WALKER;
+      el.style.left = `${d.left - tr.left + 1}px`;
+      train.append(el);
+      el.animate([{ transform: "translate(0,0)", opacity: 0 }, { opacity: 1, offset: 0.2 }, { transform: `translate(${(m - 1) * 10}px, 44px)`, opacity: 0 }],
+        { duration: 1100, delay: m * 140, easing: "cubic-bezier(.4,0,.6,1)", fill: "both" }).finished.then(() => el.remove());
+    }
+  });
+}
+
+function stopPlay() { clearTimeout(playTimer); playTimer = null; $("play").innerHTML = ICON_PLAY; $("play").setAttribute("aria-label", "재생"); }
+function play() {
+  const M = R.steps.length; if (!M) return;
+  if (stepAt >= M) setStep(0, false);
+  $("play").innerHTML = ICON_PAUSE; $("play").setAttribute("aria-label", "일시정지");
+  const tick = () => {
+    if (stepAt >= M) return stopPlay();
+    setStep(stepAt + 1, true);
+    playTimer = setTimeout(tick, 900);
+  };
+  playTimer = setTimeout(tick, 300);
+}
+
+// 열차 진입: 감속하며 들어오고, 멈추면 추천 칸 핀이 떨어진 뒤 구간 재생 시작
+function arrive() {
+  centerOn(R.picks, false);
+  if (reduced) return;
+  const train = $("train");
+  train.animate([{ transform: "translateX(70%)" }, { transform: "translateX(0)" }], { duration: 1400, easing: "cubic-bezier(.12,.75,.2,1)" })
+    .finished.then(() => { train.style.transform = ""; playTimer = setTimeout(play, 700); });
+}
+
+/* ---------- 이벤트 ---------- */
+$("find").onclick = findSeat;
+$("tab-rec").onclick = () => current !== "rec" && findSeat();
+$("tab-route").onclick = () => current !== "route" && (stopPlay(), go("route"));
+$("back").onclick = () => { stopPlay(); go("route"); };
+$("train").addEventListener("click", e => { const c = e.target.closest(".car"); if (c) selectCar(+c.dataset.c); });
+$("mini").addEventListener("click", e => { const b = e.target.closest("button[data-c]"); if (b) selectCar(+b.dataset.c); });
+$("play").onclick = () => (playTimer ? stopPlay() : play());
+$("stop-range").addEventListener("input", e => { stopPlay(); setStep(+e.target.value, +e.target.value === stepAt + 1); });
+$("swap").onclick = () => { $("swap").classList.toggle("spun"); state = { ...state, from: state.to, to: state.from }; renderRoute(); };
+$("time").addEventListener("change", e => { state = { ...state, time: e.target.value || nowHHMM() }; });
+document.querySelectorAll("dialog").forEach(d => d.addEventListener("click", e => { if (e.target === d) d.close(); }));
+
+/* ---------- 역 선택 시트 ---------- */
+let pickFor = "from";
+function stationsFor() {
+  const all = Object.entries(LINES).flatMap(([ln, L]) => L.names.map(n => ({ ln: +ln, n })));
+  return pickFor === "to" ? all.filter(s => s.ln === state.line && s.n !== state.from) : all;
+}
+function renderList() {
+  const q = $("q").value.trim();
+  const items = stationsFor().filter(s => s.n.includes(q)).slice(0, 40);
+  $("list").innerHTML = items.length
+    ? items.map(s => `<li><button type="button" data-ln="${s.ln}" data-n="${s.n}"><span class="ln-dot" style="background:var(--color-line-${s.ln})">${s.ln}</span>${q ? s.n.replace(q, `<mark>${q}</mark>`) : s.n}역</button></li>`).join("")
+    : `<li class="empty">"${q.replace(/[<>&"]/g, "")}" 역을 찾지 못했어요. 1단계는 1~8호선만 지원해요.</li>`;
+}
+function openPicker(which) {
+  pickFor = which;
+  $("picker-title").textContent = which === "from" ? "출발역" : "도착역";
+  $("picker-hint").textContent = which === "from" ? "1단계는 서울교통공사 1~8호선, 평일만 지원해요" : `${state.line}호선 역만 고를 수 있어요 (같은 노선 안 이동)`;
+  $("q").value = ""; renderList(); $("picker").showModal(); $("q").focus();
+}
+$("q").addEventListener("input", renderList);
+$("list").addEventListener("click", e => {
+  const b = e.target.closest("button[data-n]"); if (!b) return;
+  const ln = +b.dataset.ln, n = b.dataset.n;
+  if (pickFor === "from") {
+    const keepTo = ln === state.line && n !== state.to;
+    state = { ...state, line: ln, from: n, to: keepTo ? state.to : LINES[ln].names.find(x => x !== n && big(x).a >= 5) };
+  } else state = { ...state, to: n };
+  $("picker").close(); renderRoute();
+});
+$("from-btn").onclick = () => openPicker("from");
+$("to-btn").onclick = () => openPicker("to");
+
+/* ---------- 설문: 탔나요 → 앉았나요 → 몇 정거장 뒤 ---------- */
+function openSurvey(rec) {
+  if (!rec) return;
+  const ans = {};
+  const steps = [
+    { q: `추천한 ${rec.picks.join("·")}번째 칸에 탔나요?`, key: "followed", opts: [["탔어요", true], ["다른 칸에 탔어요", false]] },
+    { q: "가는 동안 한 번이라도 앉았나요?", key: "seated", opts: [["앉았어요", true], ["끝까지 서서 갔어요", false]] },
+    { q: "몇 정거장 뒤에 앉았나요?", key: "after", cols: true, opts: [["타자마자", 0], ["1~2정거장", 1], ["3~5정거장", 3], ["6정거장 이상", 6]] },
+  ];
+  const body = $("survey-body");
+  const show = i => {
+    if (i === 2 && ans.seated === false) i = 3;
+    if (i === 3) {
+      store.set("lastRec", { ...rec, answered: true, ans });
+      body.innerHTML = `<div class="grab"></div><h2 id="survey-title">고마워요</h2><p style="margin:0">답변은 익명으로 저장돼요. 모인 결과로 추천을 더 정확하게 고칩니다.</p><button class="primary" type="button" id="survey-done">닫기</button>`;
+      $("survey-done").onclick = () => $("survey").close(); $("survey-done").focus(); $("pending").hidden = true; return;
+    }
+    const s = steps[i];
+    body.innerHTML = `<div class="grab"></div><div class="progress" role="progressbar" aria-valuemin="1" aria-valuemax="3" aria-valuenow="${i + 1}" aria-label="3문항 중 ${i + 1}번째">${[0, 1, 2].map(n => `<span class="${n <= i ? "on" : ""}"></span>`).join("")}</div><h2 id="survey-title">${s.q}</h2>
+      <div class="choices${s.cols ? " cols" : ""}">${s.opts.map(([t], k) => `<button class="choice" type="button" data-k="${k}">${t}</button>`).join("")}</div>`;
+    body.querySelectorAll(".choice").forEach(b => b.onclick = () => { ans[s.key] = s.opts[+b.dataset.k][1]; show(i + 1); });
+    body.querySelector(".choice").focus();
+  };
+  show(0); $("survey").showModal();
+}
+$("arrived").onclick = () => openSurvey(lastRec);
+
+// 다음 방문: 답하지 않은 지난 추천이 있으면 1단계 맨 위에 설문 카드
+function showPending(rec) {
+  if (!rec) return;
+  $("pending-route").textContent = `${rec.line}호선 ${rec.from} → ${rec.to} · ${rec.picks.join("·")}번째 칸 추천`;
+  $("pending").hidden = false;
+  $("pending-go").onclick = () => openSurvey(rec);
+  $("pending-skip").onclick = () => { store.set("lastRec", { ...rec, answered: true, skipped: true }); $("pending").hidden = true; };
+}
+$("demo-pending").onclick = () => { stopPlay(); go("route", () => showPending(lastRec)); };
+
+const prev = store.get("lastRec");
+$("play").innerHTML = ICON_PLAY;
+$("time").value = state.time;
+renderRoute();
+if (prev && !prev.answered) showPending(prev);
+</script>

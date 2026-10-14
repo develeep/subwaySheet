@@ -1,0 +1,253 @@
+/* Design Tokens - Auto-generated */
+/* Do not edit directly - modify tokens.json instead */
+
+/* === PRIMITIVES === */
+:root {
+  --primitive-color-slate-50: #F3F5F8;
+  --primitive-color-slate-100: #E6ECF3;
+  --primitive-color-slate-200: #DDE2EA;
+  --primitive-color-slate-300: #C3CCD7;
+  --primitive-color-slate-400: #A3AFBD;
+  --primitive-color-slate-500: #A3ACB9;
+  --primitive-color-slate-600: #4B5563;
+  --primitive-color-slate-700: #2A303A;
+  --primitive-color-slate-750: #232933;
+  --primitive-color-slate-800: #171B22;
+  --primitive-color-slate-900: #111827;
+  --primitive-color-slate-950: #0E1116;
+  --primitive-color-slate-paper: #EEF1F5;
+  --primitive-color-white: #FFFFFF;
+  --primitive-color-blue-400: #7AA2FF;
+  --primitive-color-blue-700: #1D4ED8;
+  --primitive-color-amber-50: #FFF4E5;
+  --primitive-color-amber-300: #F3C27A;
+  --primitive-color-amber-800: #8A4B00;
+  --primitive-color-amber-900: #2C2213;
+  --primitive-color-seoul-1: #0052A4;
+  --primitive-color-seoul-2: #00A84D;
+  --primitive-color-seoul-3: #EF7C1C;
+  --primitive-color-seoul-4: #00A5DE;
+  --primitive-color-seoul-5: #996CAC;
+  --primitive-color-seoul-6: #CD7C2F;
+  --primitive-color-seoul-7: #747F00;
+  --primitive-color-seoul-8: #E6186C;
+  --primitive-color-seoul-1-dark: #4C8DFF;
+  --primitive-color-seoul-2-dark: #22C26A;
+  --primitive-color-seoul-3-dark: #F5953F;
+  --primitive-color-seoul-4-dark: #33C3F0;
+  --primitive-color-seoul-5-dark: #B48CC6;
+  --primitive-color-seoul-6-dark: #E0974F;
+  --primitive-color-seoul-7-dark: #B4BF3A;
+  --primitive-color-seoul-8-dark: #FF4D93;
+  --primitive-color-lamp-headlight: #FFF3C4;
+  --primitive-color-lamp-bulb: #FFF8E1;
+  --primitive-color-lamp-spark: #FFE08A;
+  --primitive-color-lamp-led: #FF9E2C;
+  --primitive-color-lamp-led-bg: #07090C;
+  --primitive-color-lamp-tunnel-core: #04060A;
+  --primitive-color-lamp-tunnel-edge: #1C232D;
+}
+
+/* === SEMANTIC === */
+:root {
+  --color-bg: #F3F5F8;
+  --color-surface: #FFFFFF;
+  --color-fill: #E6ECF3;
+  --color-fill-hover: #DDE2EA;
+  --color-text: #111827;
+  --color-text-muted: #4B5563;
+  --color-border: #DDE2EA;
+  --color-focus: #1D4ED8;
+  --color-warn-bg: #FFF4E5;
+  --color-warn-text: #8A4B00;
+  --color-on-line: #FFFFFF;
+  --color-line-1: #0052A4;
+  --color-line-2: #00A84D;
+  --color-line-3: #EF7C1C;
+  --color-line-4: #00A5DE;
+  --color-line-5: #996CAC;
+  --color-line-6: #CD7C2F;
+  --color-line-7: #747F00;
+  --color-line-8: #E6186C;
+  --color-line-current: var(--color-line-2);
+  --color-ill-wall1: #E6ECF3;
+  --color-ill-wall2: #CDD6E1;
+  --color-ill-tile: #F4F7FA;
+  --color-ill-sign: #1F2937;
+  --color-ill-floor1: #C3CCD7;
+  --color-ill-floor2: #A3AFBD;
+  --color-ill-track: #59636F;
+  --color-ill-rail: #D3DAE2;
+  --color-ill-body1: #FBFCFD;
+  --color-ill-body2: #BCC5D0;
+  --color-ill-roof: #DDE3EA;
+  --color-ill-door: #A9B4C1;
+  --color-ill-glass1: #2B3A4F;
+  --color-ill-glass2: #111925;
+  --color-ill-cabin1: #EEF4FB;
+  --color-ill-cabin2: #C9D7E8;
+  --color-ill-head: #2E3B4D;
+  --color-ill-wheel: #2A2F36;
+  --color-ill-mark: #DCE2EA;
+  --color-ill-tactile: #E2B23A;
+  --color-ill-skin: #F1C7A5;
+  --color-ill-hair: #2B2B33;
+  --color-ill-shirt: #2F6FED;
+  --color-ill-pants: #2A3342;
+  --color-ill-headlight: #FFF3C4;
+  --color-ill-bulb: #FFF8E1;
+  --color-ill-spark: #FFE08A;
+  --color-ill-led: #FF9E2C;
+  --color-ill-led-bg: #07090C;
+  --color-ill-tunnel-core: #04060A;
+  --color-ill-tunnel-edge: #1C232D;
+  --font-sans: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+  --font-numeric: tabular-nums;
+  --text-note: 13px;
+  --text-body: 16px;
+  --text-title: 20px;
+  --text-headline: 28px;
+  --text-display: clamp(48px, 14vw, 64px);
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --radius-control: 999px;
+  --radius-card: 16px;
+  --radius-sheet: 20px;
+  --radius-car: 10px;
+  --motion-fast: 100ms;
+  --motion-base: 300ms;
+  --motion-slide: 340ms;
+  --motion-arrive: 1400ms;
+  --motion-step: 900ms;
+  --motion-ease-standard: cubic-bezier(.4,0,.2,1);
+  --motion-ease-arrive: cubic-bezier(.12,.75,.2,1);
+  --motion-ease-spring: cubic-bezier(.3,1.6,.5,1);
+  --leading-tight: 1.1;
+  --leading-body: 1.55;
+}
+
+/* === COMPONENTS === */
+:root {
+  --touch-min: 44px;
+  --button-primary-bg: var(--color-text);
+  --button-primary-text: var(--color-bg);
+  --button-primary-height: 56px;
+  --button-secondary-bg: var(--color-fill);
+  --tab-indicator-bg: var(--color-text);
+  --tab-active-text: var(--color-bg);
+  --car-width: 132px;
+  --car-body-height: 62px;
+  --car-pick-ring: var(--color-line-current);
+  --car-pin-bg: var(--color-text);
+  --car-pin-text: var(--color-surface);
+  --grade-pip-on: var(--color-text);
+  --grade-pip-off: var(--color-border);
+}
+
+/* === DARK MODE === */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-fill: #232933;
+    --color-fill-hover: #2A303A;
+    --color-bg: #0E1116;
+    --color-surface: #171B22;
+    --color-text: #EEF1F5;
+    --color-text-muted: #A3ACB9;
+    --color-border: #2A303A;
+    --color-focus: #7AA2FF;
+    --color-warn-bg: #2C2213;
+    --color-warn-text: #F3C27A;
+    --color-line-1: #4C8DFF;
+    --color-line-2: #22C26A;
+    --color-line-3: #F5953F;
+    --color-line-4: #33C3F0;
+    --color-line-5: #B48CC6;
+    --color-line-6: #E0974F;
+    --color-line-7: #B4BF3A;
+    --color-line-8: #FF4D93;
+    --color-ill-wall1: #1E2530;
+    --color-ill-wall2: #151B23;
+    --color-ill-tile: #262E39;
+    --color-ill-sign: #0B0F14;
+    --color-ill-floor1: #2C3440;
+    --color-ill-floor2: #1E252E;
+    --color-ill-track: #0F1318;
+    --color-ill-rail: #4A5563;
+    --color-ill-body1: #DCE2E9;
+    --color-ill-body2: #8693A2;
+    --color-ill-roof: #AEB8C4;
+    --color-ill-door: #7D8896;
+    --color-ill-glass1: #1E2A3A;
+    --color-ill-glass2: #0A0F17;
+    --color-ill-cabin1: #C9D6E6;
+    --color-ill-cabin2: #93A6BE;
+    --color-ill-head: #1C2633;
+    --color-ill-wheel: #0B0E12;
+    --color-ill-mark: #3A4452;
+    --color-ill-tactile: #C99A2A;
+    --color-ill-skin: #E0B48F;
+    --color-ill-hair: #0F0F12;
+    --color-ill-shirt: #5B8CFF;
+    --color-ill-pants: #39445A;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --color-fill: #232933;
+  --color-fill-hover: #2A303A;
+  --color-bg: #0E1116;
+  --color-surface: #171B22;
+  --color-text: #EEF1F5;
+  --color-text-muted: #A3ACB9;
+  --color-border: #2A303A;
+  --color-focus: #7AA2FF;
+  --color-warn-bg: #2C2213;
+  --color-warn-text: #F3C27A;
+  --color-line-1: #4C8DFF;
+  --color-line-2: #22C26A;
+  --color-line-3: #F5953F;
+  --color-line-4: #33C3F0;
+  --color-line-5: #B48CC6;
+  --color-line-6: #E0974F;
+  --color-line-7: #B4BF3A;
+  --color-line-8: #FF4D93;
+  --color-ill-wall1: #1E2530;
+  --color-ill-wall2: #151B23;
+  --color-ill-tile: #262E39;
+  --color-ill-sign: #0B0F14;
+  --color-ill-floor1: #2C3440;
+  --color-ill-floor2: #1E252E;
+  --color-ill-track: #0F1318;
+  --color-ill-rail: #4A5563;
+  --color-ill-body1: #DCE2E9;
+  --color-ill-body2: #8693A2;
+  --color-ill-roof: #AEB8C4;
+  --color-ill-door: #7D8896;
+  --color-ill-glass1: #1E2A3A;
+  --color-ill-glass2: #0A0F17;
+  --color-ill-cabin1: #C9D6E6;
+  --color-ill-cabin2: #93A6BE;
+  --color-ill-head: #1C2633;
+  --color-ill-wheel: #0B0E12;
+  --color-ill-mark: #3A4452;
+  --color-ill-tactile: #C99A2A;
+  --color-ill-skin: #E0B48F;
+  --color-ill-hair: #0F0F12;
+  --color-ill-shirt: #5B8CFF;
+  --color-ill-pants: #39445A;
+  color-scheme: dark;
+}
+
+/* 선택 노선 색: <html class="lineN"> */
+:root.line1 { --color-line-current: var(--color-line-1); }
+:root.line2 { --color-line-current: var(--color-line-2); }
+:root.line3 { --color-line-current: var(--color-line-3); }
+:root.line4 { --color-line-current: var(--color-line-4); }
+:root.line5 { --color-line-current: var(--color-line-5); }
+:root.line6 { --color-line-current: var(--color-line-6); }
+:root.line7 { --color-line-current: var(--color-line-7); }
+:root.line8 { --color-line-current: var(--color-line-8); }
