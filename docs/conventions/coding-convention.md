@@ -20,7 +20,7 @@
 
 ## 파일 / 코드 규칙
 
-- 다른 최상위 폴더나 다른 화면 폴더를 가리킬 때는 별칭(`@web/*`, `@shared/*`, `@batch/*`)을 씁니다. 같은 폴더 안은 `./`로 씁니다 **(리뷰)**.
+- 다른 최상위 폴더나 `web/` 안의 다른 종류 폴더(`pages`·`hooks`·`components` 등)를 가리킬 때는 별칭(`@web/*`, `@shared/*`, `@batch/*`)을 씁니다. 같은 폴더 안은 `./`로 씁니다 **(리뷰)**.
 - 사용하지 않는 import는 허용하지 않습니다 **(Biome `noUnusedImports`)**.
 - 타입만 쓰는 import는 `import type`을 사용합니다 **(Biome `useImportType`)**.
 - 쓰지 않는 파일·export·상수와 도달하지 않는 분기는 발견 즉시 지웁니다. 호환 alias·재export·주석 처리로 남기지 않습니다. 지우기 전에 참조가 0건인지 검색으로 확인합니다 **(리뷰)**.
@@ -34,8 +34,9 @@
 |---|---|---|
 | 폴더·파일 | `kebab-case`, ASCII만 | `car-diagram.tsx`, `fast-exit.ts` |
 | 컴포넌트 파일 | 컴포넌트 이름의 kebab-case | `CarDiagram` → `car-diagram.tsx` |
-| Screen 파일 | `{화면}-screen.tsx` | `route-picker-screen.tsx` |
-| hook 파일 | `use-*.ts` | `use-route-picker.ts` |
+| 페이지 파일 | `pages/{화면}-page.tsx` | `seat-finder-page.tsx` |
+| hook 파일 | `hooks/use-*.ts` | `use-seat-finder.ts` |
+| fetcher 파일 | `api/{대상}-api.ts` | `refined-data-api.ts` |
 | 동반 파일 | 대상 파일명 + 접미어 | `car-diagram.module.css`, `fast-exit.test.ts` |
 
 - `useFilenamingConvention`(kebab-case · strictCase · requireAscii)이 `web/`·`shared/`·`batch/`에 적용됩니다. `functions/`는 Pages 파일 라우팅 이름(`[id].ts`, `_middleware.ts`) 때문에 뺐습니다.
@@ -69,7 +70,7 @@
 
 저장소 전체 규칙은 `AGENTS.md`·이 문서에 둡니다. **파일 하나에만 해당하는 설명(흐름·상수 근거·같이 고칠 곳)은 그 파일의 머리 주석에 둡니다.** 그 파일을 열 때 읽히고, 코드와 같은 커밋에서 고쳐지기 때문입니다.
 
-- **머리 주석**: 역할이 이름만으로 안 보이는 파일(추천 모듈·배치 단계·설문 함수·화면 훅·로직 있는 Screen)은 import 아래 첫 선언 앞에 `/** */`를 둡니다.
+- **머리 주석**: 역할이 이름만으로 안 보이는 파일(추천 모듈·배치 단계·설문 함수·화면 훅·로직 있는 페이지)은 import 아래 첫 선언 앞에 `/** */`를 둡니다.
   - 첫 줄은 `이름 — 역할(누가 부르는지)`입니다.
   - 이어서 왜 이렇게 했는지, 어기면 무엇이 깨지는지 적습니다.
   - 꼭 지킬 제약은 `**굵게**`, 같이 고칠 곳은 경로로 적습니다.
@@ -92,7 +93,7 @@
 ## 화면의 fetch · 에러 처리 (리뷰)
 
 - 화면이 부르는 서버는 우리 설문 함수(`/api/*`)와 정적 정제 데이터(`public/data/`)뿐입니다. 외부 API를 화면에서 직접 부르지 않습니다.
-- fetcher는 화면 폴더의 `<화면>-api.ts`에 둡니다. 엔드포인트는 `*_ENDPOINT` 상수로 두고 fetch와 테스트가 같은 값을 씁니다.
+- fetcher는 `web/api/<대상>-api.ts`에 둡니다. 엔드포인트는 `*_ENDPOINT` 상수로 두고 fetch와 테스트가 같은 값을 씁니다.
 - fetcher는 **status union**을 돌려줍니다: `ok`, `invalid`(400, 사용자가 고칠 입력), `failed`(그 밖의 실패·네트워크 오류). 400과 장애를 합치면 서버 장애 때 "입력을 확인하세요"라는 거짓 안내가 나갑니다.
 - 2xx 본문도 zod로 계약을 검증합니다. 실패하면 `failed`를 돌려줍니다. 기본값으로 조용히 진행하지 않습니다.
 - **추천 기록 저장 실패는 화면에 드러내지 않습니다.** 추천 화면은 그대로 보여야 합니다(스펙 #2).
@@ -160,7 +161,7 @@ pnpm build            # tsc --noEmit && vite build
   4. **설문 함수**: 로컬 D1로 요청 → 저장. 검증 거절, 중복 응답 거절, 레이트 리밋, 원 IP 미저장. 실행 도구는 #5에서 정합니다.
 - **E2E는 Playwright로 핵심 흐름 하나**(역 고르기 → 결과 → "도착했어요" → 설문 제출, 그리고 다시 왔을 때 설문 카드)만 둡니다(#9).
 - 화면 컴포넌트는 따로 단위 테스트하지 않습니다. jsdom·React Testing Library·Storybook은 쓰지 않습니다.
-- 커버리지는 `shared/`·`batch/`·`web/recommend/` 기준 80% 이상입니다(`vite.config.ts` `coverage.thresholds`).
+- 커버리지는 `shared/`·`batch/`·`web/recommend/`·`web/utils/` 기준 80% 이상입니다(`vite.config.ts` `coverage.thresholds`).
 
 ### 위치
 

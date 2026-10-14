@@ -14,10 +14,16 @@
 ## 루트 구조
 
 ```text
-web/            화면 (Vite + React 정적 SPA)
+web/            화면 (Vite + React 정적 SPA). recommend/ 밖은 종류별 폴더로 나눈다
   recommend/    추천 모듈 — 순수 TS, 앱의 핵심 (스펙 #2 테스트 지점 1)
-  <화면>/       화면 하나의 Screen·훅·표시 컴포넌트·스타일·fetcher
-  components/   두 화면 이상이 쓰는 UI (실제로 공유가 생길 때 만든다)
+  pages/        화면(페이지) 컴포넌트 — 훅 호출 한 번 + 표시 컴포넌트 조립
+  hooks/        화면 훅 — 상태·effect·동작, fetcher·추천 모듈 호출
+  components/   표시 컴포넌트 — props를 그리기만 한다
+  api/          fetcher — 정적 정제 데이터·설문 함수 호출
+  constants/    화면 문구·표시용 고정 값
+  utils/        React 없는 순수 함수 + 옆 테스트
+  styles/       문서 전체 스타일(global.css)
+  main.tsx      진입점
 shared/         web·batch·functions가 함께 쓰는 데이터 형식·용어 타입·요청 스키마
 batch/          월별 배치 (pnpm batch → tsx batch/main.ts)
 functions/      Cloudflare Pages Function (설문 함수 하나)
@@ -58,34 +64,33 @@ shared ────▶ (없음)
 - 순수 TS입니다. `react`·`react-dom` import 금지(Biome), `process.env` 금지(Biome), `new Date()`·`Date.now()` 직접 호출 금지(리뷰). 현재 시각과 오늘 날짜는 화면 훅이 구해 인자로 넘깁니다. 그래야 테스트가 시계에 흔들리지 않습니다.
 - 공휴일 목록처럼 계산에 쓰는 정적 표도 여기 둡니다.
 
-### `web/<화면>/` — 화면
+### `web/` 종류별 폴더 — 화면
 
-화면 이름은 기획 단위 kebab-case입니다(예: `route-picker`, `result`, `survey`). 한 화면 폴더에 다음을 둡니다.
+`recommend/` 밖의 화면 코드는 파일 종류로 나눕니다. 화면 이름은 기획 단위 kebab-case입니다(예: `seat-finder`, `survey`).
 
-| 파일 | 둔다 | 두지 않는다 |
-|---|---|---|
-| `<화면>-screen.tsx` | 훅 호출 한 번 + 표시 컴포넌트 조립 | 상태, 판정, fetch |
-| `use-<화면>.ts` | `useState`·effect·핸들러, fetcher·추천 모듈 호출 | JSX, 순수 계산 |
-| 표시 컴포넌트 `*.tsx` | props를 그리기 | fetch, 판정 |
-| `*.module.css` | 컴포넌트 옆 스타일 | 토큰에 없는 색·간격 값 |
-| `<화면>-api.ts` | 설문 함수 호출(fetcher) | 화면 상태 |
-| 순수 로직 `*.ts` + `*.test.ts` | 그 화면만 쓰는 판정(예: 지난 추천 24시간 판정) | React import |
+| 폴더 | 파일 | 둔다 | 두지 않는다 |
+|---|---|---|---|
+| `pages/` | `<화면>-page.tsx` + `.module.css` | 훅 호출 한 번 + 표시 컴포넌트 조립 | 상태, 판정, fetch |
+| `hooks/` | `use-<화면>.ts` | `useState`·effect·동작 함수, fetcher·추천 모듈·utils 호출 | JSX, 순수 계산 |
+| `components/` | `<컴포넌트>.tsx` + `.module.css` | props를 그리기, `<dialog>` 열기 같은 DOM 동기화 | fetch, 판정 |
+| `api/` | `<대상>-api.ts` | 정제 데이터·설문 함수 호출(fetcher), `*_ENDPOINT` 상수 | 화면 상태 |
+| `constants/` | `<화면>-copy.ts` 등 | 화면 문구, 등급 표기 같은 표시용 고정 값 | 계산, 공식 값(→ `recommend/formula.ts`) |
+| `utils/` | `<동작>.ts` + `<동작>.test.ts` | React 없는 순수 함수(예: 시각 표기, 지난 추천 24시간 판정) | React import, 칸 점수·등급 판정(→ `recommend/`) |
+| `styles/` | `global.css` | 문서 전체 기본값 | 컴포넌트 스타일(→ 옆 `.module.css`) |
 
 - 화면이 칸 점수·등급을 다시 판정하지 않습니다. 추천 모듈 결과를 그리기만 합니다.
-- 순수 로직 파일로 옮기는 기준은 테스트 가치입니다. 코드를 쪼개려는 목적만으로 옮기지 않습니다.
+- 종류 폴더 안에서는 파일 이름이 화면·대상을 드러내게 짓습니다. 폴더를 더 쪼개는 일(`components/seat-finder/`)은 한 폴더의 파일이 많아 찾기 어려워질 때 합니다.
+- `utils/`로 옮기는 기준은 테스트 가치입니다. 코드를 쪼개려는 목적만으로 옮기지 않습니다.
+- 다른 종류 폴더는 별칭(`@web/hooks/…`)으로, 같은 폴더 안은 `./`로 가져옵니다.
 
 ### UI · 로직 분리 — 추적성 우선 (리뷰)
 
-버튼 하나를 눌렀을 때 실제 로직까지 **두 단계 안에** 찾아갈 수 있어야 합니다. Screen → `use-<화면>.ts`의 함수(→ fetcher·추천 모듈·순수 로직) 순서입니다. 표시 컴포넌트의 `on*` prop에 Screen이 훅 함수를 그대로 넘기는 연결은 단계로 세지 않습니다.
+버튼 하나를 눌렀을 때 실제 로직까지 **두 단계 안에** 찾아갈 수 있어야 합니다. 페이지 → `hooks/use-<화면>.ts`의 함수(→ fetcher·추천 모듈·utils) 순서입니다. 표시 컴포넌트의 `on*` prop에 페이지가 훅 함수를 그대로 넘기는 연결은 단계로 세지 않습니다.
 
-- **Screen은 조립만** 합니다. `const picker = useRoutePicker(props)`를 한 번 호출하고 표시 컴포넌트에 값·핸들러를 넘깁니다.
-- **화면 하나 = 훅 하나.** 줄 수를 줄이려고 훅을 쪼개지 않고, 여러 훅을 묶는 오케스트레이터 훅도 만들지 않습니다.
+- **페이지는 조립만** 합니다. `const finder = useSeatFinder()`를 한 번 호출하고 표시 컴포넌트에 값·핸들러를 넘깁니다.
+- **화면 하나 = 훅 하나.** 줄 수를 줄이려고 훅을 쪼개지 않고, 여러 훅을 묶는 오케스트레이터 훅도 만들지 않습니다. `hooks/`는 화면 훅을 모으는 곳이지 훅을 잘게 나누는 곳이 아닙니다.
 - 조건 하나를 prop 여러 개로 나눈 래퍼 컴포넌트나 "함수를 고르는 함수"를 만들지 않습니다. 단계별 분기는 `switch` 하나로 모읍니다.
 - 훅은 정의한 함수 이름 그대로 반환하고, 이름은 `handle*` 대신 동작 이름(`swapStations`·`submitSurvey`)을 씁니다.
-
-### `web/components/`
-
-두 화면 이상이 실제로 쓰는 UI만 둡니다(예: 열차 칸 그림을 결과와 설문 카드가 같이 쓰게 될 때). 미리 만들지 않습니다.
 
 ### `shared/`
 
@@ -125,11 +130,9 @@ Cloudflare Pages Function입니다. 추천 기록 만들기와 설문 응답 만
 
 | 공유되는 것 | 위치 |
 |---|---|
-| 두 화면 이상이 쓰는 UI | `web/components/` |
-| 두 화면 이상이 쓰는 훅·순수 함수 | `web/` 아래 기능 이름 폴더(예: `web/storage/`) |
 | web·batch·functions 중 둘 이상이 쓰는 타입·스키마 | `shared/` |
 
-공유가 실제로 생긴 시점에 옮깁니다. 미리 공용 폴더를 만들지 않습니다.
+`web/` 안은 처음부터 종류별 폴더라 화면끼리 공유해도 옮길 필요가 없습니다. `shared/`로는 공유가 실제로 생긴 시점에 옮깁니다. 미리 공용 폴더를 만들지 않습니다.
 
 ## 새 파일을 만들 때 판단 순서
 
@@ -137,15 +140,15 @@ Cloudflare Pages Function입니다. 추천 기록 만들기와 설문 응답 만
 2. 원본을 받거나 정제하는가? → `batch/`
 3. 서버에서 D1에 쓰는가? → `functions/`
 4. 둘 이상의 최상위 폴더가 모양을 알아야 하는가? → `shared/`
-5. 화면 하나의 상태·표시·fetch인가? → `web/<화면>/`
-6. 두 화면 이상이 쓰는가? → `web/components/` 또는 `web/<기능>/`
+5. 화면의 조립인가? → `web/pages/` · 상태·동작인가? → `web/hooks/` · 그리기인가? → `web/components/`
+6. fetch인가? → `web/api/` · 문구·표시 값인가? → `web/constants/` · React 없는 순수 함수인가? → `web/utils/`
 
 ## 리뷰 체크리스트
 
 - 화면이 추천 모듈 결과를 다시 판정하지 않는가?
 - 배치 출력에 공식 값(퍼짐·가중치)이 들어가지 않았는가?
-- Screen이 조립만 하는가? 상태·핸들러는 화면 훅에 있는가?
+- 페이지가 조립만 하는가? 상태·핸들러는 `hooks/`의 화면 훅에 있는가?
 - 버튼 onClick에서 실제 로직까지 두 단계 안에 닿는가? 오케스트레이터 훅·반환 시 이름 바꾸기가 없는가?
-- 추천 모듈과 순수 로직 파일에 옆 테스트가 있는가? 시계·환경을 직접 읽지 않는가?
+- 추천 모듈과 `utils/` 파일에 옆 테스트가 있는가? 시계·환경을 직접 읽지 않는가?
 - `shared/`에 한 폴더만 쓰는 코드가 새지 않았는가?
 - `public/data/`를 손으로 고치지 않았는가?
