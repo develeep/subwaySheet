@@ -1,0 +1,98 @@
+/* 추천 결과: 칸 번호가 화면에서 가장 큰 것(design/prototype.html .verdict) */
+.verdict {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  background: var(--color-surface);
+  border-radius: var(--radius-card);
+  padding: var(--space-4);
+}
+
+.summary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.summary strong {
+  display: block;
+  font-size: var(--text-body);
+}
+
+.sub {
+  font-size: var(--text-note);
+  color: var(--color-text-muted);
+}
+
+.back {
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: var(--radius-control);
+  background: var(--color-fill);
+  display: grid;
+  place-items: center;
+  flex: none;
+}
+
+.back:hover {
+  background: var(--color-fill-hover);
+}
+
+.cars {
+  margin: var(--space-2) 0 0;
+  font-size: var(--text-display);
+  line-height: var(--leading-tight);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  font-variant-numeric: var(--font-numeric);
+}
+
+.grade {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+  font-weight: 700;
+}
+
+.pips {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.pips span {
+  width: 28px;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--grade-pip-off);
+}
+
+.pips .pipOn {
+  background: var(--grade-pip-on);
+}
+
+.reason {
+  margin: 0;
+  font-size: var(--text-title);
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+}
+
+.reason em {
+  font-style: normal;
+  font-weight: 700;
+  background: color-mix(in srgb, var(--color-line-current) 22%, transparent);
+  border-radius: 4px;
+  padding: 0 3px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.note {
+  margin: 0;
+  background: var(--color-warn-bg);
+  color: var(--color-warn-text);
+  border-radius: 12px;
+  padding: var(--space-3);
+}

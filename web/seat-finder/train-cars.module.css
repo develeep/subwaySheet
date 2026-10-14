@@ -1,0 +1,187 @@
+/* 열차 칸 그림: 벽 → 바닥 → 점자블록 띠 위에 칸을 늘어놓는다(design/prototype.html .train-scroll·.car). 움직임은 #3에서 넣지 않는다. */
+.card {
+  background: var(--color-surface);
+  border-radius: var(--radius-card);
+  padding: var(--space-4);
+  overflow: hidden;
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.head h2 {
+  margin: 0;
+  font-size: var(--text-title);
+  letter-spacing: -0.02em;
+}
+
+.head span {
+  font-size: var(--text-note);
+  color: var(--color-text-muted);
+}
+
+/* 미니맵: 열차 전체에서 추천 칸 위치 */
+.mini {
+  display: flex;
+  gap: 3px;
+  margin-top: var(--space-3);
+}
+
+.mini span {
+  flex: 1;
+  height: 12px;
+  border-radius: 3px;
+  background: var(--color-fill-hover);
+}
+
+.mini span:first-child {
+  border-top-left-radius: 8px;
+}
+
+.mini .miniPick {
+  background: var(--color-line-current);
+}
+
+.scroller {
+  margin: var(--space-3) calc(-1 * var(--space-4)) 0;
+  padding: 48px var(--space-4) 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  background: var(--color-ill-wall1);
+}
+
+.scroller::-webkit-scrollbar {
+  display: none;
+}
+
+.train {
+  position: relative;
+  display: flex;
+  gap: 5px;
+  width: max-content;
+  margin: 0;
+  padding: 0 0 12px;
+  list-style: none;
+}
+
+.train::before {
+  content: "";
+  position: absolute;
+  left: -16px;
+  right: -16px;
+  top: 62px;
+  bottom: 0;
+  background: var(--color-ill-floor1);
+}
+
+.train::after {
+  content: "";
+  position: absolute;
+  left: -16px;
+  right: -16px;
+  top: 74px;
+  height: 6px;
+  background: var(--color-ill-tactile);
+}
+
+.car {
+  position: relative;
+  flex: none;
+  width: var(--car-width);
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.body {
+  position: relative;
+  height: var(--car-body-height);
+  border-radius: var(--radius-car) var(--radius-car) 6px 6px;
+  display: flex;
+  gap: 3px;
+  padding: 8px 6px 0;
+  background: var(--color-ill-body1);
+  outline: 3px solid transparent;
+  outline-offset: 2px;
+}
+
+.pick .body {
+  outline-color: var(--car-pick-ring);
+}
+
+.car:first-child .body {
+  border-top-left-radius: 28px;
+}
+
+.door {
+  flex: none;
+  width: 13px;
+  height: 48px;
+  border-radius: 3px 3px 0 0;
+  background: var(--color-ill-door);
+}
+
+.window {
+  flex: 1;
+  height: 25px;
+  margin-top: 4px;
+  border-radius: 4px;
+  background: var(--color-ill-cabin1);
+}
+
+.stripe {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 13px;
+  height: 5px;
+  background: var(--color-line-current);
+}
+
+.label {
+  position: relative;
+  z-index: 1;
+  margin-top: 22px;
+  align-self: center;
+  min-width: 32px;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-control);
+  font-weight: 700;
+  font-variant-numeric: var(--font-numeric);
+}
+
+.pick .label {
+  background: var(--color-text);
+  color: var(--color-surface);
+}
+
+.pin {
+  position: absolute;
+  top: -44px;
+  left: 50%;
+  translate: -50% 0;
+  white-space: nowrap;
+  z-index: 2;
+  background: var(--car-pin-bg);
+  color: var(--car-pin-text);
+  font-size: var(--text-note);
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: var(--radius-control);
+}
+
+.pin::after {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  translate: -50% 0;
+  border: 5px solid transparent;
+  border-bottom: 0;
+  border-top-color: var(--car-pin-bg);
+}

@@ -4,6 +4,7 @@ import { FIXTURE_CONFIG, fixtureRawSources } from "./fixtures/raw-sources";
 import { refine } from "./refine";
 
 const refined = () => refine(fixtureRawSources(), FIXTURE_CONFIG);
+const station = (name: string) => refined().stations[name];
 const stop = (name: string) => {
   const found = refined().routes[0]?.stops.find((s) => s.name === name);
   if (!found) throw new Error(`${name} 없음`);
@@ -22,7 +23,7 @@ describe("refine", () => {
   });
 
   it("승하차를 요일유형별 하루 평균으로 만들고 공휴일은 일요일·공휴일에 넣는다", () => {
-    const ridership = refined().stations["시청"]?.ridership;
+    const ridership = station("시청")?.ridership;
     // 하차 06시 이전 값: 평일 1000·1100 → 1050, 토요일 1200, 일요일 1300과 공휴일 1400 → 1350
     expect(ridership?.weekday.alighting[0]).toBe(1050);
     expect(ridership?.saturday.alighting[0]).toBe(1200);
@@ -31,7 +32,7 @@ describe("refine", () => {
   });
 
   it("다른 호선 행을 섞지 않는다", () => {
-    expect(refined().stations["사당"]).toBeUndefined();
+    expect(station("사당")).toBeUndefined();
   });
 
   it("원본별 기준 기간을 적는다", () => {
@@ -77,11 +78,11 @@ describe("refine", () => {
   });
 
   it("환승역에 환승인원과 만나는 노선 수를 붙이고, 환승역이 아니면 비운다", () => {
-    expect(refined().stations["시청"]?.transfer).toEqual({
+    expect(station("시청")?.transfer).toEqual({
       perDay: { weekday: 52690, saturday: 42575, sunday: 29750 },
       lineCount: 2,
     });
-    expect(refined().stations["을지로입구"]?.transfer).toBeNull();
+    expect(station("을지로입구")?.transfer).toBeNull();
   });
 
   it("노선 수 표에 없는 환승역이 있으면 멈춘다", () => {

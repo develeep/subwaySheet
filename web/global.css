@@ -1,0 +1,28 @@
+/* 문서 전체 기본값. 색·글꼴·간격은 design/tokens.css 변수만 쓴다. */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font: 400 var(--text-body) / var(--leading-body) var(--font-sans);
+  padding-left: max(var(--space-4), env(safe-area-inset-left, 0px));
+  padding-right: max(var(--space-4), env(safe-area-inset-right, 0px));
+  padding-top: var(--space-3);
+  -webkit-font-smoothing: antialiased;
+  word-break: keep-all;
+  text-wrap: pretty;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}

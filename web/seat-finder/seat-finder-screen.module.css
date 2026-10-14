@@ -1,0 +1,115 @@
+/* 화면 뼈대: 한 손 조작용 세로 컬럼 + 2단계 탭. 주요 버튼은 엄지 영역에 고정(design/prototype.html). */
+.app {
+  max-width: 440px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 40px;
+  font-weight: 700;
+  font-size: var(--text-title);
+  letter-spacing: -0.02em;
+}
+
+.brand svg {
+  color: var(--color-line-current);
+}
+
+.tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-1);
+  background: var(--color-surface);
+  border-radius: var(--radius-control);
+  padding: var(--space-1);
+}
+
+.tabs button {
+  min-height: var(--touch-min);
+  border: 0;
+  background: transparent;
+  border-radius: var(--radius-control);
+  font-weight: 600;
+  color: var(--color-text-muted);
+  transition:
+    background-color var(--motion-base) var(--motion-ease-standard),
+    color var(--motion-base);
+}
+
+.tabs button[aria-selected="true"] {
+  background: var(--tab-indicator-bg);
+  color: var(--tab-active-text);
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.hero {
+  background: var(--color-surface);
+  border-radius: var(--radius-card);
+  padding: var(--space-4) var(--space-4) var(--space-5);
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: var(--text-headline);
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.hero p {
+  margin: var(--space-2) 0 0;
+}
+
+.dock {
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
+  padding: var(--space-3) 0 calc(14px + env(safe-area-inset-bottom, 0px));
+  background: var(--color-bg);
+}
+
+.primary {
+  width: 100%;
+  min-height: var(--button-primary-height);
+  border: 0;
+  border-radius: var(--radius-control);
+  background: var(--button-primary-bg);
+  color: var(--button-primary-text);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.primary:disabled,
+.tabs button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.notice {
+  margin: 0;
+  padding: var(--space-3);
+  border-radius: 12px;
+  background: var(--color-warn-bg);
+  color: var(--color-warn-text);
+}
+
+.foot {
+  margin: var(--space-2) 0 var(--space-5);
+  font-size: var(--text-note);
+  color: var(--color-text-muted);
+  font-variant-numeric: var(--font-numeric);
+}

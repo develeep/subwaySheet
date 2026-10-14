@@ -10,7 +10,7 @@ import {
   withStop,
 } from "./fixtures/fake-data";
 import { FORMULA_VERSION } from "./formula";
-import { type RecommendInput, type RecommendResult, recommend, stationNames } from "./recommend";
+import { type RecommendInput, type RecommendResult, recommend, stationOptions } from "./recommend";
 
 const EIGHT_AM = 8 * 60;
 const input = (from: string, to: string, extra: Partial<RecommendInput> = {}): RecommendInput => ({
@@ -55,7 +55,13 @@ describe("recommend — 오류", () => {
 describe("recommend — 노선과 방향", () => {
   it("순환 노선은 정거장 수가 적은 방향이 기본이고 다음 역 방면으로 적는다", () => {
     const down = ok(recommend(input("가", "다"), fakeData()));
-    expect(down).toMatchObject({ direction: "down", isDefaultDirection: true, towardStation: "나", stops: ["나"] });
+    expect(down).toMatchObject({
+      direction: "down",
+      isDefaultDirection: true,
+      canChangeDirection: true,
+      towardStation: "나",
+      stops: ["나"],
+    });
     const up = ok(recommend(input("가", "마"), fakeData()));
     expect(up).toMatchObject({ direction: "up", towardStation: "바", stops: ["바"], stopCount: 2 });
   });
@@ -76,7 +82,11 @@ describe("recommend — 노선과 방향", () => {
   });
 
   it("순환이 아닌 노선은 역 순서로 방향이 정해진다", () => {
-    expect(ok(recommend(input("사", "자"), fakeData()))).toMatchObject({ direction: "down", stops: ["아"] });
+    expect(ok(recommend(input("사", "자"), fakeData()))).toMatchObject({
+      direction: "down",
+      canChangeDirection: false,
+      stops: ["아"],
+    });
     expect(ok(recommend(input("자", "사", { direction: "down" }), fakeData()))).toMatchObject({
       direction: "up",
       towardStation: "아",
@@ -161,8 +171,9 @@ describe("recommend — 데이터 없는 역과 고르게 퍼뜨린 역", () => 
 });
 
 describe("recommend — 결과에 함께 싣는 값", () => {
-  it("기준 기간과 공식 버전을 돌려준다", () => {
-    const result = ok(recommend(input("가", "라"), fakeData()));
+  it("기준 기간, 공식 버전, 계산에 쓴 요일유형을 돌려준다", () => {
+    const result = ok(recommend(input("가", "라", { dayType: "saturday" }), fakeData()));
+    expect(result.dayType).toBe("saturday");
     expect(result.periods.ridership).toEqual({ start: "2024-01-01", end: "2024-12-31" });
     expect(result.formulaVersion).toBe(FORMULA_VERSION);
     expect(result.route).toEqual({ id: "loop", lineNumber: 2, name: "2호선", carCount: 4 });
@@ -197,8 +208,16 @@ describe("recommend — 시간대와 요일유형", () => {
   });
 });
 
-describe("stationNames", () => {
-  it("고를 수 있는 역을 노선 순서대로 중복 없이 돌려준다", () => {
-    expect(stationNames(fakeData())).toEqual(["가", "나", "다", "라", "마", "바", "사", "아", "자", "차"]);
+describe("stationOptions", () => {
+  it("고를 수 있는 역을 노선 순서대로 중복 없이, 지나는 호선과 함께 돌려준다", () => {
+    const base = fakeData();
+    const [loop, line] = base.routes;
+    const ga = loop?.stops.find((s) => s.name === "가");
+    if (!loop || !line || !ga) throw new Error("픽스처 노선 없음");
+    // "가"역이 7호선에도 있다고 가정한다.
+    const options = stationOptions({ ...base, routes: [loop, { ...line, stops: [...line.stops, ga] }] });
+    expect(options.map((o) => o.name)).toEqual(["가", "나", "다", "라", "마", "바", "사", "아", "자", "차"]);
+    expect(options[0]).toEqual({ name: "가", lineNumbers: [2, 7] });
+    expect(options[6]).toEqual({ name: "사", lineNumbers: [7] });
   });
 });

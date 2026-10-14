@@ -24,8 +24,11 @@ export type RecommendError = "sameStation" | "noCommonRoute" | "noStopsToScore";
 export type RecommendSuccess = {
   status: "ok";
   route: { id: string; lineNumber: number; name: string; carCount: number };
+  dayType: DayType;
   direction: Direction;
   isDefaultDirection: boolean;
+  /** 방향을 반대로 바꿀 수 있는지(순환 노선만). */
+  canChangeDirection: boolean;
   /** "○○ 방면"의 ○○. 진행 방향 다음 역이다(빠른하차 drtnInfo·승강장 바닥 표기와 같다). */
   towardStation: string;
   /** 중간 역(출발·도착역 제외). */
@@ -71,8 +74,10 @@ export function recommend(input: RecommendInput, data: RefinedData): RecommendRe
   return {
     status: "ok",
     route: { id: route.id, lineNumber: route.lineNumber, name: route.name, carCount: route.carCount },
+    dayType: input.dayType,
     direction,
     isDefaultDirection: direction === defaultDirection,
+    canChangeDirection: route.isLoop,
     towardStation: nameAt(path[1]),
     stops: path.slice(1, -1).map(nameAt),
     stopCount: path.length - 1,
@@ -82,9 +87,15 @@ export function recommend(input: RecommendInput, data: RefinedData): RecommendRe
   };
 }
 
-/** 고를 수 있는 역 이름(노선 순서, 중복 없음). 화면의 역 자동완성 목록이다. */
-export function stationNames(data: RefinedData): string[] {
-  return [...new Set(data.routes.flatMap((route) => route.stops.map((s) => s.name)))];
+export type StationOption = { name: string; lineNumbers: number[] };
+
+/** 고를 수 있는 역(노선 순서, 중복 없음)과 그 역을 지나는 호선. 화면의 역 자동완성 목록이다. */
+export function stationOptions(data: RefinedData): StationOption[] {
+  const byName = new Map<string, Set<number>>();
+  for (const route of data.routes) {
+    for (const stop of route.stops) byName.set(stop.name, (byName.get(stop.name) ?? new Set()).add(route.lineNumber));
+  }
+  return [...byName].map(([name, lines]) => ({ name, lineNumbers: [...lines].sort((a, b) => a - b) }));
 }
 
 function hasStation(route: Route, name: string): boolean {

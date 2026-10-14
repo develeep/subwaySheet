@@ -1,0 +1,93 @@
+/* 역 고르기 바텀시트(design/prototype.html dialog·.sheet) */
+.dialog {
+  width: 100%;
+  max-width: 440px;
+  margin: auto auto 0;
+  border: 0;
+  padding: 0;
+  border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;
+  background: var(--color-surface);
+  color: var(--color-text);
+  max-height: 85dvh;
+}
+
+.dialog::backdrop {
+  background: rgb(0 0 0 / 0.45);
+}
+
+.sheet {
+  padding: var(--space-3) var(--space-4) calc(20px + env(safe-area-inset-bottom, 0px));
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.sheet h2 {
+  margin: 0;
+  font-size: var(--text-headline);
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+}
+
+.grab {
+  width: 40px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--color-fill-hover);
+  margin: 0 auto;
+}
+
+.search {
+  width: 100%;
+  min-height: 52px;
+  font: inherit;
+  padding: 0 20px;
+  border: 0;
+  border-radius: var(--radius-control);
+  background: var(--color-fill);
+  color: var(--color-text);
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  max-height: 50dvh;
+  display: grid;
+  gap: 2px;
+}
+
+.list button {
+  width: 100%;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  text-align: left;
+  padding: 0 var(--space-2);
+}
+
+.list button:hover {
+  background: var(--color-fill);
+}
+
+.lineDot {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  color: var(--color-on-line);
+  font-size: var(--text-note);
+  font-weight: 700;
+  flex: none;
+}
+
+.empty {
+  padding: var(--space-4) var(--space-1);
+  color: var(--color-text-muted);
+}
