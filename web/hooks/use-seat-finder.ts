@@ -13,7 +13,7 @@ import { useEffect, useState } from "react";
  * 시각과 요일유형의 기본값은 화면을 연 순간 값이다. 화면을 열어 둔 채 시간이 지나도 "지금"을 다시 읽지 않는다.
  */
 
-type Tab = "segment" | "result";
+type Step = "segment" | "result";
 type SheetTarget = "from" | "to" | "dayType";
 type DataState = { status: "loading" } | { status: "ok"; data: RefinedData } | { status: "failed" };
 
@@ -31,7 +31,7 @@ export function useSeatFinder() {
   const [from, setFrom] = useState(INITIAL_FROM);
   const [to, setTo] = useState(INITIAL_TO);
   const [direction, setDirection] = useState<Direction | undefined>(undefined);
-  const [tab, setTab] = useState<Tab>("segment");
+  const [step, setStep] = useState<Step>("segment");
   const [sheetTarget, setSheetTarget] = useState<SheetTarget | null>(null);
   const [query, setQuery] = useState("");
 
@@ -100,8 +100,8 @@ export function useSeatFinder() {
     to,
     success,
     errorText,
-    tab,
-    setTab,
+    step,
+    setStep,
     stationSheetTitle,
     dayTypeSheetTitle,
     query,
