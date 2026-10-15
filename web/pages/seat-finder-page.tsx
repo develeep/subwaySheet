@@ -79,7 +79,7 @@ export function SeatFinderPage() {
             canChangeDirection={Boolean(success?.oppositeDirection)}
             errorText={finder.errorText}
             dayTypeLabel={DAY_TYPE_LABEL[finder.dayType]}
-            timeValue={finder.clockText}
+            timeValue={finder.timeText}
             isNow={finder.isNow}
             onPickFrom={() => finder.openSheet("from")}
             onPickTo={() => finder.openSheet("to")}

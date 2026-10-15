@@ -9,9 +9,9 @@ export type SegmentCardProps = {
   canChangeDirection: boolean;
   errorText: string | null;
   dayTypeLabel: string;
-  /** 시각 입력 값 "HH:MM". */
+  /** 시각 입력 값 "HH:MM". 지우는 중이면 빈 문자열이다. */
   timeValue: string;
-  /** 시각을 화면을 연 순간 그대로 두었으면 "지금"을 붙인다. */
+  /** 시각·요일유형을 둘 다 화면을 연 순간 그대로 두었으면 "지금"을 붙인다. */
   isNow: boolean;
   onPickFrom: () => void;
   onPickTo: () => void;

@@ -24,7 +24,9 @@ const INITIAL_TO = "강남";
 export function useSeatFinder() {
   const [dataState, setDataState] = useState<DataState>({ status: "loading" });
   const [openedClock] = useState(() => clockOf(new Date()));
-  const [departMinute, setDepartMinute] = useState(openedClock.departMinute);
+  // 시각 입력 글자는 그대로 들고 있어야 칸을 지우고 다시 칠 수 있다. 비었거나 덜 쳤으면 시안처럼 "지금"으로 계산한다.
+  const [timeText, setTimeText] = useState(() => formatClock(openedClock.departMinute));
+  const departMinute = parseClock(timeText) ?? openedClock.departMinute;
   const [dayType, setDayType] = useState<DayType>(openedClock.dayType);
   const [from, setFrom] = useState(INITIAL_FROM);
   const [to, setTo] = useState(INITIAL_TO);
@@ -73,10 +75,8 @@ export function useSeatFinder() {
     setSheetTarget(null);
   }
 
-  /** 시각 입력을 비우거나 형식이 맞지 않으면 앞 시각을 그대로 둔다. */
   function changeTime(text: string) {
-    const minute = parseClock(text);
-    if (minute !== null) setDepartMinute(minute);
+    setTimeText(text);
   }
 
   function swapStations() {
@@ -92,6 +92,7 @@ export function useSeatFinder() {
   return {
     dataStatus: dataState.status,
     dayType,
+    timeText,
     clockText: formatClock(departMinute),
     // 시각·요일유형 둘 다 연 순간 값일 때만 "지금"이다. 공휴일에 평일로 바꾸면 "지금"을 떼어 오늘이 평일로 읽히지 않게 한다.
     isNow: departMinute === openedClock.departMinute && dayType === openedClock.dayType,
