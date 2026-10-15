@@ -101,6 +101,7 @@
   --color-ill-led-bg: #07090C;
   --color-ill-tunnel-core: #04060A;
   --color-ill-tunnel-edge: #1C232D;
+  --color-scrim: rgb(0 0 0 / 0.45);
   --font-sans: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
   --font-numeric: tabular-nums;
   --text-note: 13px;
@@ -118,6 +119,7 @@
   --radius-card: 16px;
   --radius-sheet: 20px;
   --radius-car: 10px;
+  --radius-inset: 12px;
   --motion-fast: 100ms;
   --motion-base: 300ms;
   --motion-slide: 340ms;
@@ -146,6 +148,7 @@
   --car-pin-text: var(--color-surface);
   --grade-pip-on: var(--color-text);
   --grade-pip-off: var(--color-border);
+  --control-padding-x: 20px;
 }
 
 /* === DARK MODE === */
