@@ -6,16 +6,7 @@
     "useIgnoreFile": true
   },
   "files": {
-    "includes": [
-      "**",
-      "!.agents",
-      "!.claude",
-      "!.taste-skill",
-      "!design",
-      "!prototypes",
-      "!public/data",
-      "!skills-lock.json"
-    ]
+    "includes": ["**", "!.claude", "!design", "!prototypes", "!public/data", "!skills-lock.json"]
   },
   "formatter": {
     "enabled": true,

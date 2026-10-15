@@ -14,3 +14,7 @@ raw/
 # 빌드·테스트 산출물
 dist/
 coverage/
+
+# 에이전트 스킬 설치본(skills-lock.json으로 다시 설치한다)
+.agents/
+.claude/skills/
