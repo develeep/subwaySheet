@@ -33,6 +33,9 @@
   display: grid;
   place-items: center;
   flex: none;
+  transition:
+    background-color var(--motion-fast),
+    transform var(--motion-fast);
 }
 
 .back:hover {
@@ -95,4 +98,11 @@
   color: var(--color-warn-text);
   border-radius: var(--radius-inset);
   padding: var(--space-3);
+}
+
+/* 누르면 살짝 줄어든다(design/prototype.html). 움직임 줄이기 설정이면 끈다. */
+@media (prefers-reduced-motion: no-preference) {
+  .back:active {
+    transform: scale(0.97);
+  }
 }

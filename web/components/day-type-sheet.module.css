@@ -12,7 +12,9 @@
   background: var(--color-fill);
   font-weight: 600;
   text-align: left;
-  transition: background-color var(--motion-fast);
+  transition:
+    background-color var(--motion-fast),
+    transform var(--motion-fast);
 }
 
 .choice:hover {
@@ -22,4 +24,11 @@
 .choice[aria-pressed="true"] {
   background: var(--tab-indicator-bg);
   color: var(--tab-active-text);
+}
+
+/* 누르면 살짝 줄어든다(design/prototype.html). 움직임 줄이기 설정이면 끈다. */
+@media (prefers-reduced-motion: no-preference) {
+  .choice:active {
+    transform: scale(0.97);
+  }
 }

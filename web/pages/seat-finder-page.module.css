@@ -65,6 +65,11 @@
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
+  transition: transform var(--motion-fast);
+}
+
+.primary svg {
+  transition: translate var(--motion-base) var(--motion-ease-standard);
 }
 
 .primary:disabled {
@@ -85,4 +90,15 @@
   font-size: var(--text-note);
   color: var(--color-text-muted);
   font-variant-numeric: var(--font-numeric);
+}
+
+/* 누르면 살짝 줄어든다(design/prototype.html). 움직임 줄이기 설정이면 끈다. */
+@media (prefers-reduced-motion: no-preference) {
+  .primary:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+
+  .primary:hover:not(:disabled) svg {
+    translate: 3px 0;
+  }
 }

@@ -76,6 +76,9 @@
   background: var(--color-fill);
   display: grid;
   place-items: center;
+  transition:
+    background-color var(--motion-fast),
+    transform var(--motion-fast);
 }
 
 .stopButton:hover,
@@ -125,6 +128,9 @@
   border-radius: var(--radius-control);
   background: var(--color-fill);
   font-variant-numeric: var(--font-numeric);
+  transition:
+    background-color var(--motion-fast),
+    transform var(--motion-fast);
 }
 
 .error {
@@ -134,4 +140,12 @@
   border-radius: var(--radius-inset);
   background: var(--color-warn-bg);
   color: var(--color-warn-text);
+}
+
+/* 누르면 살짝 줄어든다(design/prototype.html). 움직임 줄이기 설정이면 끈다. */
+@media (prefers-reduced-motion: no-preference) {
+  .swap:active,
+  .chip:active {
+    transform: scale(0.97);
+  }
 }

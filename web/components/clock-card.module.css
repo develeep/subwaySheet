@@ -21,7 +21,9 @@
   font-variant-numeric: var(--font-numeric);
   /* 좁은 폭에서는 칩끼리 다음 줄로 넘기고, 칩 안 글자("일요일·공휴일")는 깨지 않는다. */
   white-space: nowrap;
-  transition: background-color var(--motion-fast);
+  transition:
+    background-color var(--motion-fast),
+    transform var(--motion-fast);
 }
 
 .chip:hover {
@@ -37,4 +39,11 @@
   color: inherit;
   padding: 0;
   min-width: 7.5em;
+}
+
+/* 누르면 살짝 줄어든다(design/prototype.html). 움직임 줄이기 설정이면 끈다. */
+@media (prefers-reduced-motion: no-preference) {
+  .chip:active {
+    transform: scale(0.97);
+  }
 }
