@@ -20,5 +20,5 @@
       "@batch/*": ["./batch/*"]
     }
   },
-  "include": ["shared", "batch", "web", "vite.config.ts"]
+  "include": ["shared", "batch", "web", "scripts", "vite.config.ts"]
 }

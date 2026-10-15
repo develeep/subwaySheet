@@ -19,7 +19,7 @@ import { FORMULA, FULL_LOAD_PER_CAR, SEATS_PER_CAR } from "./formula";
  * - 출발역 혼잡도가 없으면 서 있는 사람을 0으로 둔다(프로토타입 그대로). 바꾸는 규칙은 #10에서 정한다.
  */
 
-export type Grade = "high" | "mid" | "low";
+type Grade = "high" | "mid" | "low";
 
 export type CarScoreInput = {
   route: Route;

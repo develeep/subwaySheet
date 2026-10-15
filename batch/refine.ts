@@ -13,7 +13,7 @@ import { baseStationName, stationKey } from "./station-key";
  * **마지막에 스키마로 검증한다.** 형식이 어긋난 파일을 `public/data/`에 쓰지 않기 위해서다.
  */
 
-export type RouteDefinition = {
+type RouteDefinition = {
   id: string;
   lineNumber: number;
   name: string;

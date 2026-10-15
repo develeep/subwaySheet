@@ -32,6 +32,7 @@ design/         디자인 원본 — prototype.html, tokens.json(원본) → tok
 docs/           adr/ · conventions/ · research/ · agents/
 prototypes/     데이터 프로토타입 — 앱 코드에서 import하지 않는다
 raw/            배치 원본 다운로드 — gitignore, 커밋하지 않는다
+scripts/        레포 검사 스크립트(pnpm check가 부른다) — 앱 코드에서 import하지 않는다
 ```
 
 Playwright E2E 폴더와 D1 마이그레이션 폴더는 처음 만드는 티켓(#9, #5)에서 위치를 정하고 이 표에 더합니다.

@@ -109,6 +109,10 @@
                   {
                     "group": ["@batch/**", "**/batch/**", "@functions/**", "**/functions/**"],
                     "message": "web은 shared만 가져온다."
+                  },
+                  {
+                    "group": ["../**"],
+                    "message": "web 안의 다른 폴더는 @web/* 별칭으로 가져온다."
                   }
                 ]
               }
@@ -133,6 +137,34 @@
                   {
                     "group": ["@batch/**", "**/batch/**", "@functions/**", "**/functions/**"],
                     "message": "web은 shared만 가져온다."
+                  },
+                  {
+                    "group": ["../**"],
+                    "message": "web 안의 다른 폴더는 @web/* 별칭으로 가져온다."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["web/main.tsx"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": ["@batch/**", "**/batch/**", "@functions/**", "**/functions/**"],
+                    "message": "web은 shared만 가져온다."
+                  },
+                  {
+                    "group": ["./*/**"],
+                    "message": "web 안의 다른 폴더는 @web/* 별칭으로 가져온다."
                   }
                 ]
               }

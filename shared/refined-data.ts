@@ -19,7 +19,7 @@ export type Direction = "down" | "up";
 /** 시간대 개수. 0 = 06시 이전, 1 = 06~07시, …, 18 = 23~24시, 19 = 24시 이후(OA-12921 열 구성). */
 export const TIME_SLOT_COUNT = 20;
 
-export const FACILITY_KINDS = ["stairs", "escalator", "elevator"] as const;
+const FACILITY_KINDS = ["stairs", "escalator", "elevator"] as const;
 export type FacilityKind = (typeof FACILITY_KINDS)[number];
 
 const slotValuesSchema = z.array(z.number().nonnegative()).length(TIME_SLOT_COUNT);

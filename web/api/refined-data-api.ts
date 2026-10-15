@@ -5,7 +5,7 @@ import { type RefinedData, refinedDataSchema } from "@shared/refined-data";
  * 본문은 zod로 계약을 검증하고, 실패하면 기본값으로 진행하지 않고 `failed`를 돌려준다(coding-convention "화면의 fetch").
  */
 
-export const REFINED_DATA_ENDPOINT = "/data/refined-data.json";
+const REFINED_DATA_ENDPOINT = "/data/refined-data.json";
 
 type RefinedDataResult = { status: "ok"; data: RefinedData } | { status: "failed" };
 

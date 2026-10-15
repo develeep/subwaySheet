@@ -5,8 +5,8 @@ import type { ByDayType, Facility, FastExitSide, RefinedData, RouteStop, Station
  * 기본값은 모든 역이 고르게 붐비고 고르게 내리는 상태라, 테스트는 바꾸고 싶은 역만 `withStop`·`withStation`으로 고친다.
  */
 
-export const LOOP_STATIONS = ["가", "나", "다", "라", "마", "바"];
-export const LINE_STATIONS = ["사", "아", "자", "차"];
+const LOOP_STATIONS = ["가", "나", "다", "라", "마", "바"];
+const LINE_STATIONS = ["사", "아", "자", "차"];
 
 const flat = (value: number) => new Array(20).fill(value);
 const byDay = <T>(make: () => T): ByDayType<T> => ({ weekday: make(), saturday: make(), sunday: make() });

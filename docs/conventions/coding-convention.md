@@ -20,10 +20,10 @@
 
 ## 파일 / 코드 규칙
 
-- 다른 최상위 폴더나 `web/` 안의 다른 종류 폴더(`pages`·`hooks`·`components` 등)를 가리킬 때는 별칭(`@web/*`, `@shared/*`, `@batch/*`)을 씁니다. 같은 폴더 안은 `./`로 씁니다 **(리뷰)**.
+- 다른 최상위 폴더나 `web/` 안의 다른 종류 폴더(`pages`·`hooks`·`components` 등)를 가리킬 때는 별칭(`@web/*`, `@shared/*`, `@batch/*`)을 씁니다. 같은 폴더 안은 `./`로 씁니다 **(web은 Biome, 나머지는 리뷰)**.
 - 사용하지 않는 import는 허용하지 않습니다 **(Biome `noUnusedImports`)**.
 - 타입만 쓰는 import는 `import type`을 사용합니다 **(Biome `useImportType`)**.
-- 쓰지 않는 파일·export·상수와 도달하지 않는 분기는 발견 즉시 지웁니다. 호환 alias·재export·주석 처리로 남기지 않습니다. 지우기 전에 참조가 0건인지 검색으로 확인합니다 **(리뷰)**.
+- 쓰지 않는 파일·export·상수와 도달하지 않는 분기는 발견 즉시 지웁니다(파일·export는 knip이 잡음). 호환 alias·재export·주석 처리로 남기지 않습니다. 지우기 전에 참조가 0건인지 검색으로 확인합니다 **(리뷰)**.
 - 파일 이동·개명은 `git mv`로 합니다. 이력을 보존하려면 같은 커밋에서 내용까지 크게 바꾸지 않습니다 **(리뷰)**.
 
 ## 네이밍 규칙
@@ -77,7 +77,7 @@
 - 위임만 하는 진입 파일처럼 이름으로 충분한 파일에는 달지 않습니다.
 - 주석만 읽고 이해되게 씁니다. 외부 근거는 찾아갈 수 있는 이름으로 적습니다(예: 데이터셋 번호 `OA-12921`, API 이름 `getFstExit`, 이슈 `#2`, `ADR 0001`).
 - 공식의 시작값처럼 추정한 상수는 근거(프로토타입 비교, 추정값 여부)를 옆에 적습니다.
-- 코드와 어긋난 주석은 버그입니다. 동작을 바꾸면 같은 커밋에서 주석도 고칩니다. 지금 코드와 무관한 이력·주석 처리한 코드는 남기지 않습니다.
+- 코드와 어긋난 주석은 버그입니다. 백틱으로 적은 레포 경로는 `scripts/check-comment-paths.ts`가 존재를 확인합니다. 동작을 바꾸면 같은 커밋에서 주석도 고칩니다. 지금 코드와 무관한 이력·주석 처리한 코드는 남기지 않습니다.
 - `~한다`체로 쓰고, 한 블록은 10줄 안팎으로 유지합니다.
 
 ## 설문 함수 (`functions/`, 리뷰)
@@ -93,7 +93,7 @@
 ## 화면의 fetch · 에러 처리 (리뷰)
 
 - 화면이 부르는 서버는 우리 설문 함수(`/api/*`)와 정적 정제 데이터(`public/data/`)뿐입니다. 외부 API를 화면에서 직접 부르지 않습니다.
-- fetcher는 `web/api/<대상>-api.ts`에 둡니다. 엔드포인트는 `*_ENDPOINT` 상수로 두고 fetch와 테스트가 같은 값을 씁니다.
+- fetcher는 `web/api/<대상>-api.ts`에 둡니다. 엔드포인트는 `*_ENDPOINT` 상수로 둡니다. 테스트가 같은 값을 써야 할 때 export합니다.
 - fetcher는 **status union**을 돌려줍니다: `ok`, `invalid`(400, 사용자가 고칠 입력), `failed`(그 밖의 실패·네트워크 오류). 400과 장애를 합치면 서버 장애 때 "입력을 확인하세요"라는 거짓 안내가 나갑니다.
 - 2xx 본문도 zod로 계약을 검증합니다. 실패하면 `failed`를 돌려줍니다. 기본값으로 조용히 진행하지 않습니다.
 - **추천 기록 저장 실패는 화면에 드러내지 않습니다.** 추천 화면은 그대로 보여야 합니다(스펙 #2).
@@ -133,7 +133,7 @@
 - `assist.actions.source.organizeImports`: on
 - overrides
   - `web/**`·`shared/**`·`batch/**` → `useFilenamingConvention`(kebab-case · strictCase · requireAscii)
-  - 폴더별 `noRestrictedImports` → import 방향(`folder-structure-convention.md` "import 방향"). `web/recommend/**`·`shared/**`는 React도 막음
+  - 폴더별 `noRestrictedImports` → import 방향(`folder-structure-convention.md` "import 방향"). `web/recommend/**`·`shared/**`는 React도 막음. `web/**`는 `../`를, `web/main.tsx`는 `./<폴더>/`를 막아 다른 폴더를 `@web/*` 별칭으로 가져오게 함
   - `**/*.test.ts` → `noRestrictedImports` 끔(계약 테스트)
 - 검사에서 빼는 곳: `design/`, `prototypes/`, `public/data/`, `.claude/`, `skills-lock.json`, `.gitignore` 대상(`.agents/`·`.claude/skills/` 스킬 설치본 포함)
 
@@ -142,7 +142,7 @@
 ```bash
 pnpm lint             # biome lint .
 pnpm format           # biome format --write .
-pnpm check            # biome check . (lint + format 진단)
+pnpm check            # biome check . + knip(안 쓰는 export·파일·의존성) + 주석 경로 검사
 pnpm typecheck        # tsc --noEmit
 pnpm test             # vitest run
 pnpm test:coverage    # vitest run --coverage (80% 기준)
