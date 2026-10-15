@@ -11,7 +11,7 @@ export function stationKey(lineLabel: string, code: string): string {
 }
 
 /** 역번호 "0201"·"201"을 같은 값으로 맞춘다. */
-export function normalizeCode(code: string): string {
+function normalizeCode(code: string): string {
   const trimmed = code.trim().replace(/^0+(?=\d)/, "");
   if (!/^\d+$/.test(trimmed)) throw new Error(`역번호 형식이 숫자가 아니다: ${code}`);
   return trimmed;

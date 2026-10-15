@@ -1,6 +1,7 @@
 import { type RefinedData, refinedDataSchema, type StationData } from "@shared/refined-data";
 import { refineCongestion } from "./congestion";
 import { parseCsv } from "./csv";
+import { mapDayTypes } from "./day-type";
 import { refineFastExit, toFastExitSide } from "./fast-exit";
 import { refineRidership } from "./ridership";
 import { baseStationName, stationKey } from "./station-key";
@@ -85,12 +86,10 @@ export function refine(raw: RawSources, config: RefineConfig): RefinedData {
 }
 
 /** 환승인원(data.go.kr 15062858): 연번, 출발역명, 평일, 토요일, 일요일. 역 단위 일평균이다. */
-function readTransfer(csv: string): Map<string, { weekday: number; saturday: number; sunday: number }> {
+function readTransfer(csv: string) {
+  // 열 순서(평일, 토요일, 일요일)가 DAY_TYPES 순서와 같다.
   return new Map(
-    parseCsv(csv).map(([, name = "", weekday = "", saturday = "", sunday = ""]) => [
-      baseStationName(name),
-      { weekday: Number(weekday), saturday: Number(saturday), sunday: Number(sunday) },
-    ]),
+    parseCsv(csv).map(([, name = "", ...perDay]) => [baseStationName(name), mapDayTypes((_, i) => Number(perDay[i]))]),
   );
 }
 

@@ -57,12 +57,12 @@ describe("recommend — 노선과 방향", () => {
     const down = ok(recommend(input("가", "다"), fakeData()));
     expect(down).toMatchObject({
       direction: "down",
-      canChangeDirection: true,
+      oppositeDirection: "up",
       towardStation: "나",
-      stops: ["나"],
+      middleStations: ["나"],
     });
     const up = ok(recommend(input("가", "마"), fakeData()));
-    expect(up).toMatchObject({ direction: "up", towardStation: "바", stops: ["바"], stopCount: 2 });
+    expect(up).toMatchObject({ direction: "up", towardStation: "바", middleStations: ["바"], stopCount: 2 });
   });
 
   it("순환 노선에서 두 방향 정거장 수가 같으면 하행(down)", () => {
@@ -74,7 +74,7 @@ describe("recommend — 노선과 방향", () => {
     expect(result).toMatchObject({
       direction: "up",
       towardStation: "바",
-      stops: ["바", "마", "라"],
+      middleStations: ["바", "마", "라"],
       stopCount: 4,
     });
   });
@@ -82,8 +82,8 @@ describe("recommend — 노선과 방향", () => {
   it("순환이 아닌 노선은 역 순서로 방향이 정해진다", () => {
     expect(ok(recommend(input("사", "자"), fakeData()))).toMatchObject({
       direction: "down",
-      canChangeDirection: false,
-      stops: ["아"],
+      oppositeDirection: null,
+      middleStations: ["아"],
     });
     expect(ok(recommend(input("자", "사", { direction: "down" }), fakeData()))).toMatchObject({
       direction: "up",

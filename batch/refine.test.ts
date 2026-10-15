@@ -44,7 +44,7 @@ describe("refine", () => {
     });
   });
 
-  it("혼잡도 30분 값을 1시간 시간대로 합치고 2호선 내선을 하행(down)에 맞춘다", () => {
+  it("혼잡도 30분 값을 1시간 시간대로 합친다", () => {
     const down = stop("시청").congestion.down?.weekday;
     // 5시30분 = 0 → 06시 이전, 6시00분·6시30분 = 10·20 → 06~07시 15, 00시00분·00시30분 = 370·380 → 24시 이후 375
     expect(down?.[0]).toBe(0);
@@ -53,8 +53,11 @@ describe("refine", () => {
     expect(stop("시청").congestion.up?.sunday[5]).toBe(50);
   });
 
-  it("빠른하차 2호선 하행을 down, 상행을 up에 넣는다", () => {
-    const { fastExit } = stop("시청");
+  it("한 역에서 빠른하차 하행과 혼잡도 내선이 함께 역번호 증가 방향(down)에 들어간다", () => {
+    const { fastExit, congestion } = stop("시청");
+    // 픽스처: 내선은 30분마다 10씩 오르고 외선은 50 고정이다.
+    expect(congestion.down?.weekday[1]).toBe(15);
+    expect(congestion.up?.weekday[1]).toBe(50);
     expect(fastExit.down.facilities).toEqual([
       { car: 3, door: 2, kind: "stairs" },
       { car: 8, door: 1, kind: "escalator" },

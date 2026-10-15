@@ -1,6 +1,6 @@
-import { DAY_TYPES, type DayType, type StationData, TIME_SLOT_COUNT } from "@shared/refined-data";
+import { type DayType, type StationData, TIME_SLOT_COUNT } from "@shared/refined-data";
 import { parseCsv } from "./csv";
-import { dayTypeOfYmd } from "./day-type";
+import { dayTypeOfYmd, mapDayTypes } from "./day-type";
 import { baseStationName, stationKey } from "./station-key";
 
 /**
@@ -19,8 +19,11 @@ export type RidershipResult = {
 
 /** `wanted`는 "호선|역번호" 키(예: "2호선|201")다. 결과도 같은 키로 돌려준다. */
 export function refineRidership(csv: string, wanted: Set<string>): RidershipResult {
-  const sums = new Map<string, { name: string; on: Record<DayType, number[]>; off: Record<DayType, number[]> }>();
-  const days: Record<DayType, Set<string>> = { weekday: new Set(), saturday: new Set(), sunday: new Set() };
+  const sums = new Map<
+    string,
+    { name: string; boarding: Record<DayType, number[]>; alighting: Record<DayType, number[]> }
+  >();
+  const days = mapDayTypes(() => new Set<string>());
   let start = "";
   let end = "";
 
@@ -34,9 +37,13 @@ export function refineRidership(csv: string, wanted: Set<string>): RidershipResu
 
     const key = stationKey(line, code);
     if (!wanted.has(key)) continue;
-    const acc = sums.get(key) ?? { name: baseStationName(name), on: emptyByDayType(), off: emptyByDayType() };
+    const acc = sums.get(key) ?? {
+      name: baseStationName(name),
+      boarding: zerosByDayType(),
+      alighting: zerosByDayType(),
+    };
     sums.set(key, acc);
-    const target = kind === "승차" ? acc.on[dayType] : kind === "하차" ? acc.off[dayType] : null;
+    const target = kind === "승차" ? acc.boarding[dayType] : kind === "하차" ? acc.alighting[dayType] : null;
     if (!target) throw new Error(`승하차구분 값을 모른다: ${kind}`);
     row.slice(6, 6 + TIME_SLOT_COUNT).forEach((value, slot) => {
       target[slot] = (target[slot] ?? 0) + Number(value || 0);
@@ -47,21 +54,13 @@ export function refineRidership(csv: string, wanted: Set<string>): RidershipResu
   for (const [key, acc] of sums) {
     const average = (values: number[], dayType: DayType) =>
       values.map((v) => (days[dayType].size === 0 ? 0 : Math.round(v / days[dayType].size)));
-    const ridership = Object.fromEntries(
-      DAY_TYPES.map((dayType) => [
-        dayType,
-        { boarding: average(acc.on[dayType], dayType), alighting: average(acc.off[dayType], dayType) },
-      ]),
-    ) as Ridership;
+    const ridership = mapDayTypes((dayType) => ({
+      boarding: average(acc.boarding[dayType], dayType),
+      alighting: average(acc.alighting[dayType], dayType),
+    }));
     byStation.set(key, { name: acc.name, ridership });
   }
   return { byStation, period: { start, end } };
 }
 
-function emptyByDayType(): Record<DayType, number[]> {
-  return {
-    weekday: new Array(TIME_SLOT_COUNT).fill(0),
-    saturday: new Array(TIME_SLOT_COUNT).fill(0),
-    sunday: new Array(TIME_SLOT_COUNT).fill(0),
-  };
-}
+const zerosByDayType = () => mapDayTypes(() => new Array<number>(TIME_SLOT_COUNT).fill(0));

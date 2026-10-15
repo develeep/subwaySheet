@@ -2,16 +2,20 @@ import { SegmentCard } from "@web/components/segment-card";
 import { StationSheet } from "@web/components/station-sheet";
 import { TrainCars } from "@web/components/train-cars";
 import { VerdictCard } from "@web/components/verdict-card";
-import { DAY_TYPE_LABEL, ERROR_TEXT, LOAD_FAILED_TEXT } from "@web/constants/seat-finder-copy";
+import { DAY_TYPE_LABEL, LOAD_FAILED_TEXT } from "@web/constants/seat-finder-copy";
 import { useSeatFinder } from "@web/hooks/use-seat-finder";
 import { formatClock } from "@web/utils/format-clock";
 import type { CSSProperties } from "react";
 import styles from "./seat-finder-page.module.css";
 
+/**
+ * SeatFinderPage — 구간 선택 → 칸 추천 화면. `web/main.tsx`가 그린다.
+ * 화면 훅 `useSeatFinder`를 한 번 부르고 표시 컴포넌트에 값과 동작을 넘긴다. **판정은 훅·추천 모듈이 하고 여기서는 그리기만 한다.**
+ * 추천 결과가 없으면(데이터를 읽는 중, 오류) 칸 추천 탭을 열지 않고 구간 선택 탭을 보인다.
+ */
 export function SeatFinderPage() {
   const finder = useSeatFinder();
-  const success = finder.result?.status === "ok" ? finder.result : null;
-  const errorText = finder.result?.status === "error" ? ERROR_TEXT[finder.result.error] : null;
+  const { success } = finder;
   const clockText = formatClock(finder.clock.departMinute);
   // 선택 노선 색: 하위 요소가 쓰는 --color-line-current를 노선 색으로 바꾼다(design/tokens.css :root.lineN과 같은 값).
   const lineStyle = success
@@ -73,8 +77,8 @@ export function SeatFinderPage() {
             to={finder.to}
             lineNumber={success?.route.lineNumber ?? null}
             towardStation={success?.towardStation ?? null}
-            canChangeDirection={success?.canChangeDirection ?? false}
-            errorText={errorText}
+            canChangeDirection={Boolean(success?.oppositeDirection)}
+            errorText={finder.errorText}
             clockLabel={`${DAY_TYPE_LABEL[finder.clock.dayType]} · 지금 ${clockText}`}
             onPickFrom={() => finder.openPicker("from")}
             onPickTo={() => finder.openPicker("to")}
@@ -122,7 +126,7 @@ export function SeatFinderPage() {
       )}
 
       <StationSheet
-        title={finder.pickerTarget === "from" ? "출발역" : finder.pickerTarget === "to" ? "도착역" : null}
+        title={finder.sheetTitle}
         query={finder.query}
         matches={finder.matches}
         onQueryChange={finder.setQuery}

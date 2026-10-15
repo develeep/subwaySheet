@@ -24,7 +24,7 @@ export type Grade = "high" | "mid" | "low";
 export type CarScoreInput = {
   route: Route;
   /** 구간의 역 순서(route.stops 인덱스). 처음 = 출발역, 끝 = 도착역. */
-  path: number[];
+  segmentStops: number[];
   direction: Direction;
   dayType: DayType;
   departMinute: number;
@@ -42,83 +42,100 @@ export type CarScoreResult = {
   evenlySpreadStations: string[];
 };
 
+type ScoredStop = { station: string; stopsAfter: number; byCar: number[] };
+
 /** 계산할 중간 역이 하나도 없으면 null. */
 export function scoreCars(input: CarScoreInput): CarScoreResult | null {
-  const { route, path, direction, dayType, departMinute, stations } = input;
+  const origin = standingAtOrigin(input);
+  const seats = freedSeats(input);
+  if (seats.scored.length === 0) return null;
+  return {
+    ...judge(seats.freed, origin.standing, origin.load, seats.scored),
+    missingStations: seats.missingStations,
+    evenlySpreadStations: seats.evenlySpreadStations,
+  };
+}
+
+const stopAt = ({ route, segmentStops }: CarScoreInput, k: number) => route.stops[segmentStops[k] ?? -1] as RouteStop;
+
+/** 출발역에서 칸마다 서 있는 사람 = 이미 타고 있던 사람(칸마다 같게) + 출발역에서 탄 사람(출입설비 쪽으로 몰림). */
+function standingAtOrigin(input: CarScoreInput): { standing: number[]; load: number | null } {
+  const { route, direction, dayType, departMinute, stations } = input;
   const carCount = route.carCount;
-  const total = path.length - 1;
-  const stopAt = (k: number) => route.stops[path[k] ?? -1] as RouteStop;
-
-  const origin = stopAt(0);
-  const originSlot = slotOfMinute(departMinute);
-  const originLoad = loadAt(origin, direction, dayType, originSlot);
-  const standingAverage = originLoad === null ? 0 : Math.max(0, originLoad - SEATS_PER_CAR);
-  const originRidership = stations[origin.name]?.ridership?.[dayType];
-  const boardingPerCar = originRidership
-    ? ((originRidership.boarding[originSlot] ?? 0) * FORMULA.directionShare * headway(dayType, originSlot)) /
-      60 /
-      carCount
+  const origin = stopAt(input, 0);
+  const slot = slotOfMinute(departMinute);
+  const load = loadAt(origin, direction, dayType, slot);
+  const standingAverage = load === null ? 0 : Math.max(0, load - SEATS_PER_CAR);
+  const ridership = stations[origin.name]?.ridership?.[dayType];
+  const boardingPerCar = ridership
+    ? ((ridership.boarding[slot] ?? 0) * FORMULA.directionShare * headway(dayType, slot)) / 60 / carCount
     : 0;
-  const boardedAtOrigin = Math.min(standingAverage, boardingPerCar);
+  const boarded = Math.min(standingAverage, boardingPerCar);
   const standing = carSpread(origin.fastExit[direction], carCount).map(
-    (share) => standingAverage - boardedAtOrigin + boardedAtOrigin * carCount * share,
+    (share) => standingAverage - boarded + boarded * carCount * share,
   );
+  return { standing, load };
+}
 
-  const freed = new Array<number>(carCount).fill(0);
-  const scored: { station: string; stopsAfter: number; byCar: number[] }[] = [];
+/** 중간 역마다 칸별로 나는 자리(가중치 × 열차당 하차 × 칸 분포 × 앉아 있던 비율)를 더한다. 데이터 없는 역은 뺀다. */
+function freedSeats(input: CarScoreInput) {
+  const { route, direction, dayType, departMinute, stations } = input;
+  const total = input.segmentStops.length - 1;
+  const freed = new Array<number>(route.carCount).fill(0);
+  const scored: ScoredStop[] = [];
   const missingStations: string[] = [];
   const evenlySpreadStations: string[] = [];
   for (let k = 1; k < total; k++) {
-    const stop = stopAt(k);
-    const side = stop.fastExit[direction];
+    const stop = stopAt(input, k);
+    const fastExitSide = stop.fastExit[direction];
     const station = stations[stop.name];
     const ridership = station?.ridership?.[dayType];
-    if (!station || !ridership || side.isMissing) {
+    if (!station || !ridership || fastExitSide.isMissing) {
       missingStations.push(stop.name);
       continue;
     }
-    if (side.isElevatorOnly) evenlySpreadStations.push(stop.name);
+    if (fastExitSide.isElevatorOnly) evenlySpreadStations.push(stop.name);
 
     const slot = slotOfMinute(departMinute + k * FORMULA.minutesPerStop);
     const alighting = (ridership.alighting[slot] ?? 0) + transferAlighting(station, dayType, slot);
     const perTrain = (alighting * FORMULA.directionShare * headway(dayType, slot)) / 60;
-    const previousLoad = loadAt(stopAt(k - 1), direction, dayType, slot);
+    const previousLoad = loadAt(stopAt(input, k - 1), direction, dayType, slot);
     const seatedShare =
       previousLoad === null ? FORMULA.unknownSeatedShare : Math.min(1, SEATS_PER_CAR / Math.max(previousLoad, 1));
     const weight = (total - k) / (total - 1);
-    const byCar = carSpread(side, carCount).map((share) => weight * perTrain * share * seatedShare);
+    const byCar = carSpread(fastExitSide, route.carCount).map((share) => weight * perTrain * share * seatedShare);
     byCar.forEach((value, car) => {
       freed[car] = (freed[car] ?? 0) + value;
     });
     scored.push({ station: stop.name, stopsAfter: k, byCar });
   }
-  if (scored.length === 0) return null;
+  return { freed, scored, missingStations, evenlySpreadStations };
+}
 
+/** 빈자리 ÷ 서 있는 사람으로 추천 칸·앉을 가능성·칸 차이 작음·바로 앉음·이유 역을 정한다. */
+function judge(freed: number[], standing: number[], originLoad: number | null, scored: ScoredStop[]) {
   const ratio = freed.map((value, car) => value / Math.max(1, standing[car] ?? 0));
   const order = ratio.map((_, car) => car).sort((a, b) => (ratio[b] ?? 0) - (ratio[a] ?? 0));
   const [top = 0, second = 0] = order;
   const topRatio = ratio[top] ?? 0;
   const picks = [top];
-  if (carCount > 1 && (ratio[second] ?? 0) >= topRatio * (1 - FORMULA.secondCarWithin)) picks.push(second);
+  if (ratio.length > 1 && (ratio[second] ?? 0) >= topRatio * (1 - FORMULA.secondCarWithin)) picks.push(second);
 
   const canSitAtOrigin = originLoad !== null && originLoad < SEATS_PER_CAR;
-  const mean = ratio.reduce((a, b) => a + b, 0) / carCount;
+  const mean = ratio.reduce((a, b) => a + b, 0) / ratio.length;
   const lift = mean > 0 ? topRatio / mean : 1;
   const reason = scored.reduce((best, s) => ((s.byCar[top] ?? 0) > (best.byCar[top] ?? 0) ? s : best));
-
   return {
     picks: picks.map((car) => car + 1),
-    grade: canSitAtOrigin ? "high" : gradeOf(topRatio),
+    grade: canSitAtOrigin ? ("high" as const) : gradeOf(topRatio),
     isWeakGap: lift < FORMULA.weakBelow,
     canSitAtOrigin,
     reason: { station: reason.station, stopsAfter: reason.stopsAfter },
-    missingStations,
-    evenlySpreadStations,
   };
 }
 
 /** 분(0시 기준)을 시간대 인덱스로. 0 = 06시 이전, 1 = 06~07시, …, 18 = 23~24시, 19 = 24시 이후(0시대). */
-export function slotOfMinute(minute: number): number {
+function slotOfMinute(minute: number): number {
   const hour = Math.floor((((minute % MINUTES_PER_DAY) + MINUTES_PER_DAY) % MINUTES_PER_DAY) / 60);
   if (hour === 0) return AFTER_MIDNIGHT_SLOT;
   return hour < FIRST_HOUR ? 0 : hour - FIRST_HOUR + 1;

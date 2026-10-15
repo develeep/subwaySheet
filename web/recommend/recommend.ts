@@ -26,12 +26,12 @@ export type RecommendSuccess = {
   route: { id: string; lineNumber: number; name: string; carCount: number };
   dayType: DayType;
   direction: Direction;
-  /** 방향을 반대로 바꿀 수 있는지(순환 노선만). */
-  canChangeDirection: boolean;
+  /** 바꿀 수 있는 반대 방향. 순환 노선만 있고, 아니면 null(방향 바꾸기 없음). */
+  oppositeDirection: Direction | null;
   /** "○○ 방면"의 ○○. 진행 방향 다음 역이다(빠른하차 drtnInfo·승강장 바닥 표기와 같다). */
   towardStation: string;
   /** 중간 역(출발·도착역 제외). */
-  stops: string[];
+  middleStations: string[];
   /** 출발역부터 도착역까지 정거장 수. */
   stopCount: number;
   periods: Periods;
@@ -49,11 +49,11 @@ export function recommend(input: RecommendInput, data: RefinedData): RecommendRe
   const toIndex = route.stops.findIndex((s) => s.name === input.to);
   const defaultDirection = defaultDirectionOf(route, fromIndex, toIndex);
   const direction = route.isLoop && input.direction ? input.direction : defaultDirection;
-  const path = walk(route, fromIndex, toIndex, direction);
+  const segmentStops = segmentStopsOf(route, fromIndex, toIndex, direction);
 
   const score = scoreCars({
     route,
-    path,
+    segmentStops,
     direction,
     dayType: input.dayType,
     departMinute: input.departMinute,
@@ -67,10 +67,10 @@ export function recommend(input: RecommendInput, data: RefinedData): RecommendRe
     route: { id: route.id, lineNumber: route.lineNumber, name: route.name, carCount: route.carCount },
     dayType: input.dayType,
     direction,
-    canChangeDirection: route.isLoop,
-    towardStation: nameAt(path[1]),
-    stops: path.slice(1, -1).map(nameAt),
-    stopCount: path.length - 1,
+    oppositeDirection: route.isLoop ? (direction === "down" ? "up" : "down") : null,
+    towardStation: nameAt(segmentStops[1]),
+    middleStations: segmentStops.slice(1, -1).map(nameAt),
+    stopCount: segmentStops.length - 1,
     ...score,
     periods: data.periods,
     formulaVersion: FORMULA_VERSION,
@@ -100,13 +100,14 @@ function defaultDirectionOf(route: Route, from: number, to: number): Direction {
   return downStops <= count - downStops ? "down" : "up";
 }
 
-function walk(route: Route, from: number, to: number, direction: Direction): number[] {
+/** 구간의 역 순서(route.stops 인덱스). 처음 = 출발역, 끝 = 도착역. 순환 노선은 끝에서 처음으로 이어진다. */
+function segmentStopsOf(route: Route, from: number, to: number, direction: Direction): number[] {
   const count = route.stops.length;
   const step = direction === "down" ? 1 : -1;
-  const path = [from];
+  const stops = [from];
   for (let i = from; i !== to; ) {
     i = (i + step + count) % count;
-    path.push(i);
+    stops.push(i);
   }
-  return path;
+  return stops;
 }

@@ -1,5 +1,6 @@
 import { mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { hyphenateDate } from "./day-type";
 import { fetchFastExit } from "./fetch-fast-exit";
 import { formatJson } from "./format-json";
 import { refine } from "./refine";
@@ -24,7 +25,7 @@ function latestRaw(pattern: RegExp): { path: string; period: string | undefined 
     .at(-1);
   if (!name) throw new Error(`${RAW_DIR}/에 ${pattern} 파일이 없다`);
   const ym = pattern.exec(name)?.[1];
-  return { path: join(RAW_DIR, name), period: ym ? `${ym.slice(0, 4)}-${ym.slice(4, 6)}` : undefined };
+  return { path: join(RAW_DIR, name), period: ym ? hyphenateDate(ym) : undefined };
 }
 
 function readText(path: string): string {

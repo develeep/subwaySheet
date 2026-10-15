@@ -1,5 +1,6 @@
-import type { DayType, RouteStop } from "@shared/refined-data";
+import { DAY_TYPES, type DayType, type RouteStop } from "@shared/refined-data";
 import { parseCsv } from "./csv";
+import { mapDayTypes } from "./day-type";
 import { baseStationName, DIRECTION_BY_SIDE, stationKey } from "./station-key";
 
 /**
@@ -24,10 +25,10 @@ const MIDNIGHT_COLUMNS = [TIME_COLUMNS - 2, TIME_COLUMNS - 1] as const;
 export function refineCongestion(csv: string): Map<string, { name: string; congestion: Congestion }> {
   const partial = new Map<string, { name: string; down: PartialByDay | null; up: PartialByDay | null }>();
   for (const row of parseCsv(csv)) {
-    const [dayLabel = "", line = "", code = "", name = "", side = ""] = row;
+    const [dayLabel = "", line = "", code = "", name = "", sideLabel = ""] = row;
     const dayType = DAY_LABELS[dayLabel];
-    const direction = DIRECTION_BY_SIDE[side];
-    if (!dayType || !direction) throw new Error(`혼잡도 구분 값을 모른다: ${dayLabel}, ${side}`);
+    const direction = DIRECTION_BY_SIDE[sideLabel];
+    if (!dayType || !direction) throw new Error(`혼잡도 구분 값을 모른다: ${dayLabel}, ${sideLabel}`);
     const values = row.slice(5, 5 + TIME_COLUMNS).map((v) => Number(v || 0));
     if (values.length !== TIME_COLUMNS) throw new Error(`혼잡도 행의 시간 칸 수가 ${TIME_COLUMNS}이 아니다: ${code}`);
 
@@ -45,9 +46,8 @@ export function refineCongestion(csv: string): Map<string, { name: string; conge
 
 function complete(key: string, byDay: PartialByDay | null): Congestion["down"] {
   if (!byDay) return null;
-  const { weekday, saturday, sunday } = byDay;
-  if (!weekday || !saturday || !sunday) throw new Error(`${key} 혼잡도에 빠진 요일유형이 있다`);
-  return { weekday, saturday, sunday };
+  if (DAY_TYPES.some((dayType) => !byDay[dayType])) throw new Error(`${key} 혼잡도에 빠진 요일유형이 있다`);
+  return mapDayTypes((dayType) => byDay[dayType] ?? []);
 }
 
 function toHourly(values: number[]): number[] {

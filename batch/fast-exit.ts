@@ -1,5 +1,6 @@
 import type { Direction, Facility, FacilityKind, FastExitSide } from "@shared/refined-data";
 import { z } from "zod";
+import { hyphenateDate } from "./day-type";
 import { DIRECTION_BY_SIDE, stationKey } from "./station-key";
 
 /**
@@ -50,7 +51,7 @@ export function refineFastExit(items: unknown[], carCounts: Map<string, number>)
     sides[direction].push({ car, door, kind });
   }
   if (latest === "") throw new Error("빠른하차 행이 없다");
-  return { byStation, period: `${latest.slice(0, 4)}-${latest.slice(4, 6)}-${latest.slice(6, 8)}` };
+  return { byStation, period: hyphenateDate(latest) };
 }
 
 export function toFastExitSide(facilities: Facility[] | undefined): FastExitSide {

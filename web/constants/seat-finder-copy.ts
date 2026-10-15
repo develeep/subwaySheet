@@ -16,6 +16,8 @@ export const ERROR_TEXT: Record<RecommendError, string> = {
   noStopsToScore: "중간 역이 없거나 데이터가 없어 추천할 수 없어요.",
 };
 
+export const SHEET_TITLE = { from: "출발역", to: "도착역" } as const;
+
 export const WEAK_GAP_TEXT = "칸 차이가 작아요. 어느 칸이든 비슷해요.";
 export const CAN_SIT_TEXT = "출발역에서 바로 앉을 수 있을 만큼 한산해요.";
 export const missingStationsText = (names: string[]) => `데이터가 없어 계산에서 뺀 역: ${names.join(", ")}`;

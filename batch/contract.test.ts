@@ -17,7 +17,7 @@ describe("배치 출력 → 추천 모듈", () => {
       route: { id: "2-main", carCount: 10 },
       direction: "down",
       towardStation: "을지로3가",
-      stops: ["을지로3가"],
+      middleStations: ["을지로3가"],
       evenlySpreadStations: ["을지로3가"],
       periods: { ridership: { start: "2024-03-04", end: "2024-04-10" } },
     });
