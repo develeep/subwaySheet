@@ -1,11 +1,10 @@
 <title>subwaySheet</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <link rel="stylesheet" href="tokens.css">
 <style>
 /* 레이아웃: 한 손 조작용 세로 컬럼 + 2단계 탭(구간 선택 → 칸 추천). 주요 버튼은 화면 아래 엄지 영역에 고정. */
-/* 색·크기·반경 토큰은 tokens.css (tokens.json에서 생성). 면은 선·그림자 대신 톤 단계(bg → surface → fill)로 나눈다. */
+/* 색·크기·반경 토큰은 tokens.css (tokens.json에서 생성). 역 안내판처럼 어두운 판(sign)과 노선 색 띠로 위계를 만들고, 면은 톤 단계와 1px 구획선으로 나눈다(ADR 0004). */
 
 * { box-sizing: border-box; }
 [hidden] { display: none !important; } /* .panel·.pending의 display:flex가 hidden 속성을 덮어쓰지 않게 */
@@ -26,8 +25,9 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .card { background: var(--color-surface); border-radius: var(--radius-card); padding: var(--space-4); }
 .sub { font-size: var(--text-note); color: var(--color-text-muted); }
 
-header { display: flex; align-items: center; min-height: 40px; }
-.brand { font-weight: 700; font-size: var(--text-title); letter-spacing: -0.02em; display: flex; align-items: center; gap: var(--space-2); }
+/* 머리띠: 어두운 안내판 + 아래 노선 색 띠 */
+header { display: flex; align-items: center; min-height: 52px; padding: 0 var(--space-4) var(--band-height); border-radius: var(--radius-card); background: var(--color-sign); color: var(--color-on-sign); box-shadow: inset 0 calc(-1 * var(--band-height)) 0 var(--color-line-current); }
+.brand { font-weight: 700; font-size: var(--text-body); letter-spacing: -0.01em; display: flex; align-items: center; gap: var(--space-2); }
 .brand svg { color: var(--color-line-current); }
 
 /* 공통 컨트롤: 테두리 없는 면 + 완전히 둥근 모서리 */
@@ -54,25 +54,28 @@ main { view-transition-name: panel; }
 .hero { padding: 0; overflow: hidden; }
 .hero svg { display: block; width: 100%; height: auto; }
 .hero-copy { padding: var(--space-4) var(--space-4) var(--space-5); }
-.hero-copy h1 { margin: 0; font-size: var(--text-headline); line-height: 1.2; letter-spacing: -0.03em; text-wrap: balance; }
-.hero-copy p { margin: var(--space-2) 0 0; }
+.hero-copy h1 { margin: 0; font-size: var(--text-headline); line-height: 1.18; font-weight: 800; letter-spacing: -0.035em; text-wrap: balance; }
+.hero-copy p { margin: var(--space-3) 0 0; color: var(--color-text-muted); }
 .ill-text { font-family: var(--font-sans); font-weight: 600; }
 
-/* 경로 입력: 왼쪽 노선 띠에 출발·도착 역이 매달린 모양 */
-.route { display: grid; grid-template-columns: 1fr auto; gap: var(--space-2) 10px; align-items: center; }
-.stops { display: grid; gap: var(--space-2); position: relative; padding-left: 24px; }
-.stops::before { content: ""; position: absolute; left: 6px; top: 28px; bottom: 28px; width: 4px; background: var(--color-line-current); border-radius: 2px; }
-.stop-btn { position: relative; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; width: 100%; min-height: 60px; padding: 4px 20px; background: var(--color-fill); text-align: left; line-height: 1.3; }
-.stop-btn::before { content: ""; position: absolute; left: -24px; top: 50%; translate: 0 -50%; width: 16px; height: 16px; border-radius: 50%; background: var(--color-surface); border: 4px solid var(--color-line-current); }
+/* 경로 입력: 노선도처럼 노선 색 선에 출발·도착 역이 매달린 판. 역 줄과 방면 줄은 1px 구획선으로 나눈다. 선·동그라미 px는 그림 좌표 */
+.route { position: relative; padding: 0; overflow: hidden; }
+.stops { display: grid; position: relative; }
+.stops::before { content: ""; position: absolute; z-index: 1; left: 27px; top: 40px; bottom: 40px; width: 6px; background: var(--color-line-current); border-radius: 3px; pointer-events: none; }
+.stop-btn { position: relative; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; width: 100%; min-height: 80px; padding: 8px 80px 8px 60px; background: transparent; border-radius: 0; text-align: left; line-height: 1.25; }
+.stop-btn + .stop-btn { border-top: 1px solid var(--color-border); }
+.stop-btn::before { content: ""; position: absolute; z-index: 2; left: 20px; top: 50%; translate: 0 -50%; width: 20px; height: 20px; border-radius: 50%; background: var(--color-surface); border: 5px solid var(--color-line-current); }
 .stop-btn small { font-size: var(--text-note); color: var(--color-text-muted); }
-.stop-btn span { font-size: var(--text-title); font-weight: 700; letter-spacing: -0.02em; }
-.swap { width: 48px; height: 48px; background: var(--color-fill); display: grid; place-items: center; }
+.stop-btn span { font-size: var(--text-title); font-weight: 800; letter-spacing: -0.03em; }
+.route .stop-btn:hover { background: var(--color-fill); }
+.swap { position: absolute; z-index: 3; right: var(--space-4); top: 80px; translate: 0 -50%; width: 48px; height: 48px; background: var(--color-fill); display: grid; place-items: center; }
 .swap svg { transition: rotate .35s var(--motion-ease-standard); }
 .swap.spun svg { rotate: 180deg; }
-.meta { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; padding-top: var(--space-1); }
+.meta { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; padding: var(--space-3) var(--space-4); border-top: 1px solid var(--color-border); }
 .meta .chip input { font: inherit; font-variant-numeric: var(--font-numeric); border: 0; background: transparent; color: inherit; padding: 0; min-width: 7.5em; }
-.ln-dot { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--color-line-current); color: var(--color-on-line); font-size: var(--text-note); font-weight: 700; font-style: normal; flex: none; }
-.line-badge { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; margin-right: var(--space-1); }
+.ln-dot { display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--color-line-current); color: var(--color-on-line); font-size: var(--text-note); font-weight: 700; font-style: normal; flex: none; }
+/* 방면 안내판: 승강장 방면 표지처럼 어두운 판 위 흰 글자 */
+.line-badge { display: inline-flex; align-items: center; gap: var(--space-2); min-height: 40px; padding: 0 var(--space-3) 0 var(--space-2); border-radius: var(--radius-inset); background: var(--color-sign); color: var(--color-on-sign); font-weight: 700; }
 
 .recent h2 { margin: 0 0 var(--space-3); font-size: var(--text-body); font-weight: 700; }
 .recent-list { display: flex; flex-wrap: wrap; gap: var(--space-2); }
@@ -91,24 +94,26 @@ main { view-transition-name: panel; }
 .pending .ghost:hover { background: color-mix(in srgb, var(--color-bg) 12%, transparent); }
 .pending .primary { background: var(--color-bg); color: var(--color-text); }
 
-/* 추천 결과: 칸 번호가 화면에서 가장 큰 것 */
+/* 추천 결과: 구간 요약 줄 + 칸 번호 안내판. 칸 번호 숫자가 화면에서 가장 큰 것 */
+.verdict.card { background: none; padding: 0; }
 .summary { display: flex; align-items: center; gap: var(--space-3); }
-.back { width: 44px; height: 44px; background: var(--color-fill); display: grid; place-items: center; flex: none; }
+.back { width: 44px; height: 44px; background: var(--color-surface); display: grid; place-items: center; flex: none; }
 .summary strong { display: block; font-size: var(--text-body); }
-.verdict, #verdict { display: flex; flex-direction: column; gap: var(--space-4); }
-.answer { margin-top: var(--space-2); }
-.answer h1 { margin: 0; font-size: var(--text-display); line-height: var(--leading-tight); font-weight: 700; letter-spacing: -0.04em; font-variant-numeric: var(--font-numeric); }
-.grade { display: flex; align-items: center; gap: var(--space-3); margin-top: var(--space-3); font-weight: 700; }
+.verdict, #verdict { display: flex; flex-direction: column; gap: var(--space-3); }
+.answer { display: flex; flex-direction: column; gap: var(--space-4); padding: calc(var(--space-5) + var(--band-height)) var(--space-5) var(--space-5); border-radius: var(--radius-card); background: var(--color-sign); color: var(--color-on-sign); box-shadow: inset 0 var(--band-height) 0 var(--color-line-current); }
+.answer h1 { margin: 0; line-height: 1; font-size: var(--text-headline); font-weight: 700; letter-spacing: -0.03em; }
+.answer h1 b { margin-right: var(--space-2); font-size: var(--text-display); line-height: .9; font-weight: 800; letter-spacing: -0.05em; font-variant-numeric: var(--font-numeric); }
+.grade { display: flex; align-items: center; gap: var(--space-3); font-weight: 700; }
 .pips { display: flex; gap: 4px; }
 .pips span { width: 28px; height: 8px; border-radius: 4px; background: var(--grade-pip-off); }
 .pips span.on { background: var(--grade-pip-on); }
-.reason { margin: 0; font-size: var(--text-title); line-height: 1.4; letter-spacing: -0.01em; }
-.reason em { font-style: normal; font-weight: 700; background: color-mix(in srgb, var(--color-line-current) 22%, transparent); border-radius: 4px; padding: 0 3px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.reason { margin: 0; padding-top: var(--space-4); border-top: 1px solid var(--color-sign-muted); font-size: var(--text-title); line-height: 1.4; letter-spacing: -0.02em; color: var(--color-on-sign-muted); }
+.reason em { font-style: normal; font-weight: 700; color: var(--color-on-sign); text-decoration: underline 0.14em var(--color-line-current); text-underline-offset: 0.2em; text-decoration-skip-ink: none; }
 .warn { background: var(--color-warn-bg); color: var(--color-warn-text); border-radius: 12px; padding: var(--space-3); display: flex; gap: var(--space-2); }
 .warn svg { flex: none; margin-top: 4px; }
 
 .sec-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-2); flex-wrap: wrap; }
-.sec-head h2 { margin: 0; font-size: var(--text-title); letter-spacing: -0.02em; }
+.sec-head h2 { margin: 0; font-size: var(--text-title); font-weight: 800; letter-spacing: -0.03em; }
 .sec-head span { font-size: var(--text-note); color: var(--color-text-muted); }
 
 /* 미니맵: 칸 위치 바로가기 */
@@ -476,7 +481,7 @@ function renderRoute() {
   $("from-name").textContent = state.from + "역";
   $("to-name").textContent = state.to + "역";
   const { dirLabel } = trip(state.line, state.from, state.to);
-  $("line-badge").innerHTML = `<i class="ln-dot">${state.line}</i>${state.line}호선 · ${dirLabel}`;
+  $("line-badge").innerHTML = `<i class="ln-dot">${state.line}</i>${state.line}호선 · ${dirLabel}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>`;
   $("ill-line").textContent = state.line;
   $("ill-dir").textContent = `${state.to} 방면`;
   $("ill-sign").textContent = state.to.length > 4 ? state.to.slice(0, 4) : state.to;
@@ -531,13 +536,13 @@ function renderRec() {
     : R.short ? `<div class="warn" role="note"><span>구간이 짧아 추천 근거가 적어요.</span></div>` : "";
   $("verdict").innerHTML = `
     <div class="answer rise">
-      <h1>${carTxt}번째 칸</h1>
+      <h1><b>${carTxt}</b>번째 칸</h1>
       <div class="grade">
         <div class="pips" aria-hidden="true">${[1, 2, 3].map(n => `<span class="${n <= R.lvl ? "on" : ""}" style="--i:${n}"></span>`).join("")}</div>
         <span>앉을 가능성 ${GR[R.lvl]}</span>
       </div>
-    </div>
-    <p class="reason rise" style="--d:1">${reason}</p>${warn}`;
+      <p class="reason rise" style="--d:1">${reason}</p>
+    </div>${warn}`;
   $("train-meta").textContent = `${R.cars}량 · 왼쪽이 진행 방향 맨 앞`;
   $("mini").innerHTML = range(R.cars).map(i => `<button type="button" data-c="${i + 1}" class="${R.picks.includes(i + 1) ? "pick" : ""}" aria-label="${i + 1}번째 칸 보기"></button>`).join("");
   $("train").innerHTML = range(R.cars).map(i => carHTML(i + 1)).join("");
