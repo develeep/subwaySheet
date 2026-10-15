@@ -1,10 +1,10 @@
+import { DayTypeSheet } from "@web/components/day-type-sheet";
 import { SegmentCard } from "@web/components/segment-card";
 import { StationSheet } from "@web/components/station-sheet";
 import { TrainCars } from "@web/components/train-cars";
 import { VerdictCard } from "@web/components/verdict-card";
 import { DAY_TYPE_LABEL, LOAD_FAILED_TEXT } from "@web/constants/seat-finder-copy";
 import { useSeatFinder } from "@web/hooks/use-seat-finder";
-import { formatClock } from "@web/utils/format-clock";
 import type { CSSProperties } from "react";
 import styles from "./seat-finder-page.module.css";
 
@@ -16,7 +16,6 @@ import styles from "./seat-finder-page.module.css";
 export function SeatFinderPage() {
   const finder = useSeatFinder();
   const { success } = finder;
-  const clockText = formatClock(finder.clock.departMinute);
   // 선택 노선 색: 하위 요소가 쓰는 --color-line-current를 노선 색으로 바꾼다(design/tokens.css :root.lineN과 같은 값).
   const lineStyle = success
     ? ({ "--color-line-current": `var(--color-line-${success.route.lineNumber})` } as CSSProperties)
@@ -79,11 +78,15 @@ export function SeatFinderPage() {
             towardStation={success?.towardStation ?? null}
             canChangeDirection={Boolean(success?.oppositeDirection)}
             errorText={finder.errorText}
-            clockLabel={`${DAY_TYPE_LABEL[finder.clock.dayType]} · 지금 ${clockText}`}
-            onPickFrom={() => finder.openPicker("from")}
-            onPickTo={() => finder.openPicker("to")}
+            dayTypeLabel={DAY_TYPE_LABEL[finder.dayType]}
+            timeValue={finder.clockText}
+            isNow={finder.isNow}
+            onPickFrom={() => finder.openSheet("from")}
+            onPickTo={() => finder.openSheet("to")}
             onSwap={finder.swapStations}
             onFlipDirection={finder.flipDirection}
+            onPickDayType={() => finder.openSheet("dayType")}
+            onTimeChange={finder.changeTime}
           />
           <div className={styles.dock}>
             <button
@@ -115,7 +118,7 @@ export function SeatFinderPage() {
             from={finder.from}
             to={finder.to}
             result={success}
-            clockText={clockText}
+            clockText={finder.clockText}
             onBack={() => finder.setTab("segment")}
           />
           <TrainCars carCount={success.route.carCount} picks={success.picks} />
@@ -126,12 +129,18 @@ export function SeatFinderPage() {
       )}
 
       <StationSheet
-        title={finder.sheetTitle}
+        title={finder.stationSheetTitle}
         query={finder.query}
         matches={finder.matches}
         onQueryChange={finder.setQuery}
         onPick={finder.pickStation}
-        onClose={finder.closePicker}
+        onClose={finder.closeSheet}
+      />
+      <DayTypeSheet
+        title={finder.dayTypeSheetTitle}
+        selected={finder.dayType}
+        onPick={finder.pickDayType}
+        onClose={finder.closeSheet}
       />
     </div>
   );
