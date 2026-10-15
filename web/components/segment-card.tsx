@@ -61,8 +61,28 @@ export function SegmentCard(props: SegmentCardProps) {
             반대 방향으로
           </button>
         ) : null}
-        {/* 시안의 시각 칩("평일 08:00") 하나에 요일유형 버튼과 시각 입력을 함께 둔다. */}
-        <div className={styles.chip}>
+        <button
+          className={styles.chip}
+          type="button"
+          aria-label={`요일유형 ${props.dayTypeLabel}, 바꾸기`}
+          onClick={props.onPickDayType}
+        >
+          {props.dayTypeLabel}
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.6"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M6 9l6 6 6-6" />
+          </svg>
+        </button>
+        <label className={styles.chip}>
           <svg
             width="16"
             height="16"
@@ -75,38 +95,15 @@ export function SegmentCard(props: SegmentCardProps) {
             <circle cx="12" cy="12" r="9" />
             <path d="M12 7v5l3 2" />
           </svg>
-          <button
-            className={styles.dayTypeButton}
-            type="button"
-            aria-label={`요일유형 ${props.dayTypeLabel}, 바꾸기`}
-            onClick={props.onPickDayType}
-          >
-            {props.dayTypeLabel}
-            <svg
-              width="12"
-              height="12"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.6"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <path d="M6 9l6 6 6-6" />
-            </svg>
-          </button>
-          <label className={styles.timeLabel}>
-            {props.isNow ? "지금" : null}
-            <input
-              className={styles.timeInput}
-              type="time"
-              aria-label="출발 시각"
-              value={props.timeValue}
-              onChange={(event) => props.onTimeChange(event.target.value)}
-            />
-          </label>
-        </div>
+          {props.isNow ? "지금" : null}
+          <input
+            className={styles.timeInput}
+            type="time"
+            aria-label="출발 시각"
+            value={props.timeValue}
+            onChange={(event) => props.onTimeChange(event.target.value)}
+          />
+        </label>
         {props.errorText ? (
           <p className={styles.error} role="alert">
             {props.errorText}

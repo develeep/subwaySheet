@@ -125,27 +125,11 @@
   border-radius: var(--radius-control);
   background: var(--color-fill);
   font-variant-numeric: var(--font-numeric);
+  /* 좁은 폭에서는 칩끼리 다음 줄로 넘기고, 칩 안 글자("일요일·공휴일")는 깨지 않는다. */
+  white-space: nowrap;
 }
 
-/* 시각 칩 안의 요일유형 버튼·시각 입력(design/prototype.html .meta .chip input). 칩 면 위에 글자만 보인다. */
-.dayTypeButton {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-  min-height: 40px;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-}
-
-.timeLabel {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-}
-
+/* 시각 칩 안의 입력(design/prototype.html .meta .chip input). 칩 면 위에 글자만 보인다. */
 .timeInput {
   font: inherit;
   font-variant-numeric: var(--font-numeric);
