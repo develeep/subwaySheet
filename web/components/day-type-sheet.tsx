@@ -1,6 +1,6 @@
 import { DAY_TYPES, type DayType } from "@shared/refined-data";
-import { BottomSheet } from "@web/components/bottom-sheet";
 import { DAY_TYPE_LABEL } from "@web/constants/seat-finder-copy";
+import { BottomSheet } from "./bottom-sheet";
 import styles from "./day-type-sheet.module.css";
 
 export type DayTypeSheetProps = {

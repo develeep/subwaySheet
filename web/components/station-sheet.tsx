@@ -1,6 +1,6 @@
-import { BottomSheet } from "@web/components/bottom-sheet";
 import { stationNotFoundText } from "@web/constants/seat-finder-copy";
 import type { StationOption } from "@web/recommend/recommend";
+import { BottomSheet } from "./bottom-sheet";
 import styles from "./station-sheet.module.css";
 
 export type StationSheetProps = {
