@@ -3,7 +3,7 @@ import styles from "./clock-card.module.css";
 export type ClockCardProps = {
   dayTypeLabel: string;
   /** 시각 입력 값 "HH:MM". 지우는 중이면 빈 문자열이다. */
-  timeValue: string;
+  timeText: string;
   /** 시각·요일유형을 둘 다 화면을 연 순간 그대로 두었으면 "지금"을 붙인다. */
   isNow: boolean;
   onPickDayType: () => void;
@@ -53,7 +53,7 @@ export function ClockCard(props: ClockCardProps) {
           className={styles.timeInput}
           type="time"
           aria-label="출발 시각"
-          value={props.timeValue}
+          value={props.timeText}
           onChange={(event) => props.onTimeChange(event.target.value)}
         />
       </label>

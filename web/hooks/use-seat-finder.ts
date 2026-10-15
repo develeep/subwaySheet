@@ -49,8 +49,7 @@ export function useSeatFinder() {
   const result = data ? recommend({ from, to, direction, departMinute, dayType }, data) : null;
   const success = result?.status === "ok" ? result : null;
   const errorText = result?.status === "error" ? ERROR_TEXT[result.error] : null;
-  const stationSheetTitle = sheetTarget === "from" || sheetTarget === "to" ? SHEET_TITLE[sheetTarget] : null;
-  const dayTypeSheetTitle = sheetTarget === "dayType" ? SHEET_TITLE.dayType : null;
+  const sheetTitle = sheetTarget ? SHEET_TITLE[sheetTarget] : null;
   const trimmedQuery = query.trim();
   const matches = data ? stationOptions(data).filter((option) => option.name.includes(trimmedQuery)) : [];
 
@@ -73,10 +72,6 @@ export function useSeatFinder() {
   function pickDayType(picked: DayType) {
     setDayType(picked);
     setSheetTarget(null);
-  }
-
-  function changeTime(text: string) {
-    setTimeText(text);
   }
 
   function swapStations() {
@@ -102,8 +97,8 @@ export function useSeatFinder() {
     errorText,
     step,
     setStep,
-    stationSheetTitle,
-    dayTypeSheetTitle,
+    sheetTarget,
+    sheetTitle,
     query,
     setQuery,
     matches,
@@ -111,7 +106,7 @@ export function useSeatFinder() {
     closeSheet,
     pickStation,
     pickDayType,
-    changeTime,
+    setTimeText,
     swapStations,
     flipDirection,
   };

@@ -1,7 +1,8 @@
+import { BottomSheet } from "@web/components/bottom-sheet";
 import { ClockCard } from "@web/components/clock-card";
-import { DayTypeSheet } from "@web/components/day-type-sheet";
+import { DayTypeChoices } from "@web/components/day-type-choices";
 import { SegmentCard } from "@web/components/segment-card";
-import { StationSheet } from "@web/components/station-sheet";
+import { StationPicker } from "@web/components/station-picker";
 import { TrainCars } from "@web/components/train-cars";
 import { VerdictCard } from "@web/components/verdict-card";
 import { DAY_TYPE_LABEL, LOAD_FAILED_TEXT } from "@web/constants/seat-finder-copy";
@@ -54,10 +55,10 @@ export function SeatFinderPage() {
           </section>
           <ClockCard
             dayTypeLabel={DAY_TYPE_LABEL[finder.dayType]}
-            timeValue={finder.timeText}
+            timeText={finder.timeText}
             isNow={finder.isNow}
             onPickDayType={() => finder.openSheet("dayType")}
-            onTimeChange={finder.changeTime}
+            onTimeChange={finder.setTimeText}
           />
           <SegmentCard
             from={finder.from}
@@ -111,20 +112,18 @@ export function SeatFinderPage() {
         </main>
       )}
 
-      <StationSheet
-        title={finder.stationSheetTitle}
-        query={finder.query}
-        matches={finder.matches}
-        onQueryChange={finder.setQuery}
-        onPick={finder.pickStation}
-        onClose={finder.closeSheet}
-      />
-      <DayTypeSheet
-        title={finder.dayTypeSheetTitle}
-        selected={finder.dayType}
-        onPick={finder.pickDayType}
-        onClose={finder.closeSheet}
-      />
+      <BottomSheet title={finder.sheetTitle} onClose={finder.closeSheet}>
+        {finder.sheetTarget === "dayType" ? (
+          <DayTypeChoices selected={finder.dayType} onPick={finder.pickDayType} />
+        ) : (
+          <StationPicker
+            query={finder.query}
+            matches={finder.matches}
+            onQueryChange={finder.setQuery}
+            onPick={finder.pickStation}
+          />
+        )}
+      </BottomSheet>
     </div>
   );
 }
