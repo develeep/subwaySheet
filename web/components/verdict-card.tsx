@@ -17,6 +17,7 @@ export type VerdictCardProps = {
   onBack: () => void;
 };
 
+/** 추천 결과. 구간 요약 줄 아래 어두운 안내판에 칸 번호를 화면에서 가장 크게 보인다. */
 export function VerdictCard({ from, to, result, clockText, onBack }: VerdictCardProps) {
   return (
     <section className={styles.verdict} aria-live="polite">
@@ -46,8 +47,11 @@ export function VerdictCard({ from, to, result, clockText, onBack }: VerdictCard
           </span>
         </div>
       </div>
-      <div>
-        <h1 className={styles.cars}>{[...result.picks].sort((a, b) => a - b).join("·")}번째 칸</h1>
+      <div className={styles.board}>
+        <h1 className={styles.cars}>
+          <span className={styles.carNumber}>{[...result.picks].sort((a, b) => a - b).join("·")}</span>
+          번째 칸
+        </h1>
         <div className={styles.grade}>
           <div className={styles.pips} aria-hidden="true">
             {[1, 2, 3].map((n) => (
@@ -56,13 +60,13 @@ export function VerdictCard({ from, to, result, clockText, onBack }: VerdictCard
           </div>
           <span>앉을 가능성 {GRADE_LABEL[result.grade]}</span>
         </div>
+        <p className={styles.reason}>
+          <em>
+            {result.reason.stopsAfter}정거장 뒤 {result.reason.station}역
+          </em>
+          에서 이 칸 근처로 많이 내려요.
+        </p>
       </div>
-      <p className={styles.reason}>
-        <em>
-          {result.reason.stopsAfter}정거장 뒤 {result.reason.station}역
-        </em>
-        에서 이 칸 근처로 많이 내려요.
-      </p>
       {result.canSitAtOrigin ? <p className={styles.note}>{CAN_SIT_TEXT}</p> : null}
       {result.isWeakGap ? <p className={styles.note}>{WEAK_GAP_TEXT}</p> : null}
       {result.missingStations.length > 0 ? (

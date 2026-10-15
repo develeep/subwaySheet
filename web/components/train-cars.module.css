@@ -20,7 +20,8 @@
 .head h2 {
   margin: 0;
   font-size: var(--text-title);
-  letter-spacing: -0.02em;
+  font-weight: 800;
+  letter-spacing: -0.03em;
 }
 
 .head span {
@@ -38,7 +39,7 @@
 .mini span {
   flex: 1;
   height: 12px;
-  border-radius: 3px;
+  border-radius: 2px;
   background: var(--color-fill-hover);
 }
 

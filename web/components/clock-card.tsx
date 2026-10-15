@@ -10,45 +10,39 @@ export type ClockCardProps = {
   onTimeChange: (text: string) => void;
 };
 
-/** 추천 기준 요일유형·시각 카드. 구간 카드 위에 둔다. 요일유형 칩은 시트를 열고, 시각 칩은 입력이다. */
+/** 추천 기준 요일유형·시각 판. 구간 판 위에 둔다. 왼쪽 칸은 요일유형 시트를 열고, 오른쪽 칸은 시각 입력이다. */
 export function ClockCard(props: ClockCardProps) {
   return (
     <section className={styles.clock} aria-label="요일유형과 출발 시각">
       <button
-        className={styles.chip}
+        className={styles.field}
         type="button"
         aria-label={`요일유형 ${props.dayTypeLabel}, 바꾸기`}
         onClick={props.onPickDayType}
       >
-        {props.dayTypeLabel}
-        <svg
-          width="12"
-          height="12"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.6"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
-          <path d="M6 9l6 6 6-6" />
-        </svg>
+        <small>요일</small>
+        <span className={styles.value}>
+          {props.dayTypeLabel}
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.6"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M6 9l6 6 6-6" />
+          </svg>
+        </span>
       </button>
-      <label className={styles.chip}>
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          aria-hidden="true"
-        >
-          <circle cx="12" cy="12" r="9" />
-          <path d="M12 7v5l3 2" />
-        </svg>
-        {props.isNow ? "지금" : null}
+      <label className={styles.field}>
+        <small>
+          출발 시각
+          {props.isNow ? <b className={styles.now}>지금</b> : null}
+        </small>
         <input
           className={styles.timeInput}
           type="time"

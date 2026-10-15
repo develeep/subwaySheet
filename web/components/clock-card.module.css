@@ -1,49 +1,83 @@
-/* 요일유형·시각 카드. 칩 모양은 design/prototype.html .meta .chip을 따른다. */
+/* 요일유형·시각 판: 두 칸을 1px 구획선으로 나눈 안내판 줄. 칸마다 작은 이름표 아래에 값을 둔다. */
 .clock {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-  align-items: center;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
   background: var(--color-surface);
   border-radius: var(--radius-card);
-  padding: var(--space-4);
+  overflow: hidden;
 }
 
-.chip {
+.field {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 2px;
+  min-height: 68px;
+  min-width: 0;
+  padding: var(--space-2) var(--space-4);
+  border: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color var(--motion-fast);
+}
+
+.field + .field {
+  border-left: 1px solid var(--color-border);
+}
+
+.field:hover {
+  background: var(--color-fill);
+}
+
+/* 판의 overflow가 바깥 링을 자르므로 안쪽에 그린다. 시각 칸은 라벨 안 입력에 포커스가 가도 칸 전체에 링을 보인다. */
+.field:focus-visible,
+label.field:focus-within {
+  outline: 3px solid var(--color-focus);
+  outline-offset: -3px;
+}
+
+.field small {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-note);
+  color: var(--color-text-muted);
+}
+
+.value {
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  min-height: 40px;
-  padding: 0 var(--space-3);
-  border: 0;
-  border-radius: var(--radius-control);
-  background: var(--color-fill);
-  font-variant-numeric: var(--font-numeric);
-  /* 좁은 폭에서는 칩끼리 다음 줄로 넘기고, 칩 안 글자("일요일·공휴일")는 깨지 않는다. */
+  font-weight: 700;
+  /* 좁은 폭에서도 "일요일·공휴일"을 깨지 않는다. */
   white-space: nowrap;
-  transition:
-    background-color var(--motion-fast),
-    transform var(--motion-fast);
 }
 
-.chip:hover {
-  background: var(--color-fill-hover);
+.now {
+  padding: 0 6px;
+  border-radius: 4px;
+  background: var(--color-sign);
+  color: var(--color-on-sign);
+  font-size: var(--text-note);
+  font-weight: 700;
+  line-height: 20px;
 }
 
-/* 시각 칩 안의 입력(design/prototype.html .meta .chip input). 칩 면 위에 글자만 보인다. */
+/* 시각 입력: 칸 면 위에 숫자만 보인다. */
 .timeInput {
+  width: 100%;
+  min-width: 0;
   font: inherit;
+  font-weight: 700;
   font-variant-numeric: var(--font-numeric);
   border: 0;
   background: transparent;
   color: inherit;
   padding: 0;
-  min-width: 7.5em;
 }
 
-/* 누르면 살짝 줄어든다(design/prototype.html). 움직임 줄이기 설정이면 끈다. */
-@media (prefers-reduced-motion: no-preference) {
-  .chip:active {
-    transform: scale(0.97);
-  }
+.timeInput:focus-visible {
+  outline: 0;
 }
