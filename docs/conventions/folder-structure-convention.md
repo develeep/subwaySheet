@@ -18,7 +18,7 @@ web/            화면 (Vite + React 정적 SPA). recommend/ 밖은 종류별 �
   recommend/    추천 모듈 — 순수 TS, 앱의 핵심
   pages/        화면(페이지) 컴포넌트
   hooks/        화면 훅 — 상태·effect·동작, fetcher·추천 모듈 호출
-  components/   표시 컴포넌트 — props를 그리기만 한다
+  components/   UI 컴포넌트
   api/          fetcher — 정적 정제 데이터·설문 함수 호출
   constants/    화면 문구·표시용 고정 값
   utils/        React 없는 순수 함수
@@ -75,7 +75,7 @@ shared ────▶ (없음)
 | `hooks/` | `use-<화면>.ts` | `useState`·effect·동작 함수, fetcher·추천 모듈·utils 호출 | JSX, 순수 계산 |
 | `components/` | `<컴포넌트>.tsx` + `.module.css` | UI 컴포넌트 | fetch, 판정 |
 | `api/` | `<대상>-api.ts` | 정제 데이터·설문 함수 호출(fetcher), `*_ENDPOINT` 상수 | 화면 상태 |
-| `constants/` | `<화면>-copy.ts` 등 | 화면 문구, 상수, 매직 매서드 같은 표시용 고정 값 | 계산, 공식 값(→ `recommend/formula.ts`) |
+| `constants/` | `<화면>-copy.ts` 등 | 화면 문구, 상수, 매직 메서드 같은 표시용 고정 값 | 계산, 공식 값(→ `recommend/formula.ts`) |
 | `utils/` | `<동작>.ts` + `<동작>.test.ts` | React 없는 순수 함수(예: 시각 표기, 지난 추천 24시간 판정) | React import, 칸 점수·등급 판정(→ `recommend/`) |
 | `styles/` | `global.css` | 웹 공통 스타일 | 컴포넌트 스타일(→ 옆 `.module.css`) |
 
