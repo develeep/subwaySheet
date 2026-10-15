@@ -14,6 +14,7 @@
 ## 기본 원칙
 
 - 패키지 매니저는 pnpm만 사용합니다.
+- 빌드 스크립트가 있는 의존성을 더하면 `pnpm-workspace.yaml` `allowBuilds`에 등록합니다.
 - lint / format은 **Biome 단일 툴체인**입니다(ESLint·Prettier 병행하지 않음).
 - **React Compiler를 켜 둡니다**(`vite.config.ts`의 `reactCompilerPreset`). Rules of React(조건부 훅 금지, 렌더 중 ref 변형 금지 등)를 지키고 `useMemo`·`useCallback`을 습관적으로 쓰지 않습니다.
 - 용어는 `CONTEXT.md`를 따릅니다. 코드 이름·화면 문구·테스트 이름에서 _Avoid_로 적힌 말을 쓰지 않습니다(예: "량", "착석 확률") **(리뷰)**.
