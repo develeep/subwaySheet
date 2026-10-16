@@ -27,7 +27,7 @@
 
 .colon {
   position: relative;
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .column {
@@ -59,7 +59,7 @@
 
 .item[aria-selected="true"] {
   color: var(--color-text);
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .actions {
@@ -74,7 +74,9 @@
   border-radius: var(--radius-control);
   background: var(--button-secondary-bg);
   font-weight: 600;
-  transition: background-color var(--motion-fast);
+  transition:
+    background-color var(--motion-fast),
+    transform var(--motion-fast);
 }
 
 .now:hover {
@@ -88,4 +90,13 @@
   background: var(--button-primary-bg);
   color: var(--button-primary-text);
   font-weight: 700;
+  transition: transform var(--motion-fast);
+}
+
+/* 누르면 살짝 줄어든다(design/prototype.html). 움직임 줄이기 설정이면 끈다. */
+@media (prefers-reduced-motion: no-preference) {
+  .now:active,
+  .confirm:active {
+    transform: scale(0.97);
+  }
 }

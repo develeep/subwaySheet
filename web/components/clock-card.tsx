@@ -21,19 +21,7 @@ export function ClockCard(props: ClockCardProps) {
         <small>요일</small>
         <span className={styles.value}>
           {props.dayTypeLabel}
-          <svg
-            width="12"
-            height="12"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.6"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <path d="M6 9l6 6 6-6" />
-          </svg>
+          <ChevronDown />
         </span>
       </button>
       <button
@@ -43,8 +31,30 @@ export function ClockCard(props: ClockCardProps) {
         onClick={props.onPickTime}
       >
         <small>출발 시각</small>
-        <span className={styles.value}>{props.clockText}</span>
+        <span className={styles.value}>
+          {props.clockText}
+          <ChevronDown />
+        </span>
       </button>
     </section>
+  );
+}
+
+/** 두 칸 모두 시트를 연다는 표시. */
+function ChevronDown() {
+  return (
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M6 9l6 6 6-6" />
+    </svg>
   );
 }
