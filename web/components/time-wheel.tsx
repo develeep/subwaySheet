@@ -4,6 +4,8 @@ import styles from "./time-wheel.module.css";
 export type TimeWheelProps = {
   /** 처음 맞춰 둘 출발 시각. 0시부터 센 분이다. */
   departMinute: number;
+  /** "지금" 버튼이 고를 시각. 화면을 연 순간의 시각이라 ClockCard의 "지금" 표시와 같은 기준이다. */
+  nowMinute: number;
   onPick: (minute: number) => void;
 };
 
@@ -11,8 +13,8 @@ export type TimeWheelProps = {
 const ITEM_HEIGHT = 44;
 
 /**
- * TimeWheel — 시각 고르기 시트의 시·분 휠과 확인 버튼. 시트 틀은 BottomSheet다.
- * 휠은 CSS scroll-snap 목록이고, 가운데 칸이 고른 값이다. 확인을 눌러야 시각이 바뀐다.
+ * TimeWheel — 시각 고르기 시트의 시·분 휠과 지금·확인 버튼. 시트 틀은 BottomSheet다.
+ * 휠은 CSS scroll-snap 목록이고, 가운데 칸이 고른 값이다. 확인을 눌러야 시각이 바뀌고, 지금은 휠을 거치지 않고 바로 고른다.
  * **처음 위치를 잡는 스크롤은 dialog가 열린 뒤여야 한다** — BottomSheet가 layout effect로 먼저 연다.
  */
 export function TimeWheel(props: TimeWheelProps) {
@@ -28,9 +30,14 @@ export function TimeWheel(props: TimeWheelProps) {
         </span>
         <WheelColumn label="분" count={60} selected={minute} onSelect={setMinute} />
       </div>
-      <button className={styles.confirm} type="button" onClick={() => props.onPick(hour * 60 + minute)}>
-        확인
-      </button>
+      <div className={styles.actions}>
+        <button className={styles.now} type="button" onClick={() => props.onPick(props.nowMinute)}>
+          지금
+        </button>
+        <button className={styles.confirm} type="button" onClick={() => props.onPick(hour * 60 + minute)}>
+          확인
+        </button>
+      </div>
     </div>
   );
 }

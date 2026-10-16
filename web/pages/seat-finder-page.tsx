@@ -117,7 +117,7 @@ export function SeatFinderPage() {
         {finder.sheetTarget === "dayType" ? (
           <DayTypeChoices selected={finder.dayType} onPick={finder.pickDayType} />
         ) : finder.sheetTarget === "time" ? (
-          <TimeWheel departMinute={finder.departMinute} onPick={finder.pickTime} />
+          <TimeWheel departMinute={finder.departMinute} nowMinute={finder.nowMinute} onPick={finder.pickTime} />
         ) : (
           <StationPicker
             query={finder.query}

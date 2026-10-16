@@ -91,6 +91,7 @@ export function useSeatFinder() {
     dataStatus: dataState.status,
     dayType,
     departMinute,
+    nowMinute: openedClock.departMinute,
     clockText: formatClock(departMinute),
     // 시각·요일유형 둘 다 연 순간 값일 때만 "지금"이다. 공휴일에 평일로 바꾸면 "지금"을 떼어 오늘이 평일로 읽히지 않게 한다.
     isNow: departMinute === openedClock.departMinute && dayType === openedClock.dayType,
