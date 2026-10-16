@@ -23,9 +23,9 @@ const INITIAL_TO = "강남";
 
 export function useSeatFinder() {
   const [dataState, setDataState] = useState<DataState>({ status: "loading" });
-  const [nowClock, setNowClock] = useState(() => clockOf(new Date()));
-  const [departMinute, setDepartMinute] = useState(nowClock.departMinute);
-  const [dayType, setDayType] = useState<DayType>(nowClock.dayType);
+  const [openedClock] = useState(() => clockOf(new Date()));
+  const [departMinute, setDepartMinute] = useState(openedClock.departMinute);
+  const [dayType, setDayType] = useState<DayType>(openedClock.dayType);
   const [from, setFrom] = useState(INITIAL_FROM);
   const [to, setTo] = useState(INITIAL_TO);
   const [direction, setDirection] = useState<Direction | undefined>(undefined);
@@ -77,11 +77,9 @@ export function useSeatFinder() {
     setSheetTarget(null);
   }
 
-  // 요일유형은 그대로 둔다. 자정을 넘겨 오늘 요일유형이 바뀌었으면 "지금" 표시가 붙지 않아 요일유형을 다시 고르라는 신호가 된다.
+  // 시각 시트의 버튼이라 시각만 바꾸고 요일유형은 그대로 둔다.
   function pickNowTime() {
-    const now = clockOf(new Date());
-    setNowClock(now);
-    pickTime(now.departMinute);
+    pickTime(clockOf(new Date()).departMinute);
   }
 
   function swapStations() {
@@ -99,8 +97,6 @@ export function useSeatFinder() {
     dayType,
     departMinute,
     clockText: formatClock(departMinute),
-    // 시각·요일유형 둘 다 마지막으로 읽은 지금 값일 때만 "지금"이다. 공휴일에 평일로 바꾸면 "지금"을 떼어 오늘이 평일로 읽히지 않게 한다.
-    isNow: departMinute === nowClock.departMinute && dayType === nowClock.dayType,
     from,
     to,
     success,

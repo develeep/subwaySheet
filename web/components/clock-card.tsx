@@ -4,8 +4,6 @@ export type ClockCardProps = {
   dayTypeLabel: string;
   /** 출발 시각 "HH:MM". */
   clockText: string;
-  /** 시각·요일유형이 둘 다 지금 값(화면을 연 순간, 또는 시각 시트에서 "지금"을 누른 순간)이면 "지금"을 붙인다. */
-  isNow: boolean;
   onPickDayType: () => void;
   onPickTime: () => void;
 };
@@ -38,7 +36,7 @@ export function ClockCard(props: ClockCardProps) {
       <button
         className={styles.chip}
         type="button"
-        aria-label={`출발 시각 ${props.isNow ? "지금 " : ""}${props.clockText}, 바꾸기`}
+        aria-label={`출발 시각 ${props.clockText}, 바꾸기`}
         onClick={props.onPickTime}
       >
         <svg
@@ -53,7 +51,6 @@ export function ClockCard(props: ClockCardProps) {
           <circle cx="12" cy="12" r="9" />
           <path d="M12 7v5l3 2" />
         </svg>
-        {props.isNow ? "지금" : null}
         <span>{props.clockText}</span>
       </button>
     </section>

@@ -57,7 +57,6 @@ export function SeatFinderPage() {
           <ClockCard
             dayTypeLabel={DAY_TYPE_LABEL[finder.dayType]}
             clockText={finder.clockText}
-            isNow={finder.isNow}
             onPickDayType={() => finder.openSheet("dayType")}
             onPickTime={() => finder.openSheet("time")}
           />
