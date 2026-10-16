@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
  * useSeatFinder — 구간 선택 → 칸 추천 화면의 상태와 동작. `web/pages/seat-finder-page.tsx`만 부른다.
  * 정제 데이터를 한 번 읽고, 출발역·도착역·방향·시각·요일유형이 바뀔 때마다 추천 모듈 `recommend`를 다시 부른다(계산은 모두 그쪽).
  * 결과를 성공(`success`)과 오류 문구(`errorText`)로 나눠 주어 페이지는 그리기만 한다.
- * 시각과 요일유형의 기본값은 화면을 연 순간 값이다. 화면을 열어 둔 채 시간이 지나도 "지금"을 다시 읽지 않는다.
+ * 시각과 요일유형의 기본값은 화면을 연 순간 값이다. 화면을 열어 둔 채 시간이 지나도 저절로 다시 읽지 않고, 시각 시트의 "지금"을 누를 때만 시계를 다시 읽는다.
  */
 
 type Step = "segment" | "result";
@@ -23,9 +23,9 @@ const INITIAL_TO = "강남";
 
 export function useSeatFinder() {
   const [dataState, setDataState] = useState<DataState>({ status: "loading" });
-  const [openedClock] = useState(() => clockOf(new Date()));
-  const [departMinute, setDepartMinute] = useState(openedClock.departMinute);
-  const [dayType, setDayType] = useState<DayType>(openedClock.dayType);
+  const [nowClock, setNowClock] = useState(() => clockOf(new Date()));
+  const [departMinute, setDepartMinute] = useState(nowClock.departMinute);
+  const [dayType, setDayType] = useState<DayType>(nowClock.dayType);
   const [from, setFrom] = useState(INITIAL_FROM);
   const [to, setTo] = useState(INITIAL_TO);
   const [direction, setDirection] = useState<Direction | undefined>(undefined);
@@ -77,6 +77,13 @@ export function useSeatFinder() {
     setSheetTarget(null);
   }
 
+  // 요일유형은 그대로 둔다. 자정을 넘겨 오늘 요일유형이 바뀌었으면 "지금" 표시가 붙지 않아 요일유형을 다시 고르라는 신호가 된다.
+  function pickNowTime() {
+    const now = clockOf(new Date());
+    setNowClock(now);
+    pickTime(now.departMinute);
+  }
+
   function swapStations() {
     setFrom(to);
     setTo(from);
@@ -91,10 +98,9 @@ export function useSeatFinder() {
     dataStatus: dataState.status,
     dayType,
     departMinute,
-    nowMinute: openedClock.departMinute,
     clockText: formatClock(departMinute),
-    // 시각·요일유형 둘 다 연 순간 값일 때만 "지금"이다. 공휴일에 평일로 바꾸면 "지금"을 떼어 오늘이 평일로 읽히지 않게 한다.
-    isNow: departMinute === openedClock.departMinute && dayType === openedClock.dayType,
+    // 시각·요일유형 둘 다 마지막으로 읽은 지금 값일 때만 "지금"이다. 공휴일에 평일로 바꾸면 "지금"을 떼어 오늘이 평일로 읽히지 않게 한다.
+    isNow: departMinute === nowClock.departMinute && dayType === nowClock.dayType,
     from,
     to,
     success,
@@ -111,6 +117,7 @@ export function useSeatFinder() {
     pickStation,
     pickDayType,
     pickTime,
+    pickNowTime,
     swapStations,
     flipDirection,
   };

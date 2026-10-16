@@ -4,8 +4,8 @@ import styles from "./time-wheel.module.css";
 export type TimeWheelProps = {
   /** 처음 맞춰 둘 출발 시각. 0시부터 센 분이다. */
   departMinute: number;
-  /** "지금" 버튼이 고를 시각. 화면을 연 순간의 시각이라 ClockCard의 "지금" 표시와 같은 기준이다. */
-  nowMinute: number;
+  /** "지금" 버튼. 화면 훅이 시계를 다시 읽어 고른다. */
+  onPickNow: () => void;
   onPick: (minute: number) => void;
 };
 
@@ -31,7 +31,7 @@ export function TimeWheel(props: TimeWheelProps) {
         <WheelColumn label="분" count={60} selected={minute} onSelect={setMinute} />
       </div>
       <div className={styles.actions}>
-        <button className={styles.now} type="button" onClick={() => props.onPick(props.nowMinute)}>
+        <button className={styles.now} type="button" onClick={props.onPickNow}>
           지금
         </button>
         <button className={styles.confirm} type="button" onClick={() => props.onPick(hour * 60 + minute)}>

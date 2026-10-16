@@ -4,7 +4,7 @@ export type ClockCardProps = {
   dayTypeLabel: string;
   /** 출발 시각 "HH:MM". */
   clockText: string;
-  /** 시각·요일유형을 둘 다 화면을 연 순간 그대로 두었으면 "지금"을 붙인다. */
+  /** 시각·요일유형이 둘 다 지금 값(화면을 연 순간, 또는 시각 시트에서 "지금"을 누른 순간)이면 "지금"을 붙인다. */
   isNow: boolean;
   onPickDayType: () => void;
   onPickTime: () => void;
