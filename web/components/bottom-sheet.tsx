@@ -1,4 +1,4 @@
-import { type ReactNode, useEffect, useId, useRef } from "react";
+import { type ReactNode, useId, useLayoutEffect, useRef } from "react";
 import styles from "./bottom-sheet.module.css";
 
 export type BottomSheetProps = {
@@ -8,13 +8,14 @@ export type BottomSheetProps = {
   children: ReactNode;
 };
 
-/** 바텀시트 틀(design/prototype.html dialog·.sheet). `<dialog>`를 열고 닫는 DOM 동기화만 한다. 화면 페이지가 역·요일유형 고르기에 쓴다. */
+/** 바텀시트 틀(design/prototype.html dialog·.sheet). `<dialog>`를 열고 닫는 DOM 동기화만 한다. 화면 페이지가 역·요일유형·시각 고르기에 쓴다. */
 export function BottomSheet({ title, onClose, children }: BottomSheetProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const titleId = useId();
   const isOpen = title !== null;
 
-  useEffect(() => {
+  // layout effect라 자식의 effect보다 먼저 연다. 자식(시각 휠)이 effect에서 스크롤 위치를 잡으려면 dialog가 보여야 한다.
+  useLayoutEffect(() => {
     const dialog = dialogRef.current;
     if (!dialog) return;
     if (isOpen && !dialog.open) dialog.showModal();

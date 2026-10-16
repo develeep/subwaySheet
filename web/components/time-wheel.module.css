@@ -1,0 +1,73 @@
+/* 시각 휠. 디자인 시안에 없는 화면이라 칸 면(--color-fill)·확인 버튼(.primary)만 시안 토큰을 따른다. 5칸이 보이고 가운데 칸이 고른 값이다. */
+.picker {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.wheels {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-title);
+  font-variant-numeric: var(--font-numeric);
+}
+
+/* 가운데 고른 칸 띠. 휠 뒤에 깔린다. */
+.wheels::before {
+  content: "";
+  position: absolute;
+  inset: calc(var(--wheel-item) * 2) 0 auto;
+  height: var(--wheel-item);
+  border-radius: var(--radius-inset);
+  background: var(--color-fill);
+}
+
+.colon {
+  position: relative;
+  font-weight: 700;
+}
+
+.column {
+  position: relative;
+  width: 72px;
+  height: calc(var(--wheel-item) * 5);
+  /* 첫 칸·끝 칸도 가운데 띠까지 오도록 위아래 2칸씩 비운다. */
+  padding: calc(var(--wheel-item) * 2) 0;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  scrollbar-width: none;
+  mask-image: linear-gradient(transparent, #000 35%, #000 65%, transparent);
+  border-radius: var(--radius-inset);
+}
+
+.column::-webkit-scrollbar {
+  display: none;
+}
+
+.item {
+  height: var(--wheel-item);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  scroll-snap-align: center;
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+.item[aria-selected="true"] {
+  color: var(--color-text);
+  font-weight: 700;
+}
+
+.confirm {
+  width: 100%;
+  min-height: var(--button-primary-height);
+  border: 0;
+  border-radius: var(--radius-control);
+  background: var(--button-primary-bg);
+  color: var(--button-primary-text);
+  font-weight: 700;
+}

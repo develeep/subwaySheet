@@ -27,14 +27,3 @@
 .chip:hover {
   background: var(--color-fill-hover);
 }
-
-/* 시각 칩 안의 입력(design/prototype.html .meta .chip input). 칩 면 위에 글자만 보인다. */
-.timeInput {
-  font: inherit;
-  font-variant-numeric: var(--font-numeric);
-  border: 0;
-  background: transparent;
-  color: inherit;
-  padding: 0;
-  min-width: 7.5em;
-}

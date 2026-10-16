@@ -3,6 +3,7 @@ import { ClockCard } from "@web/components/clock-card";
 import { DayTypeChoices } from "@web/components/day-type-choices";
 import { SegmentCard } from "@web/components/segment-card";
 import { StationPicker } from "@web/components/station-picker";
+import { TimeWheel } from "@web/components/time-wheel";
 import { TrainCars } from "@web/components/train-cars";
 import { VerdictCard } from "@web/components/verdict-card";
 import { DAY_TYPE_LABEL, LOAD_FAILED_TEXT } from "@web/constants/seat-finder-copy";
@@ -55,10 +56,10 @@ export function SeatFinderPage() {
           </section>
           <ClockCard
             dayTypeLabel={DAY_TYPE_LABEL[finder.dayType]}
-            timeText={finder.timeText}
+            clockText={finder.clockText}
             isNow={finder.isNow}
             onPickDayType={() => finder.openSheet("dayType")}
-            onTimeChange={finder.setTimeText}
+            onPickTime={() => finder.openSheet("time")}
           />
           <SegmentCard
             from={finder.from}
@@ -115,6 +116,8 @@ export function SeatFinderPage() {
       <BottomSheet title={finder.sheetTitle} onClose={finder.closeSheet}>
         {finder.sheetTarget === "dayType" ? (
           <DayTypeChoices selected={finder.dayType} onPick={finder.pickDayType} />
+        ) : finder.sheetTarget === "time" ? (
+          <TimeWheel departMinute={finder.departMinute} onPick={finder.pickTime} />
         ) : (
           <StationPicker
             query={finder.query}

@@ -3,7 +3,7 @@ import { fetchRefinedData } from "@web/api/refined-data-api";
 import { ERROR_TEXT, SHEET_TITLE } from "@web/constants/seat-finder-copy";
 import { clockOf } from "@web/recommend/clock";
 import { recommend, stationOptions } from "@web/recommend/recommend";
-import { formatClock, parseClock } from "@web/utils/format-clock";
+import { formatClock } from "@web/utils/format-clock";
 import { useEffect, useState } from "react";
 
 /**
@@ -14,7 +14,7 @@ import { useEffect, useState } from "react";
  */
 
 type Step = "segment" | "result";
-type SheetTarget = "from" | "to" | "dayType";
+type SheetTarget = "from" | "to" | "dayType" | "time";
 type DataState = { status: "loading" } | { status: "ok"; data: RefinedData } | { status: "failed" };
 
 // 디자인 시안(design/prototype.html)의 처음 구간.
@@ -24,9 +24,7 @@ const INITIAL_TO = "강남";
 export function useSeatFinder() {
   const [dataState, setDataState] = useState<DataState>({ status: "loading" });
   const [openedClock] = useState(() => clockOf(new Date()));
-  // 시각 입력 글자는 그대로 들고 있어야 칸을 지우고 다시 칠 수 있다. 비었거나 덜 쳤으면 시안처럼 "지금"으로 계산한다.
-  const [timeText, setTimeText] = useState(() => formatClock(openedClock.departMinute));
-  const departMinute = parseClock(timeText) ?? openedClock.departMinute;
+  const [departMinute, setDepartMinute] = useState(openedClock.departMinute);
   const [dayType, setDayType] = useState<DayType>(openedClock.dayType);
   const [from, setFrom] = useState(INITIAL_FROM);
   const [to, setTo] = useState(INITIAL_TO);
@@ -74,6 +72,11 @@ export function useSeatFinder() {
     setSheetTarget(null);
   }
 
+  function pickTime(minute: number) {
+    setDepartMinute(minute);
+    setSheetTarget(null);
+  }
+
   function swapStations() {
     setFrom(to);
     setTo(from);
@@ -87,7 +90,7 @@ export function useSeatFinder() {
   return {
     dataStatus: dataState.status,
     dayType,
-    timeText,
+    departMinute,
     clockText: formatClock(departMinute),
     // 시각·요일유형 둘 다 연 순간 값일 때만 "지금"이다. 공휴일에 평일로 바꾸면 "지금"을 떼어 오늘이 평일로 읽히지 않게 한다.
     isNow: departMinute === openedClock.departMinute && dayType === openedClock.dayType,
@@ -106,7 +109,7 @@ export function useSeatFinder() {
     closeSheet,
     pickStation,
     pickDayType,
-    setTimeText,
+    pickTime,
     swapStations,
     flipDirection,
   };
