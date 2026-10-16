@@ -6,7 +6,7 @@
     "useIgnoreFile": true
   },
   "files": {
-    "includes": ["**", "!.claude", "!design", "!prototypes", "!public/data", "!skills-lock.json"]
+    "includes": ["**", "!.claude", "!design", "!prototypes", "!public/data"]
   },
   "formatter": {
     "enabled": true,
