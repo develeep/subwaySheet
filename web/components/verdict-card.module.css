@@ -1,27 +1,27 @@
-/* 추천 결과: 칸 번호가 화면에서 가장 큰 것(design/prototype.html .verdict) */
+/* 추천 결과(design/prototype.html .verdict): 구간 요약 줄 + 칸 번호 안내판. 칸 번호 숫자가 화면에서 가장 큰 것이다. */
 .verdict {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
-  background: var(--color-surface);
-  border-radius: var(--radius-card);
-  padding: var(--space-4);
+  gap: var(--space-3);
 }
 
 .summary {
   display: flex;
   align-items: center;
   gap: var(--space-3);
+  padding: var(--space-1) 0;
 }
 
 .summary strong {
   display: block;
   font-size: var(--text-body);
+  font-weight: 700;
 }
 
 .sub {
   font-size: var(--text-note);
   color: var(--color-text-muted);
+  font-variant-numeric: var(--font-numeric);
 }
 
 .back {
@@ -29,22 +29,46 @@
   height: 44px;
   border: 0;
   border-radius: var(--radius-control);
-  background: var(--color-fill);
+  background: var(--color-surface);
   display: grid;
   place-items: center;
   flex: none;
+  transition:
+    background-color var(--motion-fast),
+    transform var(--motion-fast);
 }
 
 .back:hover {
-  background: var(--color-fill-hover);
+  background: var(--color-fill);
 }
 
+/* 칸 번호 안내판: 어두운 판 + 위 노선 색 띠 */
+.board {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  border-top: var(--band-height) solid var(--color-line-current);
+  border-radius: var(--radius-card);
+  background: var(--color-sign);
+  color: var(--color-on-sign);
+}
+
+/* flex로 바꾸면 접근 이름이 "3 번째 칸"으로 띄어진다. 숫자는 인라인으로 둔다. */
 .cars {
-  margin: var(--space-2) 0 0;
-  font-size: var(--text-display);
-  line-height: var(--leading-tight);
+  margin: 0;
+  line-height: 1;
+  font-size: var(--text-headline);
   font-weight: 700;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.03em;
+}
+
+.carNumber {
+  margin-right: var(--space-2);
+  font-size: var(--text-display);
+  line-height: 0.9;
+  font-weight: 800;
+  letter-spacing: -0.05em;
   font-variant-numeric: var(--font-numeric);
 }
 
@@ -52,7 +76,6 @@
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  margin-top: var(--space-3);
   font-weight: 700;
 }
 
@@ -74,19 +97,21 @@
 
 .reason {
   margin: 0;
+  padding-top: var(--space-2);
   font-size: var(--text-title);
   line-height: 1.4;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
+  color: var(--color-on-sign-muted);
 }
 
 .reason em {
   font-style: normal;
   font-weight: 700;
-  background: color-mix(in srgb, var(--color-line-current) 22%, transparent);
-  border-radius: 4px;
-  padding: 0 var(--space-1);
-  box-decoration-break: clone;
-  -webkit-box-decoration-break: clone;
+  color: var(--color-on-sign);
+  /* 밑줄은 글자 아래에 그려 밝은 노선 색에서도 흰 글자 대비를 해치지 않는다. */
+  text-decoration: underline 0.14em var(--color-line-current);
+  text-underline-offset: 0.2em;
+  text-decoration-skip-ink: none;
 }
 
 .note {
@@ -95,4 +120,32 @@
   color: var(--color-warn-text);
   border-radius: var(--radius-inset);
   padding: var(--space-3);
+}
+
+/* 누르면 살짝 줄어든다(design/prototype.html). 움직임 줄이기 설정이면 끈다. */
+@media (prefers-reduced-motion: no-preference) {
+  .back:active {
+    transform: scale(0.97);
+  }
+
+  /* 등급 막대가 왼쪽부터 하나씩 찬다(design/prototype.html .pips span.on). */
+  .pips .pipOn {
+    transform-origin: left;
+    animation: pip 0.3s 0.4s var(--motion-ease-standard) both;
+  }
+
+  .pips .pipOn:nth-child(2) {
+    animation-delay: 0.55s;
+  }
+
+  .pips .pipOn:nth-child(3) {
+    animation-delay: 0.7s;
+  }
+}
+
+@keyframes pip {
+  from {
+    transform: scaleX(0.3);
+    opacity: 0;
+  }
 }

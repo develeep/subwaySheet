@@ -1,0 +1,85 @@
+/* 첫 화면 그림(design/prototype.html .hero svg). 열차가 들어오고 불빛·탑승 위치 표시가 숨 쉬듯 움직인다. 움직임 줄이기 설정이면 멈춘 그림만 보인다. */
+.illustration {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-card);
+}
+
+.text {
+  font-family: var(--font-sans);
+  font-weight: 600;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .train {
+    transform-box: view-box;
+    transform-origin: 245px 140px;
+    animation: approach var(--motion-arrive) var(--motion-ease-arrive) both;
+  }
+
+  .glow {
+    animation: flicker 2.6s ease-in-out infinite;
+  }
+
+  .beam {
+    animation: beam 2.6s ease-in-out infinite;
+  }
+
+  .marker {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: pulse 1.8s ease-out infinite;
+  }
+
+  .bubble {
+    animation:
+      bob 3s ease-in-out infinite,
+      fadein 0.5s 1.4s both;
+  }
+}
+
+@keyframes approach {
+  from {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+}
+
+@keyframes flicker {
+  50% {
+    opacity: 0.55;
+  }
+}
+
+@keyframes beam {
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+@keyframes bob {
+  50% {
+    translate: 0 -4px;
+  }
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+}

@@ -1,5 +1,5 @@
 /*
- * 열차 칸 그림: 벽 → 바닥 → 점자블록 띠 위에 칸을 늘어놓는다(design/prototype.html .train-scroll·.car). 움직임은 #3에서 넣지 않는다.
+ * 열차 칸 그림: 벽 → 바닥 → 점자블록 띠 위에 칸을 늘어놓는다(design/prototype.html .train-scroll·.car). "여기 타세요" 표시만 움직인다.
  * 칸 안의 문·창 크기, 칸 사이 틈, 바닥 띠 위치 같은 px 값은 간격이 아니라 그림 좌표라 시안 값을 그대로 쓴다.
  */
 .card {
@@ -20,7 +20,8 @@
 .head h2 {
   margin: 0;
   font-size: var(--text-title);
-  letter-spacing: -0.02em;
+  font-weight: 800;
+  letter-spacing: -0.03em;
 }
 
 .head span {
@@ -38,7 +39,7 @@
 .mini span {
   flex: 1;
   height: 12px;
-  border-radius: 3px;
+  border-radius: 2px;
   background: var(--color-fill-hover);
 }
 
@@ -187,4 +188,26 @@
   border: 5px solid transparent;
   border-bottom: 0;
   border-top-color: var(--car-pin-bg);
+}
+
+/* "여기 타세요" 표시가 내려앉은 뒤 살짝 떠 있다(design/prototype.html .pin). 움직임 줄이기 설정이면 끈다. */
+@media (prefers-reduced-motion: no-preference) {
+  .pin {
+    animation:
+      drop 0.5s 0.6s var(--motion-ease-spring) both,
+      bob 2.4s 1.2s ease-in-out infinite;
+  }
+}
+
+@keyframes drop {
+  from {
+    translate: -50% -30px;
+    opacity: 0;
+  }
+}
+
+@keyframes bob {
+  50% {
+    translate: -50% -4px;
+  }
 }

@@ -1,20 +1,30 @@
-/* 화면 뼈대: 한 손 조작용 세로 컬럼. 구간 선택 → 칸 추천 두 단계는 주요 버튼과 뒤로 버튼으로 오간다. 주요 버튼은 엄지 영역에 고정(design/prototype.html). */
+/*
+ * 화면 뼈대: 한 손 조작용 세로 컬럼(design/prototype.html). 위는 역 안내판 머리띠, 주요 버튼은 화면 맨 아래 엄지 영역에 붙는다.
+ * 내용이 짧으면 .panel이 남은 높이를 채워 버튼을 바닥으로 밀고, 길면 sticky로 바닥에 남는다.
+ */
 .app {
   max-width: 440px;
+  min-height: calc(100dvh - var(--space-3));
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
 }
 
+/* 머리띠: 어두운 안내판 + 아래 노선 색 띠 */
 .brand {
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  min-height: 40px;
+  min-height: 52px;
+  padding: 0 var(--space-4);
+  border-bottom: var(--band-height) solid var(--color-line-current);
+  border-radius: var(--radius-card);
+  background: var(--color-sign);
+  color: var(--color-on-sign);
   font-weight: 700;
-  font-size: var(--text-title);
-  letter-spacing: -0.02em;
+  font-size: var(--text-body);
+  letter-spacing: -0.01em;
 }
 
 .brand svg {
@@ -22,33 +32,36 @@
 }
 
 .panel {
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
 }
 
 .hero {
-  background: var(--color-surface);
-  border-radius: var(--radius-card);
-  padding: var(--space-4) var(--space-4) var(--space-5);
+  padding: 0 0 var(--space-2);
 }
 
 .hero h1 {
-  margin: 0;
+  margin: var(--space-5) var(--space-1) 0;
   font-size: var(--text-headline);
-  line-height: 1.2;
-  letter-spacing: -0.03em;
+  line-height: 1.18;
+  font-weight: 800;
+  letter-spacing: -0.035em;
   text-wrap: balance;
 }
 
 .hero p {
-  margin: var(--space-2) 0 0;
+  max-width: 30em;
+  margin: var(--space-3) var(--space-1) 0;
+  color: var(--color-text-muted);
 }
 
 .dock {
   position: sticky;
   bottom: 0;
   z-index: 5;
+  margin-top: auto;
   padding: var(--space-3) 0 calc(var(--space-3) + env(safe-area-inset-bottom, 0px));
   background: var(--color-bg);
 }
@@ -60,11 +73,17 @@
   border-radius: var(--radius-control);
   background: var(--button-primary-bg);
   color: var(--button-primary-text);
+  font-size: var(--text-body);
   font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
+  transition: transform var(--motion-fast);
+}
+
+.primary svg {
+  transition: translate var(--motion-base) var(--motion-ease-standard);
 }
 
 .primary:disabled {
@@ -81,8 +100,45 @@
 }
 
 .foot {
-  margin: var(--space-2) 0 var(--space-5);
+  margin: var(--space-2) var(--space-1) var(--space-5);
   font-size: var(--text-note);
   color: var(--color-text-muted);
   font-variant-numeric: var(--font-numeric);
+}
+
+/*
+ * 움직임(design/prototype.html .rise): 단계를 열 때 판들이 위에서부터 80ms씩 늦게 올라온다. 누르면 살짝 줄어든다.
+ * 움직임 줄이기 설정이면 끈다. 스크립트 없이 CSS만 쓰므로 실패해도 내용이 숨지 않는다.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  .panel > * {
+    animation: rise 0.5s var(--motion-ease-arrive) both;
+  }
+
+  .panel > :nth-child(2) {
+    animation-delay: 80ms;
+  }
+
+  .panel > :nth-child(3) {
+    animation-delay: 160ms;
+  }
+
+  .panel > :nth-child(n + 4) {
+    animation-delay: 240ms;
+  }
+
+  .primary:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+
+  .primary:hover:not(:disabled) svg {
+    translate: 3px 0;
+  }
+}
+
+@keyframes rise {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
 }

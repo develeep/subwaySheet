@@ -14,6 +14,7 @@ export type SegmentCardProps = {
   onFlipDirection: () => void;
 };
 
+/** 구간 판: 노선도처럼 노선 색 선에 출발·도착 역이 매달리고, 아래 줄에 방면 안내판을 둔다. */
 export function SegmentCard(props: SegmentCardProps) {
   return (
     <section className={styles.segment} aria-label="구간">
@@ -26,40 +27,55 @@ export function SegmentCard(props: SegmentCardProps) {
           <small>도착</small>
           <span>{props.to}역</span>
         </button>
+        <button className={styles.swap} type="button" aria-label="출발역과 도착역 바꾸기" onClick={props.onSwap}>
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M7 4v16M3 8l4-4 4 4M17 20V4M13 16l4 4 4-4" />
+          </svg>
+        </button>
       </div>
-      <button className={styles.swap} type="button" aria-label="출발역과 도착역 바꾸기" onClick={props.onSwap}>
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
-          <path d="M7 4v16M3 8l4-4 4 4M17 20V4M13 16l4 4 4-4" />
-        </svg>
-      </button>
-      <div className={styles.meta}>
-        {props.towardStation !== null && props.lineNumber !== null ? (
-          <span className={styles.lineBadge}>
-            <i className={styles.lineDot}>{props.lineNumber}</i>
-            {props.lineNumber}호선 · {props.towardStation} 방면
-          </span>
-        ) : null}
-        {props.canChangeDirection ? (
-          <button className={styles.chip} type="button" onClick={props.onFlipDirection}>
-            반대 방향으로
-          </button>
-        ) : null}
-        {props.errorText ? (
-          <p className={styles.error} role="alert">
-            {props.errorText}
-          </p>
-        ) : null}
-      </div>
+      {props.towardStation !== null || props.canChangeDirection || props.errorText ? (
+        <div className={styles.meta}>
+          {props.towardStation !== null && props.lineNumber !== null ? (
+            <span className={styles.lineBadge}>
+              <i className={styles.lineDot}>{props.lineNumber}</i>
+              {props.lineNumber}호선 · {props.towardStation} 방면
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.6"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M5 12h14M13 6l6 6-6 6" />
+              </svg>
+            </span>
+          ) : null}
+          {props.canChangeDirection ? (
+            <button className={styles.flip} type="button" onClick={props.onFlipDirection}>
+              반대 방향으로
+            </button>
+          ) : null}
+          {props.errorText ? (
+            <p className={styles.error} role="alert">
+              {props.errorText}
+            </p>
+          ) : null}
+        </div>
+      ) : null}
     </section>
   );
 }

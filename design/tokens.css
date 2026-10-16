@@ -10,9 +10,12 @@
   --primitive-color-slate-400: #A3AFBD;
   --primitive-color-slate-500: #A3ACB9;
   --primitive-color-slate-600: #4B5563;
+  --primitive-color-slate-650: #3A4452;
   --primitive-color-slate-700: #2A303A;
+  --primitive-color-slate-725: #222A35;
   --primitive-color-slate-750: #232933;
   --primitive-color-slate-800: #171B22;
+  --primitive-color-slate-850: #161B24;
   --primitive-color-slate-900: #111827;
   --primitive-color-slate-950: #0E1116;
   --primitive-color-slate-paper: #EEF1F5;
@@ -102,24 +105,28 @@
   --color-ill-tunnel-core: #04060A;
   --color-ill-tunnel-edge: #1C232D;
   --color-scrim: rgb(0 0 0 / 0.45);
-  --font-sans: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+  --color-sign: #161B24;
+  --color-sign-muted: #3A4452;
+  --color-on-sign: #FFFFFF;
+  --color-on-sign-muted: #A3ACB9;
+  --font-sans: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
   --font-numeric: tabular-nums;
   --text-note: 13px;
   --text-body: 16px;
-  --text-title: 20px;
-  --text-headline: 28px;
-  --text-display: clamp(48px, 14vw, 64px);
+  --text-title: 22px;
+  --text-headline: clamp(30px, 9vw, 40px);
+  --text-display: clamp(80px, 26vw, 112px);
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
   --space-4: 16px;
   --space-5: 24px;
   --space-6: 32px;
-  --radius-control: 999px;
-  --radius-card: 16px;
+  --radius-control: 4px;
+  --radius-card: 4px;
   --radius-sheet: 20px;
   --radius-car: 10px;
-  --radius-inset: 12px;
+  --radius-inset: 4px;
   --motion-fast: 100ms;
   --motion-base: 300ms;
   --motion-slide: 340ms;
@@ -146,9 +153,10 @@
   --car-pick-ring: var(--color-line-current);
   --car-pin-bg: var(--color-text);
   --car-pin-text: var(--color-surface);
-  --grade-pip-on: var(--color-text);
-  --grade-pip-off: var(--color-border);
+  --grade-pip-on: var(--color-on-sign);
+  --grade-pip-off: var(--color-sign-muted);
   --control-padding-x: 20px;
+  --band-height: 5px;
 }
 
 /* === DARK MODE === */
@@ -196,6 +204,7 @@
     --color-ill-hair: #0F0F12;
     --color-ill-shirt: #5B8CFF;
     --color-ill-pants: #39445A;
+    --color-sign: #222A35;
     color-scheme: dark;
   }
 }
@@ -242,6 +251,7 @@
   --color-ill-hair: #0F0F12;
   --color-ill-shirt: #5B8CFF;
   --color-ill-pants: #39445A;
+  --color-sign: #222A35;
   color-scheme: dark;
 }
 

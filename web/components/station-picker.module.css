@@ -31,6 +31,9 @@
   background: transparent;
   text-align: left;
   padding: 0 var(--space-2);
+  transition:
+    background-color var(--motion-fast),
+    transform var(--motion-fast);
 }
 
 .list button:hover {
@@ -52,4 +55,11 @@
 .empty {
   padding: var(--space-4) var(--space-1);
   color: var(--color-text-muted);
+}
+
+/* 누르면 살짝 줄어든다(design/prototype.html). 움직임 줄이기 설정이면 끈다. */
+@media (prefers-reduced-motion: no-preference) {
+  .list button:active {
+    transform: scale(0.97);
+  }
 }
