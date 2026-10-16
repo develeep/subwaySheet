@@ -8,7 +8,6 @@ export type SegmentCardProps = {
   towardStation: string | null;
   canChangeDirection: boolean;
   errorText: string | null;
-  clockLabel: string;
   onPickFrom: () => void;
   onPickTo: () => void;
   onSwap: () => void;
@@ -55,21 +54,6 @@ export function SegmentCard(props: SegmentCardProps) {
             반대 방향으로
           </button>
         ) : null}
-        <span className={styles.chip}>
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            aria-hidden="true"
-          >
-            <circle cx="12" cy="12" r="9" />
-            <path d="M12 7v5l3 2" />
-          </svg>
-          {props.clockLabel}
-        </span>
         {props.errorText ? (
           <p className={styles.error} role="alert">
             {props.errorText}

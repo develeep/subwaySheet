@@ -1,0 +1,25 @@
+/* 요일유형 선택지(design/prototype.html .choices·.choice). 고른 것은 탭 선택 면 토큰(--tab-indicator-bg)으로 칠한다. */
+.choices {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.choice {
+  min-height: 56px;
+  padding: 0 var(--control-padding-x);
+  border: 0;
+  border-radius: var(--radius-control);
+  background: var(--color-fill);
+  font-weight: 600;
+  text-align: left;
+  transition: background-color var(--motion-fast);
+}
+
+.choice:hover {
+  background: var(--color-fill-hover);
+}
+
+.choice[aria-pressed="true"] {
+  background: var(--tab-indicator-bg);
+  color: var(--tab-active-text);
+}

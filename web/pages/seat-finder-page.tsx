@@ -1,22 +1,24 @@
+import { BottomSheet } from "@web/components/bottom-sheet";
+import { ClockCard } from "@web/components/clock-card";
+import { DayTypeChoices } from "@web/components/day-type-choices";
 import { SegmentCard } from "@web/components/segment-card";
-import { StationSheet } from "@web/components/station-sheet";
+import { StationPicker } from "@web/components/station-picker";
+import { TimeWheel } from "@web/components/time-wheel";
 import { TrainCars } from "@web/components/train-cars";
 import { VerdictCard } from "@web/components/verdict-card";
 import { DAY_TYPE_LABEL, LOAD_FAILED_TEXT } from "@web/constants/seat-finder-copy";
 import { useSeatFinder } from "@web/hooks/use-seat-finder";
-import { formatClock } from "@web/utils/format-clock";
 import type { CSSProperties } from "react";
 import styles from "./seat-finder-page.module.css";
 
 /**
  * SeatFinderPage — 구간 선택 → 칸 추천 화면. `web/main.tsx`가 그린다.
  * 화면 훅 `useSeatFinder`를 한 번 부르고 표시 컴포넌트에 값과 동작을 넘긴다. **판정은 훅·추천 모듈이 하고 여기서는 그리기만 한다.**
- * 추천 결과가 없으면(데이터를 읽는 중, 오류) 칸 추천 탭을 열지 않고 구간 선택 탭을 보인다.
+ * 추천 결과가 없으면(데이터를 읽는 중, 오류) 칸 추천 단계로 넘어가지 않고 구간 선택 단계를 보인다.
  */
 export function SeatFinderPage() {
   const finder = useSeatFinder();
   const { success } = finder;
-  const clockText = formatClock(finder.clock.departMinute);
   // 선택 노선 색: 하위 요소가 쓰는 --color-line-current를 노선 색으로 바꾼다(design/tokens.css :root.lineN과 같은 값).
   const lineStyle = success
     ? ({ "--color-line-current": `var(--color-line-${success.route.lineNumber})` } as CSSProperties)
@@ -41,29 +43,9 @@ export function SeatFinderPage() {
         subwaySheet
       </header>
 
-      <div className={styles.tabs} role="tablist" aria-label="단계">
-        <button
-          role="tab"
-          type="button"
-          aria-selected={finder.tab === "segment"}
-          onClick={() => finder.setTab("segment")}
-        >
-          구간 선택
-        </button>
-        <button
-          role="tab"
-          type="button"
-          aria-selected={finder.tab === "result"}
-          disabled={!success}
-          onClick={() => finder.setTab("result")}
-        >
-          칸 추천
-        </button>
-      </div>
-
       {finder.dataStatus === "failed" ? <p className={styles.notice}>{LOAD_FAILED_TEXT}</p> : null}
 
-      {finder.tab === "segment" || !success ? (
+      {finder.step === "segment" || !success ? (
         <main className={styles.panel}>
           <section className={styles.hero}>
             <h1>
@@ -72,6 +54,12 @@ export function SeatFinderPage() {
             </h1>
             <p>내 구간에서 많이 내리는 역과 그 역의 빠른하차 칸으로 계산해요.</p>
           </section>
+          <ClockCard
+            dayTypeLabel={DAY_TYPE_LABEL[finder.dayType]}
+            clockText={finder.clockText}
+            onPickDayType={() => finder.openSheet("dayType")}
+            onPickTime={() => finder.openSheet("time")}
+          />
           <SegmentCard
             from={finder.from}
             to={finder.to}
@@ -79,9 +67,8 @@ export function SeatFinderPage() {
             towardStation={success?.towardStation ?? null}
             canChangeDirection={Boolean(success?.oppositeDirection)}
             errorText={finder.errorText}
-            clockLabel={`${DAY_TYPE_LABEL[finder.clock.dayType]} · 지금 ${clockText}`}
-            onPickFrom={() => finder.openPicker("from")}
-            onPickTo={() => finder.openPicker("to")}
+            onPickFrom={() => finder.openSheet("from")}
+            onPickTo={() => finder.openSheet("to")}
             onSwap={finder.swapStations}
             onFlipDirection={finder.flipDirection}
           />
@@ -90,7 +77,7 @@ export function SeatFinderPage() {
               className={styles.primary}
               type="button"
               disabled={!success}
-              onClick={() => finder.setTab("result")}
+              onClick={() => finder.setStep("result")}
             >
               앉을 칸 찾기
               <svg
@@ -115,8 +102,8 @@ export function SeatFinderPage() {
             from={finder.from}
             to={finder.to}
             result={success}
-            clockText={clockText}
-            onBack={() => finder.setTab("segment")}
+            clockText={finder.clockText}
+            onBack={() => finder.setStep("segment")}
           />
           <TrainCars carCount={success.route.carCount} picks={success.picks} />
           <p className={styles.foot}>
@@ -125,14 +112,20 @@ export function SeatFinderPage() {
         </main>
       )}
 
-      <StationSheet
-        title={finder.sheetTitle}
-        query={finder.query}
-        matches={finder.matches}
-        onQueryChange={finder.setQuery}
-        onPick={finder.pickStation}
-        onClose={finder.closePicker}
-      />
+      <BottomSheet title={finder.sheetTitle} onClose={finder.closeSheet}>
+        {finder.sheetTarget === "dayType" ? (
+          <DayTypeChoices selected={finder.dayType} onPick={finder.pickDayType} />
+        ) : finder.sheetTarget === "time" ? (
+          <TimeWheel departMinute={finder.departMinute} onPickNow={finder.pickNowTime} onPick={finder.pickTime} />
+        ) : (
+          <StationPicker
+            query={finder.query}
+            matches={finder.matches}
+            onQueryChange={finder.setQuery}
+            onPick={finder.pickStation}
+          />
+        )}
+      </BottomSheet>
     </div>
   );
 }
