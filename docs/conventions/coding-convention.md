@@ -136,7 +136,7 @@
   - `web/**`·`shared/**`·`batch/**` → `useFilenamingConvention`(kebab-case · strictCase · requireAscii)
   - 폴더별 `noRestrictedImports` → import 방향(`folder-structure-convention.md` "import 방향"). `web/recommend/**`·`shared/**`는 React도 막음. `web/**`는 `../`를, `web/main.tsx`는 `./<폴더>/`를 막아 다른 폴더를 `@web/*` 별칭으로 가져오게 함
   - `**/*.test.ts` → `noRestrictedImports` 끔(계약 테스트)
-- 검사에서 빼는 곳: `design/`, `prototypes/`, `public/data/`, `.claude/`, `skills-lock.json`, `.gitignore` 대상(`.agents/`·`.claude/skills/` 스킬 설치본 포함)
+- 검사에서 빼는 곳: `design/`, `prototypes/`, `public/data/`, `.claude/`, `.gitignore` 대상
 
 ## 검증 명령
 
