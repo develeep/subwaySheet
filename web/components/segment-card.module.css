@@ -1,6 +1,6 @@
 /*
  * 구간 판(design/prototype.html .route): 왼쪽 노선 색 선에 출발·도착 역 동그라미가 매달린 노선도 모양.
- * 선·동그라미 위치 px는 그림 좌표다. 역 줄과 방면 줄은 1px 구획선으로 나눈다.
+ * 선·동그라미 위치 px는 그림 좌표다. 역 줄과 방면 줄은 구획선 없이 여백으로 나눈다(ADR 0005).
  */
 .segment {
   background: var(--color-surface);
@@ -40,16 +40,14 @@
   background: transparent;
   text-align: left;
   line-height: 1.25;
-  transition: background-color var(--motion-fast);
+  transition:
+    background-color var(--motion-fast),
+    transform var(--motion-fast);
 }
 
 /* 판의 overflow가 바깥 링을 자르므로 안쪽에 그린다. */
 .stopButton:focus-visible {
   outline-offset: -3px;
-}
-
-.stopButton + .stopButton {
-  border-top: 1px solid var(--color-border);
 }
 
 .stopButton::before {
@@ -113,8 +111,7 @@
   flex-wrap: wrap;
   gap: var(--space-2);
   align-items: center;
-  padding: var(--space-3) var(--space-4);
-  border-top: 1px solid var(--color-border);
+  padding: var(--space-1) var(--space-4) var(--space-4);
 }
 
 /* 방면 안내판: 승강장 방면 표지처럼 어두운 판 위 흰 글자 */
@@ -144,14 +141,15 @@
   flex: none;
 }
 
-/* 보조 동작은 테두리만: 다크 모드에서 방면 안내판(sign)과 면 색이 거의 같아 면으로는 구분되지 않는다. */
+/* 보조 동작은 판 없는 글자 버튼이다. 다크 모드에서 fill과 방면 안내판(sign) 색이 거의 같아 면으로는 구분되지 않고, 테두리는 쓰지 않는다(ADR 0005). */
 .flip {
   min-height: 40px;
   padding: 0 var(--space-3);
   border: 0;
   border-radius: var(--radius-inset);
   background: transparent;
-  box-shadow: inset 0 0 0 1px var(--color-border);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
   font-weight: 600;
   transition:
     background-color var(--motion-fast),
@@ -169,6 +167,7 @@
 
 /* 누르면 살짝 줄어든다(design/prototype.html). 움직임 줄이기 설정이면 끈다. */
 @media (prefers-reduced-motion: no-preference) {
+  .stopButton:active,
   .swap:active,
   .flip:active {
     transform: scale(0.97);

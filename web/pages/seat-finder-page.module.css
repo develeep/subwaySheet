@@ -17,11 +17,11 @@
   align-items: center;
   gap: var(--space-2);
   min-height: 52px;
-  padding: 0 var(--space-4) var(--band-height);
+  padding: 0 var(--space-4);
+  border-bottom: var(--band-height) solid var(--color-line-current);
   border-radius: var(--radius-card);
   background: var(--color-sign);
   color: var(--color-on-sign);
-  box-shadow: inset 0 calc(-1 * var(--band-height)) 0 var(--color-line-current);
   font-weight: 700;
   font-size: var(--text-body);
   letter-spacing: -0.01em;
@@ -39,11 +39,11 @@
 }
 
 .hero {
-  padding: var(--space-4) var(--space-1) var(--space-2);
+  padding: 0 0 var(--space-2);
 }
 
 .hero h1 {
-  margin: 0;
+  margin: var(--space-5) var(--space-1) 0;
   font-size: var(--text-headline);
   line-height: 1.18;
   font-weight: 800;
@@ -53,7 +53,7 @@
 
 .hero p {
   max-width: 30em;
-  margin: var(--space-3) 0 0;
+  margin: var(--space-3) var(--space-1) 0;
   color: var(--color-text-muted);
 }
 
@@ -106,13 +106,39 @@
   font-variant-numeric: var(--font-numeric);
 }
 
-/* 누르면 살짝 줄어든다(design/prototype.html). 움직임 줄이기 설정이면 끈다. */
+/*
+ * 움직임(design/prototype.html .rise): 단계를 열 때 판들이 위에서부터 80ms씩 늦게 올라온다. 누르면 살짝 줄어든다.
+ * 움직임 줄이기 설정이면 끈다. 스크립트 없이 CSS만 쓰므로 실패해도 내용이 숨지 않는다.
+ */
 @media (prefers-reduced-motion: no-preference) {
+  .panel > * {
+    animation: rise 0.5s var(--motion-ease-arrive) both;
+  }
+
+  .panel > :nth-child(2) {
+    animation-delay: 80ms;
+  }
+
+  .panel > :nth-child(3) {
+    animation-delay: 160ms;
+  }
+
+  .panel > :nth-child(n + 4) {
+    animation-delay: 240ms;
+  }
+
   .primary:active:not(:disabled) {
     transform: scale(0.97);
   }
 
   .primary:hover:not(:disabled) svg {
     translate: 3px 0;
+  }
+}
+
+@keyframes rise {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
   }
 }

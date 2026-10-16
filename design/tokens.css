@@ -114,7 +114,7 @@
   --text-note: 13px;
   --text-body: 16px;
   --text-title: 22px;
-  --text-headline: 30px;
+  --text-headline: clamp(30px, 9vw, 40px);
   --text-display: clamp(80px, 26vw, 112px);
   --space-1: 4px;
   --space-2: 8px;
@@ -122,11 +122,11 @@
   --space-4: 16px;
   --space-5: 24px;
   --space-6: 32px;
-  --radius-control: 12px;
-  --radius-card: 14px;
+  --radius-control: 4px;
+  --radius-card: 4px;
   --radius-sheet: 20px;
   --radius-car: 10px;
-  --radius-inset: 8px;
+  --radius-inset: 4px;
   --motion-fast: 100ms;
   --motion-base: 300ms;
   --motion-slide: 340ms;

@@ -1,4 +1,4 @@
-/* 시각 휠. 디자인 시안에 없는 화면이라 칸 면(--color-fill)·지금(.ghost)·확인(.primary) 버튼만 시안 토큰을 따른다. 5칸이 보이고 가운데 칸이 고른 값이다. */
+/* 시각 휠. 위아래 끝은 흐리게 하지 않는다(그라디언트 없음, ADR 0005). 디자인 시안에 없는 화면이라 칸 면(--color-fill)·지금(.ghost)·확인(.primary) 버튼만 시안 토큰을 따른다. 5칸이 보이고 가운데 칸이 고른 값이다. */
 .picker {
   display: flex;
   flex-direction: column;
@@ -39,7 +39,6 @@
   overflow-y: auto;
   scroll-snap-type: y mandatory;
   scrollbar-width: none;
-  mask-image: linear-gradient(transparent, #000 35%, #000 65%, transparent);
   border-radius: var(--radius-inset);
 }
 

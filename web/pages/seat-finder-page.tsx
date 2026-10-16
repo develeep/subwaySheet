@@ -1,6 +1,7 @@
 import { BottomSheet } from "@web/components/bottom-sheet";
 import { ClockCard } from "@web/components/clock-card";
 import { DayTypeChoices } from "@web/components/day-type-choices";
+import { HeroIllustration } from "@web/components/hero-illustration";
 import { SegmentCard } from "@web/components/segment-card";
 import { StationPicker } from "@web/components/station-picker";
 import { TimeWheel } from "@web/components/time-wheel";
@@ -48,6 +49,10 @@ export function SeatFinderPage() {
       {finder.step === "segment" || !success ? (
         <main className={styles.panel}>
           <section className={styles.hero}>
+            <HeroIllustration
+              lineNumber={success?.route.lineNumber ?? null}
+              towardStation={success?.towardStation ?? null}
+            />
             <h1>
               덜 붐비는 칸 말고,
               <br />곧 자리가 나는 칸

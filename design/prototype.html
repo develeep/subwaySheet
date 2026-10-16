@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="tokens.css">
 <style>
 /* 레이아웃: 한 손 조작용 세로 컬럼 + 2단계 탭(구간 선택 → 칸 추천). 주요 버튼은 화면 아래 엄지 영역에 고정. */
-/* 색·크기·반경 토큰은 tokens.css (tokens.json에서 생성). 역 안내판처럼 어두운 판(sign)과 노선 색 띠로 위계를 만들고, 면은 톤 단계와 1px 구획선으로 나눈다(ADR 0004). */
+/* 색·크기·반경 토큰은 tokens.css (tokens.json에서 생성). 역 안내판처럼 어두운 판(sign)과 노선 색 띠로 위계를 만들고, 면은 톤 단계와 여백으로 나눈다(ADR 0004·0005, 구획선·그림자·그라디언트 없음). */
 
 * { box-sizing: border-box; }
 [hidden] { display: none !important; } /* .panel·.pending의 display:flex가 hidden 속성을 덮어쓰지 않게 */
@@ -26,7 +26,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .sub { font-size: var(--text-note); color: var(--color-text-muted); }
 
 /* 머리띠: 어두운 안내판 + 아래 노선 색 띠 */
-header { display: flex; align-items: center; min-height: 52px; padding: 0 var(--space-4) var(--band-height); border-radius: var(--radius-card); background: var(--color-sign); color: var(--color-on-sign); box-shadow: inset 0 calc(-1 * var(--band-height)) 0 var(--color-line-current); }
+header { display: flex; align-items: center; min-height: 52px; padding: 0 var(--space-4); border-bottom: var(--band-height) solid var(--color-line-current); border-radius: var(--radius-card); background: var(--color-sign); color: var(--color-on-sign); }
 .brand { font-weight: 700; font-size: var(--text-body); letter-spacing: -0.01em; display: flex; align-items: center; gap: var(--space-2); }
 .brand svg { color: var(--color-line-current); }
 
@@ -58,12 +58,11 @@ main { view-transition-name: panel; }
 .hero-copy p { margin: var(--space-3) 0 0; color: var(--color-text-muted); }
 .ill-text { font-family: var(--font-sans); font-weight: 600; }
 
-/* 경로 입력: 노선도처럼 노선 색 선에 출발·도착 역이 매달린 판. 역 줄과 방면 줄은 1px 구획선으로 나눈다. 선·동그라미 px는 그림 좌표 */
+/* 경로 입력: 노선도처럼 노선 색 선에 출발·도착 역이 매달린 판. 역 줄과 방면 줄은 여백으로 나눈다. 선·동그라미 px는 그림 좌표 */
 .route { position: relative; padding: 0; overflow: hidden; }
 .stops { display: grid; position: relative; }
 .stops::before { content: ""; position: absolute; z-index: 1; left: 27px; top: 40px; bottom: 40px; width: 6px; background: var(--color-line-current); border-radius: 3px; pointer-events: none; }
 .stop-btn { position: relative; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; width: 100%; min-height: 80px; padding: 8px 80px 8px 60px; background: transparent; border-radius: 0; text-align: left; line-height: 1.25; }
-.stop-btn + .stop-btn { border-top: 1px solid var(--color-border); }
 .stop-btn::before { content: ""; position: absolute; z-index: 2; left: 20px; top: 50%; translate: 0 -50%; width: 20px; height: 20px; border-radius: 50%; background: var(--color-surface); border: 5px solid var(--color-line-current); }
 .stop-btn small { font-size: var(--text-note); color: var(--color-text-muted); }
 .stop-btn span { font-size: var(--text-title); font-weight: 800; letter-spacing: -0.03em; }
@@ -71,7 +70,7 @@ main { view-transition-name: panel; }
 .swap { position: absolute; z-index: 3; right: var(--space-4); top: 80px; translate: 0 -50%; width: 48px; height: 48px; background: var(--color-fill); display: grid; place-items: center; }
 .swap svg { transition: rotate .35s var(--motion-ease-standard); }
 .swap.spun svg { rotate: 180deg; }
-.meta { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; padding: var(--space-3) var(--space-4); border-top: 1px solid var(--color-border); }
+.meta { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; padding: var(--space-1) var(--space-4) var(--space-4); }
 .meta .chip input { font: inherit; font-variant-numeric: var(--font-numeric); border: 0; background: transparent; color: inherit; padding: 0; min-width: 7.5em; }
 .ln-dot { display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--color-line-current); color: var(--color-on-line); font-size: var(--text-note); font-weight: 700; font-style: normal; flex: none; }
 /* 방면 안내판: 승강장 방면 표지처럼 어두운 판 위 흰 글자 */
@@ -100,16 +99,16 @@ main { view-transition-name: panel; }
 .back { width: 44px; height: 44px; background: var(--color-surface); display: grid; place-items: center; flex: none; }
 .summary strong { display: block; font-size: var(--text-body); }
 .verdict, #verdict { display: flex; flex-direction: column; gap: var(--space-3); }
-.answer { display: flex; flex-direction: column; gap: var(--space-4); padding: calc(var(--space-5) + var(--band-height)) var(--space-5) var(--space-5); border-radius: var(--radius-card); background: var(--color-sign); color: var(--color-on-sign); box-shadow: inset 0 var(--band-height) 0 var(--color-line-current); }
+.answer { display: flex; flex-direction: column; gap: var(--space-4); padding: var(--space-5); border-top: var(--band-height) solid var(--color-line-current); border-radius: var(--radius-card); background: var(--color-sign); color: var(--color-on-sign); }
 .answer h1 { margin: 0; line-height: 1; font-size: var(--text-headline); font-weight: 700; letter-spacing: -0.03em; }
 .answer h1 b { margin-right: var(--space-2); font-size: var(--text-display); line-height: .9; font-weight: 800; letter-spacing: -0.05em; font-variant-numeric: var(--font-numeric); }
 .grade { display: flex; align-items: center; gap: var(--space-3); font-weight: 700; }
 .pips { display: flex; gap: 4px; }
 .pips span { width: 28px; height: 8px; border-radius: 4px; background: var(--grade-pip-off); }
 .pips span.on { background: var(--grade-pip-on); }
-.reason { margin: 0; padding-top: var(--space-4); border-top: 1px solid var(--color-sign-muted); font-size: var(--text-title); line-height: 1.4; letter-spacing: -0.02em; color: var(--color-on-sign-muted); }
+.reason { margin: 0; padding-top: var(--space-2); font-size: var(--text-title); line-height: 1.4; letter-spacing: -0.02em; color: var(--color-on-sign-muted); }
 .reason em { font-style: normal; font-weight: 700; color: var(--color-on-sign); text-decoration: underline 0.14em var(--color-line-current); text-underline-offset: 0.2em; text-decoration-skip-ink: none; }
-.warn { background: var(--color-warn-bg); color: var(--color-warn-text); border-radius: 12px; padding: var(--space-3); display: flex; gap: var(--space-2); }
+.warn { background: var(--color-warn-bg); color: var(--color-warn-text); border-radius: var(--radius-inset); padding: var(--space-3); display: flex; gap: var(--space-2); }
 .warn svg { flex: none; margin-top: 4px; }
 
 .sec-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-2); flex-wrap: wrap; }
@@ -193,7 +192,7 @@ dialog::backdrop { background: rgb(0 0 0 / 0.45); }
 .search { width: 100%; min-height: 52px; font: inherit; padding: 0 20px; background: var(--color-fill); color: var(--color-text); }
 .hint { font-size: var(--text-note); color: var(--color-text-muted); margin: calc(-1 * var(--space-2)) 0 0; }
 .list { list-style: none; margin: 0; padding: 0; overflow-y: auto; max-height: 50dvh; display: grid; gap: 2px; }
-.list button { width: 100%; min-height: 52px; display: flex; align-items: center; gap: var(--space-3); border: 0; border-radius: 12px; background: transparent; text-align: left; padding: 0 var(--space-2); }
+.list button { width: 100%; min-height: 52px; display: flex; align-items: center; gap: var(--space-3); border: 0; border-radius: var(--radius-inset); background: transparent; text-align: left; padding: 0 var(--space-2); }
 .list button:hover { background: var(--color-fill); }
 .list mark { background: none; color: inherit; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
 .empty { padding: var(--space-4) var(--space-1); color: var(--color-text-muted); }

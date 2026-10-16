@@ -1,10 +1,8 @@
-/* 요일유형·시각 판: 두 칸을 1px 구획선으로 나눈 안내판 줄. 칸마다 작은 이름표 아래에 값을 둔다. */
+/* 요일유형·시각 줄: 두 칸을 따로 선 판으로 두고 틈(바탕색)으로 나눈다(ADR 0005). 칸마다 작은 이름표 아래에 값을 둔다. */
 .clock {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
-  background: var(--color-surface);
-  border-radius: var(--radius-card);
-  overflow: hidden;
+  gap: var(--space-2);
 }
 
 .field {
@@ -17,24 +15,17 @@
   min-width: 0;
   padding: var(--space-2) var(--space-4);
   border: 0;
-  background: transparent;
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
   text-align: left;
   cursor: pointer;
-  transition: background-color var(--motion-fast);
-}
-
-.field + .field {
-  border-left: 1px solid var(--color-border);
+  transition:
+    background-color var(--motion-fast),
+    transform var(--motion-fast);
 }
 
 .field:hover {
   background: var(--color-fill);
-}
-
-/* 판의 overflow가 바깥 링을 자르므로 안쪽에 그린다. */
-.field:focus-visible {
-  outline: 3px solid var(--color-focus);
-  outline-offset: -3px;
 }
 
 .field small {
@@ -53,4 +44,11 @@
   font-variant-numeric: var(--font-numeric);
   /* 좁은 폭에서도 "일요일·공휴일"을 깨지 않는다. */
   white-space: nowrap;
+}
+
+/* 누르면 살짝 줄어든다(design/prototype.html). 움직임 줄이기 설정이면 끈다. */
+@media (prefers-reduced-motion: no-preference) {
+  .field:active {
+    transform: scale(0.97);
+  }
 }
