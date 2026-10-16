@@ -4,10 +4,12 @@ import { DayTypeChoices } from "@web/components/day-type-choices";
 import { HeroIllustration } from "@web/components/hero-illustration";
 import { SegmentCard } from "@web/components/segment-card";
 import { StationPicker } from "@web/components/station-picker";
+import { SurveyChoices, SurveyProgress } from "@web/components/survey-choices";
 import { TimeWheel } from "@web/components/time-wheel";
 import { TrainCars } from "@web/components/train-cars";
 import { VerdictCard } from "@web/components/verdict-card";
 import { DAY_TYPE_LABEL, LOAD_FAILED_TEXT } from "@web/constants/seat-finder-copy";
+import { ARRIVED_TEXT } from "@web/constants/survey-copy";
 import { useSeatFinder } from "@web/hooks/use-seat-finder";
 import type { CSSProperties } from "react";
 import styles from "./seat-finder-page.module.css";
@@ -78,12 +80,7 @@ export function SeatFinderPage() {
             onFlipDirection={finder.flipDirection}
           />
           <div className={styles.dock}>
-            <button
-              className={styles.primary}
-              type="button"
-              disabled={!success}
-              onClick={() => finder.setStep("result")}
-            >
+            <button className={styles.primary} type="button" disabled={!success} onClick={finder.showResult}>
               앉을 칸 찾기
               <svg
                 width="18"
@@ -108,12 +105,19 @@ export function SeatFinderPage() {
             to={finder.to}
             result={success}
             clockText={finder.clockText}
-            onBack={() => finder.setStep("segment")}
+            onBack={finder.backToSegment}
           />
           <TrainCars carCount={success.route.carCount} picks={success.picks} />
           <p className={styles.foot}>
             승하차 기준 기간 {success.periods.ridership.start} ~ {success.periods.ridership.end}
           </p>
+          {finder.canAnswerSurvey ? (
+            <div className={styles.dock}>
+              <button className={styles.primary} type="button" onClick={finder.openSurvey}>
+                {ARRIVED_TEXT}
+              </button>
+            </div>
+          ) : null}
         </main>
       )}
 
@@ -130,6 +134,27 @@ export function SeatFinderPage() {
             onPick={finder.pickStation}
           />
         )}
+      </BottomSheet>
+
+      <BottomSheet
+        title={finder.surveyTitle}
+        lead={finder.surveyProgress ? <SurveyProgress current={finder.surveyProgress} /> : null}
+        onClose={finder.closeSurvey}
+      >
+        {finder.surveyStep ? (
+          <SurveyChoices
+            step={finder.surveyStep}
+            otherCars={finder.otherCars}
+            stopChoices={finder.stopChoices}
+            errorText={finder.surveyErrorText}
+            isSubmitting={finder.isSubmitting}
+            onAnswerFollowed={finder.answerFollowed}
+            onAnswerOtherCar={finder.answerOtherCar}
+            onAnswerSeated={finder.answerSeated}
+            onAnswerStops={finder.submitSurvey}
+            onClose={finder.closeSurvey}
+          />
+        ) : null}
       </BottomSheet>
     </div>
   );

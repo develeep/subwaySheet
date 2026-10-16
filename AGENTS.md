@@ -29,7 +29,7 @@ Single-context: 루트의 `CONTEXT.md` + `docs/adr/`. See `docs/agents/domain.md
 
 ## 경계 (어기면 데이터·개인정보·배포가 깨진다)
 
-- **시크릿을 커밋하지 않는다.** `DATA_GO_KR_KEY`는 로컬 `.env`(gitignore)와 GitHub Actions 시크릿에만 두고 로그에 찍지 않는다.
+- **시크릿을 커밋하지 않는다.** `DATA_GO_KR_KEY`는 로컬 `.env`(gitignore)와 GitHub Actions 시크릿에만, 설문 함수의 IP 해시 키 `IP_HASH_SECRET`은 Cloudflare Pages 시크릿에만 두고 로그에 찍지 않는다.
 - **공식은 `web/recommend/`에만 둔다.** 배치 결과물에 퍼짐·가중치·등급 기준을 넣지 않는다. 시작값이나 모델을 바꾸면 공식 버전 상수를 올린다.
 - **`public/data/`는 배치로만 만든다.** 손으로 고치지 않고, 원본 다운로드(`raw/`)는 커밋하지 않는다.
 - **설문 함수는 두 요청만 받는다**(추천 기록 만들기, 설문 응답 만들기). 요청을 늘리려면 스펙·ADR을 먼저 고친다.

@@ -26,7 +26,8 @@ web/            화면 (Vite + React 정적 SPA). recommend/ 밖은 종류별 �
   main.tsx      진입점
 shared/         web·batch·functions가 함께 쓰는 데이터 형식·용어 타입·요청 스키마
 batch/          월별 배치 (pnpm batch → tsx batch/main.ts)
-functions/      Cloudflare Pages Function (설문 함수 하나)
+functions/      Cloudflare Pages Function (설문 함수 하나). api/ = 라우트, lib/ = 두 핸들러 공통
+migrations/     D1 마이그레이션(설문 함수의 표). wrangler 기본 위치다
 public/data/    배치가 만든 정제 데이터 — 커밋한다, 손으로 고치지 않는다
 design/         디자인 원본 — prototype.html, tokens.json(원본) → tokens.css(생성물)
 docs/           adr/ · conventions/ · research/ · agents/
@@ -35,7 +36,7 @@ raw/            배치 원본 다운로드 — gitignore, 커밋하지 않는다
 scripts/        레포 검사 스크립트(pnpm check가 부른다) — 앱 코드에서 import하지 않는다
 ```
 
-Playwright E2E 폴더와 D1 마이그레이션 폴더는 처음 만드는 티켓(#9, #5)에서 위치를 정하고 이 표에 더합니다.
+Playwright E2E 폴더는 처음 만드는 티켓(#9)에서 위치를 정하고 이 표에 더합니다.
 
 ## import 방향 (Biome 강제)
 
@@ -115,7 +116,9 @@ web·batch·functions가 같은 모양을 알아야 하는 것만 둡니다.
 Cloudflare Pages Function입니다. 추천 기록 만들기와 설문 응답 만들기 두 요청만 받습니다(ADR 0002, 스펙 #2 "설문 함수와 저장").
 
 - 파일 이름은 Pages 파일 라우팅을 따릅니다(`[id].ts`, `_middleware.ts` 같은 이름이 필요할 수 있어 kebab-case 검사에서 뺐습니다).
-- 바인딩(D1·시크릿)은 핸들러의 `context.env`로만 읽습니다.
+- 라우트는 `functions/api/<요청>.ts`의 `onRequestPost`입니다. Pages는 `onRequest*`를 export한 파일만 라우트로 만들므로 공통 코드는 `functions/lib/`에 둡니다.
+- 바인딩(D1 `DB`, 시크릿 `IP_HASH_SECRET`)은 핸들러의 `context.env`로만 읽습니다.
+- 표를 바꾸면 `migrations/`에 새 번호 파일을 더합니다. 이미 적용한 파일은 고치지 않습니다.
 - 요청을 늘리려면 스펙·ADR을 먼저 고칩니다.
 
 ### `public/data/`

@@ -4,12 +4,14 @@ import styles from "./bottom-sheet.module.css";
 export type BottomSheetProps = {
   /** 열려 있으면 시트 제목, 닫혀 있으면 null. */
   title: string | null;
+  /** 제목 위에 그릴 것(설문 진행 막대). */
+  lead?: ReactNode;
   onClose: () => void;
   children: ReactNode;
 };
 
-/** 바텀시트 틀(design/prototype.html dialog·.sheet). `<dialog>`를 열고 닫는 DOM 동기화만 한다. 화면 페이지가 역·요일유형·시각 고르기에 쓴다. */
-export function BottomSheet({ title, onClose, children }: BottomSheetProps) {
+/** 바텀시트 틀(design/prototype.html dialog·.sheet). `<dialog>`를 열고 닫는 DOM 동기화만 한다. 화면 페이지가 역·요일유형·시각 고르기와 설문에 쓴다. */
+export function BottomSheet({ title, lead, onClose, children }: BottomSheetProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const titleId = useId();
   const isOpen = title !== null;
@@ -35,6 +37,7 @@ export function BottomSheet({ title, onClose, children }: BottomSheetProps) {
     >
       <div className={styles.sheet}>
         <div className={styles.grab} />
+        {lead}
         <h2 id={titleId}>{title}</h2>
         {children}
       </div>
