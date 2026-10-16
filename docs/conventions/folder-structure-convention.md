@@ -30,7 +30,7 @@ functions/      Cloudflare Pages Function (설문 함수 하나). api/ = 라우�
 migrations/     D1 마이그레이션(설문 함수의 표). wrangler 기본 위치다
 public/data/    배치가 만든 정제 데이터 — 커밋한다, 손으로 고치지 않는다
 design/         디자인 원본 — prototype.html, tokens.json(원본) → tokens.css(생성물)
-docs/           adr/ · conventions/ · research/ · agents/
+docs/           adr/ · conventions/ · research/ · agents/ · guides/(실행 안내, 예: local-development.md)
 prototypes/     데이터 프로토타입 — 앱 코드에서 import하지 않는다
 raw/            배치 원본 다운로드 — gitignore, 커밋하지 않는다
 scripts/        레포 검사 스크립트(pnpm check가 부른다) — 앱 코드에서 import하지 않는다

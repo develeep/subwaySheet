@@ -21,6 +21,7 @@ Single-context: 루트의 `CONTEXT.md` + `docs/adr/`. See `docs/agents/domain.md
 - 수도권 지하철에서 내 구간에 곧 자리가 날 칸을 추천하는 모바일 웹이다. 제품은 `PRD-subwaySheet.md`, 1단계 범위와 구현 결정은 스펙 이슈 #2가 원본이다.
 - 정적 SPA(Vite + React) + Cloudflare Pages Function 하나(설문 함수, D1) + 월별 배치(TypeScript, GitHub Actions cron)다(ADR 0002).
 - 칸 점수는 화면의 추천 모듈(`web/recommend/`)이 계산하고, 배치는 공식 없는 정제 데이터만 만든다(ADR 0001).
+- 로컬에서 설문 함수·D1까지 띄우는 법은 `docs/guides/local-development.md`(`pnpm dev`만으로는 `/api`가 없다).
 - 폴더 배치와 import 방향은 `docs/conventions/folder-structure-convention.md`, 코드 규칙은 `docs/conventions/coding-convention.md`, 브랜치·커밋은 `docs/conventions/git-convention.md`. 용어는 `CONTEXT.md`.
 
 ## 우선순위
