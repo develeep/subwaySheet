@@ -95,7 +95,7 @@
 
 - 화면이 부르는 서버는 우리 설문 함수(`/api/*`)와 정적 정제 데이터(`public/data/`)뿐입니다. 외부 API를 화면에서 직접 부르지 않습니다.
 - fetcher는 `web/api/<대상>-api.ts`에 둡니다. 엔드포인트는 `*_ENDPOINT` 상수로 둡니다. 테스트가 같은 값을 써야 할 때 export합니다.
-- fetcher는 **status union**을 돌려줍니다: `ok`, `invalid`(400, 사용자가 고칠 입력), `failed`(그 밖의 실패·네트워크 오류). 400과 장애를 합치면 서버 장애 때 "입력을 확인하세요"라는 거짓 안내가 나갑니다.
+- fetcher는 **status union**을 돌려줍니다: `ok`, `invalid`(400, 사용자가 고칠 입력), `failed`(그 밖의 실패·네트워크 오류). 400과 장애를 합치면 서버 장애 때 "입력을 확인하세요"라는 거짓 안내가 나갑니다. 설문 응답만 `closed`(404·409, 다시 보내도 받지 않는 추천)가 더 있어 "다시 눌러 주세요"라는 거짓 안내를 막습니다.
 - 2xx 본문도 zod로 계약을 검증합니다. 실패하면 `failed`를 돌려줍니다. 기본값으로 조용히 진행하지 않습니다.
 - **추천 기록 저장 실패는 화면에 드러내지 않습니다.** 추천 화면은 그대로 보여야 합니다(스펙 #2).
 - **설문 제출 실패만 사용자에게 알립니다.** `invalid`와 `failed`는 다른 문구로 보여 줍니다.
@@ -159,10 +159,10 @@ pnpm build            # tsc --noEmit && vite build
   1. **추천 모듈**: 작은 가짜 노선 데이터 + 프로토타입 회귀 시나리오(실제 2호선 데이터).
   2. **배치**: 작은 원본 픽스처 → 정제 데이터 출력. 네트워크는 원본 읽기 경계에서 끊습니다.
   3. **계약 테스트**: 배치 픽스처 출력을 그대로 추천 모듈에 넣어 결과가 나오는지.
-  4. **설문 함수**: 로컬 D1로 요청 → 저장. 검증 거절, 중복 응답 거절, 레이트 리밋, 원 IP 미저장. 실행 도구는 #5에서 정합니다.
+  4. **설문 함수**: 로컬 D1로 요청 → 저장. 검증 거절, 중복 응답 거절, 레이트 리밋, 원 IP 미저장. 테스트가 Miniflare로 메모리 D1을 띄우고 `migrations/`를 적용한 뒤 핸들러 `onRequestPost`를 직접 부릅니다(`functions/api/fixtures/local-d1.ts`). `@cloudflare/vitest-pool-workers`는 vitest 4까지만 지원해 쓰지 않습니다.
 - **E2E는 Playwright로 핵심 흐름 하나**(역 고르기 → 결과 → "도착했어요" → 설문 제출, 그리고 다시 왔을 때 설문 카드)만 둡니다(#9).
 - 화면 컴포넌트는 따로 단위 테스트하지 않습니다. jsdom·React Testing Library·Storybook은 쓰지 않습니다.
-- 커버리지는 `shared/`·`batch/`·`web/recommend/`·`web/utils/` 기준 80% 이상입니다(`vite.config.ts` `coverage.thresholds`).
+- 커버리지는 `shared/`·`batch/`·`web/recommend/`·`web/utils/`·`functions/` 기준 80% 이상입니다(`vite.config.ts` `coverage.thresholds`).
 
 ### 위치
 
