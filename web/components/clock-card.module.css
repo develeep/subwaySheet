@@ -31,9 +31,8 @@
   background: var(--color-fill);
 }
 
-/* 판의 overflow가 바깥 링을 자르므로 안쪽에 그린다. 시각 칸은 라벨 안 입력에 포커스가 가도 칸 전체에 링을 보인다. */
-.field:focus-visible,
-label.field:focus-within {
+/* 판의 overflow가 바깥 링을 자르므로 안쪽에 그린다. */
+.field:focus-visible {
   outline: 3px solid var(--color-focus);
   outline-offset: -3px;
 }
@@ -51,33 +50,7 @@ label.field:focus-within {
   align-items: center;
   gap: var(--space-2);
   font-weight: 700;
+  font-variant-numeric: var(--font-numeric);
   /* 좁은 폭에서도 "일요일·공휴일"을 깨지 않는다. */
   white-space: nowrap;
-}
-
-.now {
-  padding: 0 6px;
-  border-radius: 4px;
-  background: var(--color-sign);
-  color: var(--color-on-sign);
-  font-size: var(--text-note);
-  font-weight: 700;
-  line-height: 20px;
-}
-
-/* 시각 입력: 칸 면 위에 숫자만 보인다. */
-.timeInput {
-  width: 100%;
-  min-width: 0;
-  font: inherit;
-  font-weight: 700;
-  font-variant-numeric: var(--font-numeric);
-  border: 0;
-  background: transparent;
-  color: inherit;
-  padding: 0;
-}
-
-.timeInput:focus-visible {
-  outline: 0;
 }

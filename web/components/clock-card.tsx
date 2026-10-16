@@ -2,15 +2,13 @@ import styles from "./clock-card.module.css";
 
 export type ClockCardProps = {
   dayTypeLabel: string;
-  /** 시각 입력 값 "HH:MM". 지우는 중이면 빈 문자열이다. */
-  timeValue: string;
-  /** 시각·요일유형을 둘 다 화면을 연 순간 그대로 두었으면 "지금"을 붙인다. */
-  isNow: boolean;
+  /** 출발 시각 "HH:MM". */
+  clockText: string;
   onPickDayType: () => void;
-  onTimeChange: (text: string) => void;
+  onPickTime: () => void;
 };
 
-/** 추천 기준 요일유형·시각 판. 구간 판 위에 둔다. 왼쪽 칸은 요일유형 시트를 열고, 오른쪽 칸은 시각 입력이다. */
+/** 추천 기준 요일유형·시각 판. 구간 판 위에 둔다. 왼쪽 칸은 요일유형 시트, 오른쪽 칸은 시각 시트를 연다. */
 export function ClockCard(props: ClockCardProps) {
   return (
     <section className={styles.clock} aria-label="요일유형과 출발 시각">
@@ -38,19 +36,15 @@ export function ClockCard(props: ClockCardProps) {
           </svg>
         </span>
       </button>
-      <label className={styles.field}>
-        <small>
-          출발 시각
-          {props.isNow ? <b className={styles.now}>지금</b> : null}
-        </small>
-        <input
-          className={styles.timeInput}
-          type="time"
-          aria-label="출발 시각"
-          value={props.timeValue}
-          onChange={(event) => props.onTimeChange(event.target.value)}
-        />
-      </label>
+      <button
+        className={styles.field}
+        type="button"
+        aria-label={`출발 시각 ${props.clockText}, 바꾸기`}
+        onClick={props.onPickTime}
+      >
+        <small>출발 시각</small>
+        <span className={styles.value}>{props.clockText}</span>
+      </button>
     </section>
   );
 }

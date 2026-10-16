@@ -3,18 +3,18 @@ import { fetchRefinedData } from "@web/api/refined-data-api";
 import { ERROR_TEXT, SHEET_TITLE } from "@web/constants/seat-finder-copy";
 import { clockOf } from "@web/recommend/clock";
 import { recommend, stationOptions } from "@web/recommend/recommend";
-import { formatClock, parseClock } from "@web/utils/format-clock";
+import { formatClock } from "@web/utils/format-clock";
 import { useEffect, useState } from "react";
 
 /**
  * useSeatFinder — 구간 선택 → 칸 추천 화면의 상태와 동작. `web/pages/seat-finder-page.tsx`만 부른다.
  * 정제 데이터를 한 번 읽고, 출발역·도착역·방향·시각·요일유형이 바뀔 때마다 추천 모듈 `recommend`를 다시 부른다(계산은 모두 그쪽).
  * 결과를 성공(`success`)과 오류 문구(`errorText`)로 나눠 주어 페이지는 그리기만 한다.
- * 시각과 요일유형의 기본값은 화면을 연 순간 값이다. 화면을 열어 둔 채 시간이 지나도 "지금"을 다시 읽지 않는다.
+ * 시각과 요일유형의 기본값은 화면을 연 순간 값이다. 화면을 열어 둔 채 시간이 지나도 저절로 다시 읽지 않고, 시각 시트의 "지금"을 누를 때만 시계를 다시 읽는다.
  */
 
 type Step = "segment" | "result";
-type SheetTarget = "from" | "to" | "dayType";
+type SheetTarget = "from" | "to" | "dayType" | "time";
 type DataState = { status: "loading" } | { status: "ok"; data: RefinedData } | { status: "failed" };
 
 // 디자인 시안(design/prototype.html)의 처음 구간.
@@ -24,9 +24,7 @@ const INITIAL_TO = "강남";
 export function useSeatFinder() {
   const [dataState, setDataState] = useState<DataState>({ status: "loading" });
   const [openedClock] = useState(() => clockOf(new Date()));
-  // 시각 입력 글자는 그대로 들고 있어야 칸을 지우고 다시 칠 수 있다. 비었거나 덜 쳤으면 시안처럼 "지금"으로 계산한다.
-  const [timeText, setTimeText] = useState(() => formatClock(openedClock.departMinute));
-  const departMinute = parseClock(timeText) ?? openedClock.departMinute;
+  const [departMinute, setDepartMinute] = useState(openedClock.departMinute);
   const [dayType, setDayType] = useState<DayType>(openedClock.dayType);
   const [from, setFrom] = useState(INITIAL_FROM);
   const [to, setTo] = useState(INITIAL_TO);
@@ -49,8 +47,7 @@ export function useSeatFinder() {
   const result = data ? recommend({ from, to, direction, departMinute, dayType }, data) : null;
   const success = result?.status === "ok" ? result : null;
   const errorText = result?.status === "error" ? ERROR_TEXT[result.error] : null;
-  const stationSheetTitle = sheetTarget === "from" || sheetTarget === "to" ? SHEET_TITLE[sheetTarget] : null;
-  const dayTypeSheetTitle = sheetTarget === "dayType" ? SHEET_TITLE.dayType : null;
+  const sheetTitle = sheetTarget ? SHEET_TITLE[sheetTarget] : null;
   const trimmedQuery = query.trim();
   const matches = data ? stationOptions(data).filter((option) => option.name.includes(trimmedQuery)) : [];
 
@@ -75,8 +72,14 @@ export function useSeatFinder() {
     setSheetTarget(null);
   }
 
-  function changeTime(text: string) {
-    setTimeText(text);
+  function pickTime(minute: number) {
+    setDepartMinute(minute);
+    setSheetTarget(null);
+  }
+
+  // 시각 시트의 버튼이라 시각만 바꾸고 요일유형은 그대로 둔다.
+  function pickNowTime() {
+    pickTime(clockOf(new Date()).departMinute);
   }
 
   function swapStations() {
@@ -92,18 +95,16 @@ export function useSeatFinder() {
   return {
     dataStatus: dataState.status,
     dayType,
-    timeText,
+    departMinute,
     clockText: formatClock(departMinute),
-    // 시각·요일유형 둘 다 연 순간 값일 때만 "지금"이다. 공휴일에 평일로 바꾸면 "지금"을 떼어 오늘이 평일로 읽히지 않게 한다.
-    isNow: departMinute === openedClock.departMinute && dayType === openedClock.dayType,
     from,
     to,
     success,
     errorText,
     step,
     setStep,
-    stationSheetTitle,
-    dayTypeSheetTitle,
+    sheetTarget,
+    sheetTitle,
     query,
     setQuery,
     matches,
@@ -111,7 +112,8 @@ export function useSeatFinder() {
     closeSheet,
     pickStation,
     pickDayType,
-    changeTime,
+    pickTime,
+    pickNowTime,
     swapStations,
     flipDirection,
   };

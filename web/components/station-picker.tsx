@@ -1,22 +1,18 @@
-import { BottomSheet } from "@web/components/bottom-sheet";
 import { stationNotFoundText } from "@web/constants/seat-finder-copy";
 import type { StationOption } from "@web/recommend/recommend";
-import styles from "./station-sheet.module.css";
+import styles from "./station-picker.module.css";
 
-export type StationSheetProps = {
-  /** 열려 있으면 "출발역"·"도착역" 제목, 닫혀 있으면 null. */
-  title: string | null;
+export type StationPickerProps = {
   query: string;
   matches: StationOption[];
   onQueryChange: (query: string) => void;
   onPick: (name: string) => void;
-  onClose: () => void;
 };
 
-/** 역 고르기 바텀시트. 목록 거르기는 화면 훅이 한다. */
-export function StationSheet(props: StationSheetProps) {
+/** 역 고르기 시트의 검색·목록. 시트 틀은 BottomSheet, 목록 거르기는 화면 훅이 한다. */
+export function StationPicker(props: StationPickerProps) {
   return (
-    <BottomSheet title={props.title} onClose={props.onClose}>
+    <>
       <input
         className={styles.search}
         type="search"
@@ -44,6 +40,6 @@ export function StationSheet(props: StationSheetProps) {
           <li className={styles.empty}>{stationNotFoundText(props.query)}</li>
         )}
       </ul>
-    </BottomSheet>
+    </>
   );
 }
