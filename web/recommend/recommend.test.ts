@@ -281,6 +281,18 @@ describe("recommend — 탄 사람이 내릴 역 쪽 칸에 서기", () => {
     expect(ok(recommend(input("사", "자"), exitsAtTwo(tiedAtA(), "차"))).picks).toEqual([3]);
   });
 
+  it("중간 역에서 탄 사람도 내릴 역 쪽 칸에 서서 그 뒤 역의 빈자리를 나눠 가진다", () => {
+    // 출발역에서는 아무도 타지 않는다. 아에서 2·3번 칸 쪽으로 많이 타고, 자에서 2·3번 칸 쪽으로 많이 내린다.
+    let data = withStation(fakeData(), "사", { ridership: alightingAt({}) });
+    data = withStop(data, "아", { fastExit: { down: stairsAt(2, 3), up: stairsAt(2, 3) } });
+    data = withStation(data, "아", { ridership: boardingAt(everySlot(6000)) });
+    data = withStop(data, "자", { fastExit: { down: stairsAt(2, 3), up: stairsAt(2, 3) } });
+    data = withStation(data, "자", { ridership: alightingAt(everySlot(6000)) });
+    expect([...ok(recommend(input("사", "차"), data)).picks].sort()).toEqual([2, 3]);
+    // 차에서 2번 칸 쪽으로 많이 내리면 아에서 탄 사람이 2번 칸 쪽에 몰려 자에서 3번 칸이 앞선다.
+    expect(ok(recommend(input("사", "차"), exitsAtTwo(data, "차"))).picks).toEqual([3]);
+  });
+
   it("내릴 역이 환승역 표에 있으면 그 역에서 갈아타는 사람은 환승통로 칸 쪽에 선다", () => {
     const transferAtCha = withStop(
       withStation(tiedAtA(), "차", {
