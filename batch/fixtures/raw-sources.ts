@@ -1,10 +1,11 @@
 import type { RawSources, RefineConfig } from "../refine";
 
 /**
- * 배치 테스트 픽스처 — 2호선 본선 앞쪽 4개 역(시청~을지로4가)만 담은 작은 원본.
+ * 배치 테스트 픽스처 — 2호선 본선 앞쪽 4개 역(시청~을지로4가)과 3호선·4호선 두 역씩만 담은 작은 원본.
  * 정상 행과 함께 칸 번호 형식 이상, 칸 수 초과, 엘리베이터뿐인 역(을지로3가), 계단 없이 에스컬레이터가 있는 역(을지로4가 하행),
- * 한 방향이 없는 역(을지로4가 상행),
- * 다른 호선 행, 공휴일 날짜를 넣었다. 계약 테스트(`batch/contract.test.ts`)도 이 픽스처를 쓴다.
+ * 한 방향이 없는 역(을지로4가 상행), 다음 역이 다른 갈래 승강장 행(시청 하행), 공휴일 날짜를 넣었다.
+ * 승하차는 옛 이름 행(4호선 당고개 = 불암산), 한 호선에 몰린 환승역(충무로는 4호선 행만 있음), 노선에 없는 호선 행(9호선)을 넣었다.
+ * 계약 테스트(`batch/contract.test.ts`)도 이 픽스처를 쓴다.
  */
 
 export const FIXTURE_CONFIG: RefineConfig = {
@@ -15,8 +16,10 @@ export const FIXTURE_CONFIG: RefineConfig = {
       name: "2호선",
       carCount: 10,
       isLoop: true,
-      codes: ["201", "202", "203", "204"],
+      sequences: [{ stops: ["201", "202", "203", "204"] }],
     },
+    { id: "3", lineNumber: 3, name: "3호선", carCount: 10, isLoop: false, sequences: [{ stops: ["320", "321"] }] },
+    { id: "4", lineNumber: 4, name: "4호선", carCount: 10, isLoop: false, sequences: [{ stops: ["409", "423"] }] },
   ],
   transferLineCounts: { 시청: 2, 을지로3가: 2 },
 };
@@ -46,8 +49,17 @@ function ridershipCsv(): string {
       rows.push([seq++, ymd, "2호선", code, name, "승차", ...on].join(","));
       rows.push([seq++, ymd, "2호선", code, name, "하차", ...off].join(","));
     }
-    // 다른 호선 행은 2호선 본선에 섞이지 않아야 한다.
-    rows.push([seq++, ymd, "4호선", "426", "사당", "하차", ...slots(9999)].join(","));
+    // 3호선 을지로3가는 2호선 을지로3가와 합쳐진다. 3호선 충무로 행은 없고 4호선 충무로 행에 모두 들어 있다.
+    for (const [line, code, name, base] of [
+      ["3호선", "320", "을지로3가", 700],
+      ["4호선", "409", "당고개", 400],
+      ["4호선", "423", "충무로", 800],
+    ] as const) {
+      rows.push([seq++, ymd, line, code, name, "승차", ...slots(base)].join(","));
+      rows.push([seq++, ymd, line, code, name, "하차", ...slots(base)].join(","));
+    }
+    // 노선에 없는 호선 행은 같은 이름 역에도 더하지 않는다.
+    rows.push([seq++, ymd, "9호선", "999", "시청", "하차", ...slots(9999)].join(","));
   }
   return [header, ...rows].join("\n");
 }
@@ -70,6 +82,17 @@ function congestionCsv(): string {
         rows.push([dayLabel, "2호선", code, name.replace(/\(.*\)/, ""), side, ...values].join(","));
       }
     }
+    for (const [line, code, name] of [
+      ["3호선", "320", "을지로3가"],
+      ["3호선", "321", "충무로"],
+      ["4호선", "409", "불암산"],
+      ["4호선", "423", "충무로"],
+    ]) {
+      for (const side of ["상선", "하선"])
+        rows.push([dayLabel, line, code, name, side, ...CONGESTION_TIMES.map(() => "30.0")].join(","));
+    }
+    // 특수 행: 시청 외선 승강장 값이 다른 역번호에 있는 경우(2호선 9001 성수E와 같은 꼴).
+    rows.push([dayLabel, "2호선", "9001", "시청E", "외선", ...CONGESTION_TIMES.map(() => "77.0")].join(","));
   }
   return [header, ...rows].join("\n");
 }
@@ -78,15 +101,31 @@ function transferCsv(): string {
   return ["연번,출발역명,평일,토요일,일요일", "1,시청,52690,42575,29750", "2,을지로3가,69864,54543,37099"].join("\n");
 }
 
+/** 픽스처 순환 노선(4개 역)에서 그 방향 다음 역. 빠른하차 drtnInfo 값이다. */
+function nextOf(code: string, side: string): string {
+  const i = STATIONS.findIndex(([c]) => c === code);
+  const next = STATIONS[(i + (side === "하행" ? 1 : -1) + STATIONS.length) % STATIONS.length];
+  return next?.[1].replace(/\(.*\)/, "") ?? "";
+}
+
 // ponytail: getFstExit 응답 중 배치가 읽는 필드만 둔다(fast-exit.ts itemSchema).
 function fastExit(code: string, side: string, door: string, kind: string, crtrYmd = "20241231") {
-  return { lineNm: "2호선", stnCd: `0${code}`, crtrYmd, upbdnbSe: side, qckgffVhclDoorNo: door, plfmCmgFac: kind };
+  return {
+    lineNm: "2호선",
+    stnCd: `0${code}`,
+    crtrYmd,
+    upbdnbSe: side,
+    drtnInfo: nextOf(code, side),
+    qckgffVhclDoorNo: door,
+    plfmCmgFac: kind,
+  };
 }
 
 function fastExitItems(): unknown[] {
   return [
-    // 시청: 정상 행
+    // 시청: 정상 행. 다음 역이 다른 갈래 승강장 행은 걸러져야 한다.
     fastExit("201", "하행", "3-2", "계단"),
+    { ...fastExit("201", "하행", "5-1", "계단"), drtnInfo: "용답" },
     fastExit("201", "하행", "8-1", "에스컬레이터"),
     fastExit("201", "상행", "4-3", "계단"),
     fastExit("201", "상행", "6-1", "엘리베이터", "20241130"),

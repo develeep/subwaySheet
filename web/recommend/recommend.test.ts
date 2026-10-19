@@ -5,6 +5,7 @@ import {
   elevatorOnlyAt,
   fakeData,
   MISSING_SIDE,
+  sequence,
   stairsAt,
   withStation,
   withStop,
@@ -90,6 +91,92 @@ describe("recommend — 노선과 방향", () => {
       towardStation: "아",
       route: { id: "line", lineNumber: 7, carCount: 4 },
     });
+  });
+});
+
+describe("recommend — 노선 고르기", () => {
+  /** 가·다를 함께 지나는 5호선(가→사→아→다, 3정거장)을 더한다. 2호선 순환으로는 2정거장이다. */
+  const withLine5 = () => {
+    const base = fakeData();
+    const line5 = {
+      id: "line5",
+      lineNumber: 5,
+      name: "5호선",
+      carCount: 8,
+      isLoop: false,
+      sequences: [sequence(["가", "사", "아", "다"])],
+    };
+    return { ...base, routes: [...base.routes, line5] };
+  };
+
+  it("공통 노선이 하나면 그 노선으로 정하고 노선 칩은 하나뿐이다", () => {
+    expect(ok(recommend(input("가", "다"), fakeData())).routeChoices).toEqual([
+      { id: "loop", lineNumber: 2, name: "2호선", carCount: 4 },
+    ]);
+  });
+
+  it("공통 노선이 둘 이상이면 노선 칩으로 모두 돌려주고, 기본은 정거장 수가 적은 노선이다", () => {
+    const result = ok(recommend(input("가", "다"), withLine5()));
+    expect(result.routeChoices.map((r) => r.id)).toEqual(["loop", "line5"]);
+    expect(result).toMatchObject({ route: { id: "loop" }, middleStations: ["나"] });
+  });
+
+  it("노선 칩으로 고른 노선의 구간과 칸 수로 계산한다", () => {
+    const result = ok(recommend(input("가", "다", { routeId: "line5" }), withLine5()));
+    expect(result).toMatchObject({
+      route: { id: "line5", carCount: 8 },
+      middleStations: ["사", "아"],
+      oppositeDirection: null,
+    });
+    expect(result.picks.every((car) => car >= 1 && car <= 8)).toBe(true);
+  });
+
+  it("고른 노선이 두 역을 함께 지나지 않으면 기본 노선을 쓴다", () => {
+    expect(ok(recommend(input("가", "라", { routeId: "line5" }), withLine5())).route.id).toBe("loop");
+  });
+});
+
+describe("recommend — 갈라지는 노선과 한 방향 순서열", () => {
+  /** 사에서 아·자 방면과 차·가 방면으로 갈라지는 노선. */
+  const forked = () => {
+    const base = fakeData();
+    const route = {
+      id: "fork",
+      lineNumber: 5,
+      name: "5호선",
+      carCount: 8,
+      isLoop: false,
+      sequences: [sequence(["사", "아", "자"]), sequence(["사", "차", "가"])],
+    };
+    return { ...base, routes: [route] };
+  };
+
+  it("갈라지는 노선은 도착역이 있는 갈래의 중간 역으로 계산한다", () => {
+    expect(ok(recommend(input("사", "자"), forked())).middleStations).toEqual(["아"]);
+    expect(ok(recommend(input("사", "가"), forked())).middleStations).toEqual(["차"]);
+    expect(ok(recommend(input("가", "사"), forked()))).toMatchObject({ direction: "up", middleStations: ["차"] });
+  });
+
+  it("서로 다른 갈래의 두 역은 공통 노선이 없다", () => {
+    expect(recommend(input("자", "가"), forked())).toEqual({ status: "error", error: "noCommonRoute" });
+  });
+
+  it("한 방향 순서열은 그 방향으로만 구간을 만든다(6호선 응암순환)", () => {
+    // 순환 구간 아→자를 지나 사에서 차 방면으로 간다. 거꾸로 차→사→자→아는 상행 전용 순서열을 탄다.
+    const base = fakeData();
+    const route = {
+      id: "6",
+      lineNumber: 6,
+      name: "6호선",
+      carCount: 8,
+      isLoop: false,
+      sequences: [sequence(["아", "자", "사", "차", "가"], "down"), sequence(["자", "아", "사", "차", "가"], "up")],
+    };
+    const data = { ...base, routes: [route] };
+    expect(ok(recommend(input("아", "차"), data))).toMatchObject({ direction: "down", middleStations: ["자", "사"] });
+    expect(ok(recommend(input("차", "자"), data))).toMatchObject({ direction: "up", middleStations: ["사", "아"] });
+    // 순환을 거꾸로 도는 열차는 없다.
+    expect(recommend(input("자", "아"), data)).toEqual({ status: "error", error: "noCommonRoute" });
   });
 });
 
@@ -190,6 +277,21 @@ describe("recommend — 시간대와 요일유형", () => {
     expect(gradeAt(23)).toBe("high"); // 심야 8분
   });
 
+  it("환승역 승하차(역 합계)는 그 역을 지나는 노선 수로 나눠 노선 하나 몫으로 쓴다", () => {
+    // 나(1정거장 뒤, 2번 칸)에서 5000명, 다(2정거장 뒤, 앞쪽 역 가중치 절반, 3번 칸)에서 15000명이 내린다.
+    let data = withStop(fakeData(), "나", { fastExit: { down: stairsAt(2), up: stairsAt(2) } });
+    data = withStop(data, "다", { fastExit: { down: stairsAt(3), up: stairsAt(3) } });
+    data = withStation(data, "나", { ridership: alightingAt({ 3: 5000 }) });
+    data = withStation(data, "다", { ridership: alightingAt({ 3: 15000 }) });
+    expect(ok(recommend(input("가", "라"), data)).picks[0]).toBe(3);
+
+    // 다가 7호선에도 있으면 15000명의 절반만 이 노선 몫이라 나 쪽 칸이 앞선다.
+    const [loop, line] = data.routes;
+    if (!loop || !line) throw new Error("픽스처 노선 없음");
+    const daOnLine = { ...line, sequences: [sequence(["사", "아", "자", "차", "다"])] };
+    expect(ok(recommend(input("가", "라"), { ...data, routes: [loop, daOnLine] })).picks[0]).toBe(2);
+  });
+
   it("고른 요일유형의 승하차를 쓴다", () => {
     const ridership = alightingAt({ 3: 5000 });
     if (!ridership) throw new Error("픽스처 없음");
@@ -210,10 +312,12 @@ describe("stationOptions", () => {
   it("고를 수 있는 역을 노선 순서대로 중복 없이, 지나는 호선과 함께 돌려준다", () => {
     const base = fakeData();
     const [loop, line] = base.routes;
-    const ga = loop?.stops.find((s) => s.name === "가");
-    if (!loop || !line || !ga) throw new Error("픽스처 노선 없음");
+    if (!loop || !line) throw new Error("픽스처 노선 없음");
     // "가"역이 7호선에도 있다고 가정한다.
-    const options = stationOptions({ ...base, routes: [loop, { ...line, stops: [...line.stops, ga] }] });
+    const options = stationOptions({
+      ...base,
+      routes: [loop, { ...line, sequences: [sequence(["사", "아", "자", "차", "가"])] }],
+    });
     expect(options.map((o) => o.name)).toEqual(["가", "나", "다", "라", "마", "바", "사", "아", "자", "차"]);
     expect(options[0]).toEqual({ name: "가", lineNumbers: [2, 7] });
     expect(options[6]).toEqual({ name: "사", lineNumbers: [7] });

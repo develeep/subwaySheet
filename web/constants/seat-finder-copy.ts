@@ -22,5 +22,5 @@ export const WEAK_GAP_TEXT = "칸 차이가 작아요. 어느 칸이든 비슷�
 export const CAN_SIT_TEXT = "출발역에서 바로 앉을 수 있을 만큼 한산해요.";
 export const missingStationsText = (names: string[]) => `데이터가 없어 계산에서 뺀 역: ${names.join(", ")}`;
 export const stationNotFoundText = (query: string) =>
-  `"${query}" 역을 찾지 못했어요. 지금은 2호선 본선 역만 고를 수 있어요.`;
+  `"${query}" 역을 찾지 못했어요. 지금은 서울교통공사 1~8호선 역만 고를 수 있어요.`;
 export const LOAD_FAILED_TEXT = "데이터를 불러오지 못했어요. 잠시 뒤 다시 열어 주세요.";
