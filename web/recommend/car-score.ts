@@ -12,6 +12,8 @@ import { FORMULA, FULL_LOAD_PER_CAR, SEATS_PER_CAR } from "./formula";
  * scoreCars — 구간의 칸 점수를 매겨 추천 칸·앉을 가능성·화면 규칙을 정한다. `recommend.ts`만 부른다.
  * 칸 점수 = Σ(중간 역) 가중치 × 열차당 하차 인원 × 칸 분포 × 앉아 있던 비율 ÷ 출발역에서 그 칸에 서 있는 사람(스펙 #2).
  * - 열차당 하차 인원 = (카드 하차 + 환승 하차 추정) × 방향 몫 × 배차 간격. 환승 하차 = 환승인원 ÷ 노선 수 × 그 역 승하차 시간대 비율.
+ * - 칸 분포: 카드 하차는 출입설비 칸에서 퍼진다. 환승 하차는 환승역 표에 그 역·방향의 환승통로 칸(`transferCars`)이 있으면
+ *   그 칸들에서 같은 퍼짐으로, 없으면 출입설비 칸에서 퍼진다(#7).
  * - 카드 승하차는 호선을 합친 역 합계라(`batch/ridership.ts`) 그 역을 지나는 정제 데이터 노선 수(`routeCounts`, 지선 포함)로 나눠
  *   노선 하나 몫으로 쓴다. 환승인원의 노선 수(`transfer.lineCount`)는 코레일·민자 노선까지 센 다른 값이다.
  *   나누지 않으면 환승역에서 다른 호선 열차에서 내린 사람까지 세어 환승역 칸이 과하게 유리해진다(#6).
@@ -106,13 +108,26 @@ function freedSeats(input: CarScoreInput) {
     if (fastExitSide.isElevatorOnly) evenlySpreadStations.push(stop.name);
 
     const slot = slotOfMinute(departMinute + k * FORMULA.minutesPerStop);
-    const alighting = (ridership.alighting[slot] ?? 0) + transferAlighting(station, dayType, slot);
-    const perTrain = (alighting * FORMULA.directionShare * headway(dayType, slot)) / 60;
+    const cardAlighting = ridership.alighting[slot] ?? 0;
+    const transferring = transferAlighting(station, dayType, slot);
+    const toPerTrain = (FORMULA.directionShare * headway(dayType, slot)) / 60;
     const previousLoad = loadAt(input.stops[k - 1] as RouteStop, direction, dayType, slot);
     const seatedShare =
       previousLoad === null ? FORMULA.unknownSeatedShare : Math.min(1, SEATS_PER_CAR / Math.max(previousLoad, 1));
     const weight = (total - k) / (total - 1);
-    const byCar = carSpread(fastExitSide, carCount).map((share) => weight * perTrain * share * seatedShare);
+    const spread = carSpread(fastExitSide, carCount);
+    const transferCars = stop.transferCars[direction];
+    const transferSpread =
+      transferCars.length > 0
+        ? spreadFrom(
+            transferCars.map((car) => ({ car, weight: 1 })),
+            carCount,
+          )
+        : spread;
+    const byCar = spread.map(
+      (share, car) =>
+        weight * toPerTrain * (cardAlighting * share + transferring * (transferSpread[car] ?? 0)) * seatedShare,
+    );
     byCar.forEach((value, car) => {
       freed[car] = (freed[car] ?? 0) + value;
     });
@@ -182,13 +197,21 @@ function transferAlighting(station: StationData, dayType: DayType, slot: number)
 /** 출입설비 칸에서 칸별로 퍼지는 하차 분포(합 1). 엘리베이터뿐이거나 설비가 없으면 칸마다 고르게.
  * 엘리베이터뿐인 역은 계단 행이 빠진 것이라 분포를 믿을 수 없다(을지로3가를 그대로 쓰면 홍대입구→잠실 추천이 바뀐다, 프로토타입 FINDINGS). */
 function carSpread(side: FastExitSide, carCount: number): number[] {
-  const even = new Array<number>(carCount).fill(1 / carCount);
-  if (side.isElevatorOnly || side.facilities.length === 0) return even;
+  if (side.isElevatorOnly || side.facilities.length === 0) return new Array<number>(carCount).fill(1 / carCount);
+  const sources = side.facilities.map((f) => ({
+    car: f.car,
+    weight: f.kind === "elevator" ? FORMULA.elevatorWeight : 1,
+  }));
+  return spreadFrom(sources, carCount);
+}
+
+/** 칸(가중치)들에서 퍼지는 분포(합 1). 출입설비와 환승통로가 같은 퍼짐을 쓴다. */
+function spreadFrom(sources: { car: number; weight: number }[], carCount: number): number[] {
   const kernel = new Array<number>(carCount).fill(0);
-  for (const facility of side.facilities) {
-    const weight = facility.kind === "elevator" ? FORMULA.elevatorWeight : 1;
+  for (const source of sources) {
     for (let car = 1; car <= carCount; car++) {
-      kernel[car - 1] = (kernel[car - 1] ?? 0) + weight * Math.exp(-Math.abs(car - facility.car) / FORMULA.spreadCars);
+      kernel[car - 1] =
+        (kernel[car - 1] ?? 0) + source.weight * Math.exp(-Math.abs(car - source.car) / FORMULA.spreadCars);
     }
   }
   const sum = kernel.reduce((a, b) => a + b, 0);

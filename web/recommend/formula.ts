@@ -4,7 +4,7 @@
  * 추천 기록(#5)에 공식 버전이 남아 공식별로 결과를 나눠 비교한다.
  */
 
-export const FORMULA_VERSION = "2";
+export const FORMULA_VERSION = "3";
 
 /** 칸당 좌석(7인석 6개 + 노약자석 3인석 4개). 스펙 #2 "54로 시작". 노선마다 달라지면 노선 값으로 바꾼다. */
 export const SEATS_PER_CAR = 54;

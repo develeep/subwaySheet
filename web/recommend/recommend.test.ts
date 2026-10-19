@@ -255,6 +255,29 @@ describe("recommend — 데이터 없는 역과 고르게 퍼뜨린 역", () => 
   });
 });
 
+describe("recommend — 환승역 표", () => {
+  // 나에서 하루 20만 명이 갈아탄다. 나의 출입설비는 기본값(1·4번 칸 계단)이다.
+  const transferAtNa = (transferCars: { down: number[]; up: number[] }) =>
+    withStop(
+      withStation(fakeData(), "나", {
+        transfer: { perDay: { weekday: 200000, saturday: 200000, sunday: 200000 }, lineCount: 1 },
+      }),
+      "나",
+      { transferCars },
+    );
+
+  it("표에 있는 역·방향은 환승 하차가 환승통로 칸 쪽으로 몰린다", () => {
+    expect(ok(recommend(input("가", "라"), transferAtNa({ down: [2], up: [] }))).picks).toEqual([2]);
+  });
+
+  it("표에 없는 역·방향은 환승 하차도 빠른하차 칸 분포를 따른다", () => {
+    const withoutTable = ok(recommend(input("가", "라"), transferAtNa({ down: [], up: [] })));
+    const otherDirectionOnly = ok(recommend(input("가", "라"), transferAtNa({ down: [], up: [2] })));
+    expect(otherDirectionOnly.picks).toEqual(withoutTable.picks);
+    expect(otherDirectionOnly.picks.every((car) => car === 1 || car === 4)).toBe(true);
+  });
+});
+
 describe("recommend — 결과에 함께 싣는 값", () => {
   it("기준 기간, 공식 버전, 계산에 쓴 요일유형을 돌려준다", () => {
     const result = ok(recommend(input("가", "라", { dayType: "saturday" }), fakeData()));

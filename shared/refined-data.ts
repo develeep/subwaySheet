@@ -40,12 +40,16 @@ const fastExitSideSchema = z.object({
   facilities: z.array(facilitySchema),
 });
 
+const carsSchema = z.array(z.number().int().min(1));
+
 /** 순서열 위의 역. 혼잡도는 칸당 정원 대비 %(OA-12928)를 1시간 시간대로 합친 값이고, 없으면 null이다.
- * `down`·`up`은 그 순서열을 앞→뒤·뒤→앞으로 탈 때의 값이다. 갈래마다 승강장이 달라(5호선 강동) 순서열마다 따로 둔다. */
+ * `down`·`up`은 그 순서열을 앞→뒤·뒤→앞으로 탈 때의 값이다. 갈래마다 승강장이 달라(5호선 강동) 순서열마다 따로 둔다.
+ * `transferCars`는 환승역 표(`batch/transfer-passages.ts`)의 환승통로 칸이다. 갈아탈 호선마다 하나씩이고, 표에 없는 역·방향은 빈 배열이다. */
 const routeStopSchema = z.object({
   name: z.string().min(1),
   congestion: z.object({ down: byDayType(slotValuesSchema).nullable(), up: byDayType(slotValuesSchema).nullable() }),
   fastExit: z.object({ down: fastExitSideSchema, up: fastExitSideSchema }),
+  transferCars: z.object({ down: carsSchema, up: carsSchema }),
 });
 
 /** 역 순서열(하행 순서). `oneWay`가 있으면 그 방향으로만 탈 수 있다. 6호선 응암순환은 한 방향으로만 돌아서

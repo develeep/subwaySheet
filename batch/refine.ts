@@ -12,6 +12,7 @@ import { baseStationName, stationKey } from "./station-key";
  * 역은 같은 호선 안의 역번호로 원본끼리 잇고(승하차·혼잡도 "201", 빠른하차 "0201"), 이름은 부기명을 뗀 승하차 역명을 쓴다.
  * 승하차 행이 없는 역번호(3호선 충무로 등)는 혼잡도 역명을 쓴다. 승하차·환승인원은 역 이름 단위로 붙인다.
  * 갈래·지선 승강장은 혼잡도 특수 행과 빠른하차 다음 역으로 가른다(`batch/routes.ts`의 정차 정의).
+ * 환승역 표의 환승통로 칸은 노선·역·방향이 맞는 정차에 붙인다. 어느 정차에도 붙지 않는 행은 오타로 보고 멈춘다.
  * **마지막에 스키마로 검증한다.** 형식이 어긋난 파일을 `public/data/`에 쓰지 않기 위해서다.
  */
 
@@ -36,10 +37,24 @@ type RouteDefinition = {
   sequences: { oneWay?: Direction; stops: StopDefinition[] }[];
 };
 
+/** 환승역 표 한 행: 그 노선을 그 방향으로 타고 와 그 역에서 `toLine`으로 갈아탈 때 환승통로와 가까운 칸. */
+export type TransferPassage = {
+  station: string;
+  routeId: string;
+  direction: Direction;
+  toLine: string;
+  /** 그 방향 칸 번호(진행 방향 맨 앞이 1번, CONTEXT.md "칸 번호"). */
+  car: number;
+  /** 어디서 확인했는지(공식 데이터·안내도·현장 확인). `toLine`과 함께 사람이 표를 확인하려고 둔 기록이고 정제 데이터에는 넣지 않는다. */
+  source: string;
+};
+
 export type RefineConfig = {
   routes: RouteDefinition[];
   /** 환승역 이름 → 그 역에서 만나는 노선 수(코레일·민자 노선 포함). 환승인원을 노선 몫으로 나눌 때 앱이 쓴다. */
   transferLineCounts: Record<string, number>;
+  /** 환승역 표(`batch/transfer-passages.ts`). 역마다 채워 나가고, 없는 역·방향은 앱이 빠른하차 칸 분포로 대신한다. */
+  transferPassages: TransferPassage[];
 };
 
 export type RawSources = {
@@ -58,6 +73,7 @@ export function refine(raw: RawSources, config: RefineConfig): RefinedData {
   const transferPerDay = readTransfer(raw.transfer.csv);
 
   const stations: Record<string, StationData> = {};
+  const usedPassages = new Set<TransferPassage>();
   const routes = config.routes.map((route) => {
     const line = lineLabel(route);
     const sequences = route.sequences.map((sequence) => {
@@ -87,12 +103,24 @@ export function refine(raw: RawSources, config: RefineConfig): RefinedData {
             fastExit: toFastExitSide(facilities, nextName(i, direction), route.carCount),
           };
         };
+        const transferCars = (direction: Direction) => {
+          const rows = config.transferPassages.filter(
+            (p) => p.routeId === route.id && p.station === names[i] && p.direction === direction,
+          );
+          for (const row of rows) {
+            if (row.car > route.carCount)
+              throw new Error(`환승역 표 ${row.station} ${row.car}번 칸이 ${route.name} 칸 수를 넘는다`);
+            usedPassages.add(row);
+          }
+          return rows.map((p) => p.car);
+        };
         const down = side("down");
         const up = side("up");
         return {
           name: names[i] ?? "",
           congestion: { down: down.congestion, up: up.congestion },
           fastExit: { down: down.fastExit, up: up.fastExit },
+          transferCars: { down: transferCars("down"), up: transferCars("up") },
         };
       });
       return { oneWay: sequence.oneWay ?? null, stops };
@@ -106,6 +134,9 @@ export function refine(raw: RawSources, config: RefineConfig): RefinedData {
       sequences,
     };
   });
+
+  const unused = config.transferPassages.find((p) => !usedPassages.has(p));
+  if (unused) throw new Error(`환승역 표의 ${unused.routeId} ${unused.station} 행이 어느 정차에도 붙지 않았다`);
 
   return refinedDataSchema.parse({
     periods: {
