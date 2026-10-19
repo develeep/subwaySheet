@@ -1,13 +1,14 @@
 import { readFileSync } from "node:fs";
 import { type RefinedData, refinedDataSchema } from "@shared/refined-data";
 import { describe, expect, it } from "vitest";
-import { type RecommendSuccess, recommend } from "./recommend";
+import { type RecommendSuccess, recommend, stationOptions } from "./recommend";
 
 /**
  * 프로토타입 회귀 — 실제 정제 데이터(`public/data/refined-data.json`)로 프로토타입 FINDINGS 표의 2호선 평일 결과를 재현한다(스펙 #2).
  * 프로토타입에는 환승역 표가 없어서, 표를 비운 데이터로 재현한다. 표를 채운 결과는 "환승역 표 반영"에서 따로 본다(#7).
  * 데이터를 다시 만들거나 공식을 바꿔 이 테스트가 깨지면, 바뀐 이유를 PR에 적는다.
  * 아래 "1~8호선 노선"은 같은 실제 데이터로 노선 순서열(갈래·지선·응암순환)이 맞게 들어갔는지 본다(#6).
+ * "데이터 없는 역과 코레일 구간"은 코레일 구간·데이터 없는 역이 낀 구간을 있는 역만으로 계산하는지 본다(#10).
  */
 
 const data = refinedDataSchema.parse(JSON.parse(readFileSync("public/data/refined-data.json", "utf-8")));
@@ -139,6 +140,53 @@ describe("1~8호선 노선 (실제 데이터)", () => {
     expect(recommend({ from: "신설동", to: "강남", dayType: "weekday", departMinute: 480 }, data)).toEqual({
       status: "error",
       error: "noCommonRoute",
+    });
+  });
+});
+
+describe("데이터 없는 역과 코레일 구간 (실제 데이터, #10)", () => {
+  const rangeEnds = (result: RecommendSuccess) => result.missingRanges.map((r) => [r[0], r.at(-1)]);
+
+  it("데이터 없는 역(7호선 부천 구간·별내선·진접선)과 1·3·4호선 코레일 구간 역을 고를 수 있다", () => {
+    const names = new Set(stationOptions(data).map((o) => o.name));
+    const targets = [
+      "석남",
+      "까치울",
+      "별내",
+      "장자호수공원",
+      "진접",
+      "별내별가람",
+      "오이도",
+      "선바위",
+      "대화",
+      "삼송",
+    ];
+    const line1 = ["연천", "회기", "남영", "구로", "인천", "신창", "서동탄", "광명"];
+    expect([...targets, ...line1].filter((name) => !names.has(name))).toEqual([]);
+  });
+
+  it("오이도→사당은 남태령으로 계산하고 오이도~선바위 범위를 알린다", () => {
+    const result = weekday("오이도", "사당", 8);
+    expect(result).toMatchObject({ route: { id: "4" }, reason: { station: "남태령" } });
+    expect(rangeEnds(result)).toEqual([["오이도", "선바위"]]);
+  });
+
+  it("출발역이 코레일 구간이면(대화→종로3가) 출발역부터, 도착역이 코레일 구간이면(종로3가→인천) 도착역까지 범위로 묶는다", () => {
+    expect(rangeEnds(weekday("대화", "종로3가", 8))).toEqual([["대화", "삼송"]]);
+    expect(rangeEnds(weekday("종로3가", "인천", 8))).toEqual([["남영", "인천"]]);
+  });
+
+  it("출발역과 도착역이 모두 코레일 구간이면(회기→구로) 범위 둘을 알린다", () => {
+    expect(rangeEnds(weekday("회기", "구로", 8))).toEqual([
+      ["회기", "회기"],
+      ["남영", "구로"],
+    ]);
+  });
+
+  it("중간 역이 모두 데이터 없는 역이면(오이도→금정) 추천할 수 없다", () => {
+    expect(recommend({ from: "오이도", to: "금정", dayType: "weekday", departMinute: 480 }, data)).toEqual({
+      status: "error",
+      error: "noStopsToScore",
     });
   });
 });

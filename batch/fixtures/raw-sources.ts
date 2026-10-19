@@ -19,7 +19,17 @@ export const FIXTURE_CONFIG: RefineConfig = {
       sequences: [{ stops: ["201", "202", "203", "204"] }],
     },
     { id: "3", lineNumber: 3, name: "3호선", carCount: 10, isLoop: false, sequences: [{ stops: ["320", "321"] }] },
-    { id: "4", lineNumber: 4, name: "4호선", carCount: 10, isLoop: false, sequences: [{ stops: ["409", "423"] }] },
+    {
+      id: "4",
+      lineNumber: 4,
+      name: "4호선",
+      carCount: 10,
+      isLoop: false,
+      // 진접·선바위는 데이터 없는 역, 시청은 2호선에 데이터 있는 같은 이름 역이 있는 데이터 없는 정차(1호선 신도림 꼴)다.
+      sequences: [
+        { stops: [{ datalessName: "진접" }, "409", "423", { datalessName: "시청" }, { datalessName: "선바위" }] },
+      ],
+    },
   ],
   transferLineCounts: { 시청: 2, 을지로3가: 2 },
   transferPassages: [],

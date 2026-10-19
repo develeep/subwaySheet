@@ -37,6 +37,7 @@ export const MISSING_SIDE: FastExitSide = { isMissing: true, isElevatorOnly: fal
 function stop(name: string): RouteStop {
   return {
     name,
+    isDataless: false,
     // 혼잡도 75% = 칸당 120명. 좌석 54석이라 서 있는 사람이 있다.
     congestion: { down: byDay(() => flat(75)), up: byDay(() => flat(75)) },
     // 계단이 칸 1·4번에 있어 양 끝으로 고르게 내린다.
@@ -98,6 +99,16 @@ export function withStation(data: RefinedData, name: string, patch: Partial<Stat
   const current = data.stations[name];
   if (!current) throw new Error(`${name} 없음`);
   return { ...data, stations: { ...data.stations, [name]: { ...current, ...patch } } };
+}
+
+/** 원본이 하나도 없는 정차(코레일 구간 꼴)로 바꾼다. 같은 이름 역의 승하차도 비운다. */
+export function asDataless(data: RefinedData, name: string): RefinedData {
+  const stopPatch = {
+    isDataless: true,
+    congestion: { down: null, up: null },
+    fastExit: { down: MISSING_SIDE, up: MISSING_SIDE },
+  };
+  return withStation(withStop(data, name, stopPatch), name, { ridership: null });
 }
 
 /** 하차 인원을 시간대별로 정한다(나머지 시간대는 0). */

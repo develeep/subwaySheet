@@ -44,9 +44,12 @@ const carsSchema = z.array(z.number().int().min(1));
 
 /** 순서열 위의 역. 혼잡도는 칸당 정원 대비 %(OA-12928)를 1시간 시간대로 합친 값이고, 없으면 null이다.
  * `down`·`up`은 그 순서열을 앞→뒤·뒤→앞으로 탈 때의 값이다. 갈래마다 승강장이 달라(5호선 강동) 순서열마다 따로 둔다.
- * `transferCars`는 환승역 표(`batch/transfer-passages.ts`)의 환승통로 칸이다. 갈아탈 호선마다 하나씩이고, 표에 없는 역·방향은 빈 배열이다. */
+ * `transferCars`는 환승역 표(`batch/transfer-passages.ts`)의 환승통로 칸이다. 갈아탈 호선마다 하나씩이고, 표에 없는 역·방향은 빈 배열이다.
+ * `isDataless`는 원본이 하나도 없는 정차(코레일 구간·7호선 부천 구간·별내선·진접선, #10)다. 혼잡도·빠른하차가 비어 있고,
+ * 같은 이름 역의 승하차(다른 호선 값, 예: 1호선 신도림)가 있어도 앱이 쓰지 않는다. 열차는 지나가므로 정거장 순서에는 든다. */
 const routeStopSchema = z.object({
   name: z.string().min(1),
+  isDataless: z.boolean(),
   congestion: z.object({ down: byDayType(slotValuesSchema).nullable(), up: byDayType(slotValuesSchema).nullable() }),
   fastExit: z.object({ down: fastExitSideSchema, up: fastExitSideSchema }),
   transferCars: z.object({ down: carsSchema, up: carsSchema }),

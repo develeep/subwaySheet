@@ -133,7 +133,7 @@ export function useSeatFinder() {
       picks: success.picks,
       grade: success.grade,
       isWeakGap: success.isWeakGap,
-      hasMissingStations: success.missingStations.length > 0,
+      hasMissingStations: success.missingRanges.length > 0,
       period: success.periods.ridership,
       formulaVersion: success.formulaVersion,
       carCount: success.route.carCount,

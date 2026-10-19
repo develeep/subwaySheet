@@ -99,11 +99,12 @@ export function stationOptions(data: RefinedData): StationOption[] {
   return [...byName].map(([name, lines]) => ({ name, lineNumbers: [...lines].sort((a, b) => a - b) }));
 }
 
-/** 역 이름 → 그 역을 지나는 노선 수. */
+/** 역 이름 → 그 역에 데이터 있는 정차로 서는 노선 수. 승하차는 데이터 있는 호선만 더한 역 합계라(`batch/ridership.ts`) 데이터 없는 정차는 세지 않는다. */
 function routeCountsOf(data: RefinedData): Map<string, number> {
   const counts = new Map<string, number>();
   for (const route of data.routes) {
-    for (const name of new Set(route.sequences.flatMap((s) => s.stops.map((stop) => stop.name)))) {
+    const stops = route.sequences.flatMap((s) => s.stops).filter((stop) => !stop.isDataless);
+    for (const name of new Set(stops.map((stop) => stop.name))) {
       counts.set(name, (counts.get(name) ?? 0) + 1);
     }
   }

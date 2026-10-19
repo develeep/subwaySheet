@@ -3,7 +3,7 @@ import {
   DAY_TYPE_LABEL,
   GRADE_LABEL,
   GRADE_PIPS,
-  missingStationsText,
+  missingRangesText,
   WEAK_GAP_TEXT,
 } from "@web/constants/seat-finder-copy";
 import type { RecommendSuccess } from "@web/recommend/recommend";
@@ -69,8 +69,8 @@ export function VerdictCard({ from, to, result, clockText, onBack }: VerdictCard
       </div>
       {result.canSitAtOrigin ? <p className={styles.note}>{CAN_SIT_TEXT}</p> : null}
       {result.isWeakGap ? <p className={styles.note}>{WEAK_GAP_TEXT}</p> : null}
-      {result.missingStations.length > 0 ? (
-        <p className={styles.note}>{missingStationsText(result.missingStations)}</p>
+      {result.missingRanges.length > 0 ? (
+        <p className={styles.note}>{missingRangesText(result.missingRanges)}</p>
       ) : null}
     </section>
   );
