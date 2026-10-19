@@ -2,11 +2,8 @@ import type { RecommendError } from "@web/recommend/recommend";
 
 /**
  * 결과 화면 문구. **칸 차이 작음·바로 앉음·데이터 없는 역·추천할 수 없음은 자리표시 문구다**(스펙 #2 "화면") — #8에서 정해 바꾼다.
- * 문구는 CONTEXT.md 용어를 따른다("량"·"착석 확률" 쓰지 않음). 앉을 가능성은 퍼센트로 쓰지 않는다.
+ * 문구는 CONTEXT.md 용어를 따른다("량"·"착석 확률" 쓰지 않음). 칸 점수는 숫자·등급으로 보여 주지 않는다(ADR 0006).
  */
-
-export const GRADE_LABEL = { high: "높음", mid: "보통", low: "낮음" } as const;
-export const GRADE_PIPS = { high: 3, mid: 2, low: 1 } as const;
 
 export const DAY_TYPE_LABEL = { weekday: "평일", saturday: "토요일", sunday: "일요일·공휴일" } as const;
 

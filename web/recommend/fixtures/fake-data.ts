@@ -19,11 +19,11 @@ const LINE_STATIONS = ["사", "아", "자", "차"];
 const flat = (value: number) => new Array(20).fill(value);
 const byDay = <T>(make: () => T): ByDayType<T> => ({ weekday: make(), saturday: make(), sunday: make() });
 
-/** 계단 하나가 있는 방향. */
-export const stairsAt = (car: number): FastExitSide => ({
+/** 그 칸들에 계단이 있는 방향. */
+export const stairsAt = (...cars: number[]): FastExitSide => ({
   isMissing: false,
   isElevatorOnly: false,
-  facilities: [{ car, door: 2, kind: "stairs" }],
+  facilities: cars.map((car) => ({ car, door: 2, kind: "stairs" })),
 });
 
 export const elevatorOnlyAt = (facilities: Facility[]): FastExitSide => ({
@@ -116,6 +116,15 @@ export function alightingAt(slots: Record<number, number>): StationData["ridersh
   const values = Array.from({ length: 20 }, (_, i) => slots[i] ?? 0);
   return byDay(() => ({ boarding: flat(0), alighting: values }));
 }
+
+/** 타는 인원을 시간대별로 정한다(나머지 시간대와 하차는 0). */
+export function boardingAt(slots: Record<number, number>): StationData["ridership"] {
+  const values = Array.from({ length: 20 }, (_, i) => slots[i] ?? 0);
+  return byDay(() => ({ boarding: values, alighting: flat(0) }));
+}
+
+/** 시간대마다 같은 인원. */
+export const everySlot = (value: number) => Object.fromEntries(Array.from({ length: 20 }, (_, i) => [i, value]));
 
 export function congestionOf(value: number): RouteStop["congestion"] {
   return { down: byDay(() => flat(value)), up: byDay(() => flat(value)) };
