@@ -34,25 +34,16 @@ export const elevatorOnlyAt = (facilities: Facility[]): FastExitSide => ({
 
 export const MISSING_SIDE: FastExitSide = { isMissing: true, isElevatorOnly: false, facilities: [] };
 
+const NO_FACILITY_SIDE: FastExitSide = { isMissing: false, isElevatorOnly: false, facilities: [] };
+
 function stop(name: string): RouteStop {
   return {
     name,
     isDataless: false,
     // 혼잡도 75% = 칸당 120명. 좌석 54석이라 서 있는 사람이 있다.
     congestion: { down: byDay(() => flat(75)), up: byDay(() => flat(75)) },
-    // 계단이 칸 1·4번에 있어 양 끝으로 고르게 내린다.
-    fastExit: {
-      down: {
-        isMissing: false,
-        isElevatorOnly: false,
-        facilities: [1, 4].map((car) => ({ car, door: 1, kind: "stairs" })),
-      },
-      up: {
-        isMissing: false,
-        isElevatorOnly: false,
-        facilities: [1, 4].map((car) => ({ car, door: 1, kind: "stairs" })),
-      },
-    },
+    // 출입설비가 없어 칸마다 고르게 타고 내린다. 앞 역에서 탄 사람의 칸 분포가 테스트가 고친 역의 칸 분포를 흐리지 않게 한다.
+    fastExit: { down: NO_FACILITY_SIDE, up: NO_FACILITY_SIDE },
     transferCars: { down: [], up: [] },
     // 운행시간이 없으면 정거장당 기본값(FORMULA.minutesPerStop)으로 센다. 시간을 보는 테스트만 `withStop`으로 넣는다.
     secondsFromPrevious: null,

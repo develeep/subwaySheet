@@ -24,7 +24,9 @@ import { FORMULA, FULL_LOAD_PER_CAR, SEATS_PER_CAR } from "./formula";
  * - 시간은 역 사이 운행시간(`secondsFromPrevious`)으로 센다. 값이 없는 구간(데이터 없는 역에 닿은 구간)은 정거장당 `minutesPerStop`분이다(#25).
  *   중간 역 도착 시각 = 출발 시각 + 그 역까지 걸린 시간. 앞쪽 역 가중치 = 그 역에서 도착역까지 남은 시간 ÷ 구간 소요 시간.
  *   역 사이가 긴 구간 뒤에서 앉으면 그만큼 덜 앉아 간다.
- * - 출발역에서 서 있는 사람 = 이미 타고 있던 사람(칸마다 같게) + 출발역에서 탄 사람(위의 섞은 분포로 몰림).
+ * - 칸마다 승객을 내릴 역별로 들고 걷는다(#26, ADR 0008). 중간 역에서 내리는 사람의 칸 모양은 그 사람이 탄 칸을 따르고,
+ *   총량만 그 역 승하차로 맞춘다. 출발역 앞 역(`behind`)부터 걸어 출발역에 이미 타고 있던 사람의 칸 분포도 만든다.
+ * - 출발역에서 서 있는 사람 = 이미 타고 있던 사람(앞 역들에서 탄 칸 분포) + 출발역에서 탄 사람(위의 섞은 분포로 몰림).
  * - 출발역 혼잡도가 없으면(코레일 구간 출발 등) 혼잡도가 있는 첫 중간 역의 값(그 역 도착 시간대)으로 서 있는 사람을 잡는다.
  *   0으로 두면 첫 중간 역에서 모두 앉는 것으로 계산돼 칸 차이가 사라진다(#10). 실제 데이터에서 점수에 드는 중간 역은 모두 혼잡도가 있어 대신할 값이 늘 있다.
  *   바로 앉음은 출발역 자체 혼잡도로만 판정한다.
@@ -32,15 +34,17 @@ import { FORMULA, FULL_LOAD_PER_CAR, SEATS_PER_CAR } from "./formula";
  *   빠진 역은 출발·도착역(`isDataless`일 때)까지 이어진 범위로 묶어 돌려준다.
  */
 
-/** 도착역 너머 역과 출발역부터 정거장 수·걸린 시간(분, `minutesAlong`). */
-export type BeyondStop = { stop: RouteStop; stopsAfter: number; minutesAfter: number };
+/** 구간 밖 역(도착역 너머·출발역 앞)과 출발역부터 정거장 수·걸린 시간(분, `minutesAlong`). 출발역 앞 역은 둘 다 음수다. */
+export type LineStop = { stop: RouteStop; stopsAfter: number; minutesAfter: number };
 
 export type CarScoreInput = {
   carCount: number;
   /** 구간의 역(탈 순서). 처음 = 출발역, 끝 = 도착역. */
   stops: RouteStop[];
-  /** 갈래 노선은 여러 갈래의 역이 섞여 순서가 없다. */
-  beyond: BeyondStop[];
+  /** 갈래 노선은 여러 갈래의 역이 섞여 순서가 없다(behind도 같다). */
+  beyond: LineStop[];
+  /** 출발역 앞 역. 여기서 탄 사람이 출발역에 이미 타고 있던 사람이다. */
+  behind: LineStop[];
   /** 한 역에서 탄 사람이 가는 가장 먼 정거장 수. 순환 노선은 반 바퀴, 아니면 Infinity. */
   reach: number;
   direction: Direction;
@@ -68,9 +72,9 @@ type ScoredStop = { station: string; stopsAfter: number; freedByCar: number[] };
 /** 계산할 중간 역이 하나도 없으면 null. */
 export function scoreCars(input: CarScoreInput): CarScoreResult | null {
   const minutes = minutesAlong(input.stops, input.direction);
-  const exits = exitsAhead(input, minutes);
-  const origin = standingAtOrigin(input, minutes, exits(0));
-  const ride = rideAlong(input, minutes, origin.standing, exits);
+  const riders = carryRiders(input, minutes);
+  const origin = standingAtOrigin(input, minutes, riders);
+  const ride = rideAlong(input, minutes, origin.standing, riders);
   if (ride.scored.length === 0) return null;
   return {
     ...judge(ride, origin.load),
@@ -127,26 +131,69 @@ function flowAt(input: CarScoreInput, stop: RouteStop, minutesAfter: number) {
 }
 
 /**
- * 구간의 k번째 역에서 탄 사람이 내릴 역들의 칸별 하차를 합친 분포(합 1)를 돌려주는 함수. 아래쪽 역은 k 뒤의 구간 역과 도착역 너머 역 중
- * `reach`정거장 안이고, 각 역의 하차는 그 역 도착 시간대 값이다. 데이터 있는 아래쪽 역이 없으면 null(탄 역 분포만 쓴다).
+ * 칸마다 승객을 내릴 역별로 들고 걷는다(#26, ADR 0008). 출발역 앞 역부터 데이터 있는 역마다 탄 사람(열차 한 대 몫)을
+ * 내릴 역 j와 칸으로 나눠 싣는다. 역 j에서 칸 k로 내리는 사람 = Σ(i < j) 역 i에서 칸 k에 타서 j까지 가는 사람이다.
+ * - 내릴 역 비중 P(j | i)는 OD 없이 i 아래쪽 역(도착역 너머 `beyond`까지, `reach`정거장 안)의 하차 인원 비중으로 근사한다(#23).
+ * - j까지 가는 사람의 칸은 몫 p_c(`destinationShare`)가 j의 하차 칸 분포를, 나머지가 i의 승차 칸 분포를 따른다(ADR 0007).
+ * - 데이터 없는 역에서는 타지도 내리지도 않는다(정거장 수에는 센다).
+ * 돌려주는 값은 모두 칸별 분포(합 1)이고, 실어 온 사람이 없으면 null이다.
+ * - `exits(k)`: 구간 k번째 역에서 탄 사람이 내릴 역들의 칸별 하차 분포. 탄 사람의 칸 분포를 섞을 때 쓴다.
+ * - `alighting(k)`: 구간 k번째 역에서 내리는 사람의 칸 분포. 하차 총량은 승하차 데이터로 따로 맞춘다.
+ * - `aboardAtOrigin`: 출발역 앞에서 타서 출발역 뒤에 내리는 사람, 곧 출발역에 이미 타고 있던 사람의 칸 분포.
  */
-function exitsAhead(input: CarScoreInput, minutes: number[]): (k: number) => number[] | null {
+function carryRiders(input: CarScoreInput, minutes: number[]) {
+  const { carCount, dayType, reach } = input;
   const stops = input.stops.map((stop, k) => ({ stop, stopsAfter: k, minutesAfter: minutes[k] ?? 0 }));
-  const ahead = [...stops, ...input.beyond].flatMap(({ stop, stopsAfter, minutesAfter }) => {
+  const events = [...input.behind, ...stops, ...input.beyond].flatMap(({ stop, stopsAfter, minutesAfter }) => {
     const flow = flowAt(input, stop, minutesAfter);
-    return flow ? [{ stopsAfter, alighting: flow.alighting }] : [];
+    if (!flow) return [];
+    const perTrain = (FORMULA.directionShare * headway(dayType, flow.slot)) / 60;
+    return [{ stopsAfter, perTrain, boarding: flow.boarding, alighting: flow.alighting, carried: zeros(carCount) }];
   });
-  return (k) => {
-    const sum = new Array<number>(input.carCount).fill(0);
-    for (const { stopsAfter, alighting } of ahead) {
-      if (stopsAfter <= k || stopsAfter - k > input.reach) continue;
-      alighting.forEach((value, car) => {
-        sum[car] = (sum[car] ?? 0) + value;
+  const ahead = (from: number) => events.filter((e) => e.stopsAfter > from && e.stopsAfter - from <= reach);
+  const exits = (k: number) =>
+    shapeOf(
+      sumByCar(
+        ahead(k).map((e) => e.alighting),
+        carCount,
+      ),
+    );
+  const aboard = zeros(carCount);
+  const last = input.stops.length - 1;
+  // 도착역부터 탄 사람은 구간에서 내리지 않아 싣지 않는다.
+  for (const from of events.filter((e) => e.stopsAfter < last)) {
+    const boarded = from.perTrain * sum(from.boarding);
+    const destinations = ahead(from.stopsAfter);
+    const weightTotal = sum(destinations.map((e) => sum(e.alighting)));
+    if (boarded === 0 || weightTotal === 0) continue;
+    for (const to of destinations) {
+      const riders = (boarded * sum(to.alighting)) / weightTotal;
+      const toExit = shapeOf(to.alighting) ?? [];
+      from.boarding.forEach((value, car) => {
+        const share = (1 - FORMULA.destinationShare) * (value / sum(from.boarding));
+        const ridersInCar = riders * (share + FORMULA.destinationShare * (toExit[car] ?? 0));
+        to.carried[car] = (to.carried[car] ?? 0) + ridersInCar;
+        if (from.stopsAfter < 0 && to.stopsAfter > 0) aboard[car] = (aboard[car] ?? 0) + ridersInCar;
       });
     }
-    const total = sum.reduce((a, b) => a + b, 0);
-    return total > 0 ? sum.map((value) => value / total) : null;
+  }
+  const alighting = (k: number) => {
+    const event = events.find((e) => e.stopsAfter === k);
+    return event ? shapeOf(event.carried) : null;
   };
+  return { exits, alighting, aboardAtOrigin: shapeOf(aboard) };
+}
+
+type Riders = ReturnType<typeof carryRiders>;
+
+const zeros = (length: number) => new Array<number>(length).fill(0);
+const sum = (values: number[]) => values.reduce((a, b) => a + b, 0);
+const sumByCar = (rows: number[][], carCount: number) =>
+  rows.reduce((total, row) => total.map((value, car) => value + (row[car] ?? 0)), zeros(carCount));
+/** 합 1로 맞춘 칸 분포. 합이 0이면 null. */
+function shapeOf(byCar: number[]): number[] | null {
+  const total = sum(byCar);
+  return total > 0 ? byCar.map((value) => value / total) : null;
 }
 
 /** 칸마다 탄 사람을 섞는다. 전체 인원은 두고, 몫 p_c는 내릴 역 분포(`exits`)로 옮긴다. */
@@ -157,11 +204,14 @@ function towardExits(boarding: number[], exits: number[] | null): number[] {
   return boarding.map((value, car) => (1 - share) * value + share * total * (exits[car] ?? 0));
 }
 
-/** 출발역에서 칸마다 서 있는 사람 = 이미 타고 있던 사람(칸마다 같게) + 출발역에서 탄 사람(출입설비·내릴 역 쪽으로 몰림). */
+/**
+ * 출발역에서 칸마다 서 있는 사람 = 이미 타고 있던 사람(앞 역들에서 탄 칸 분포) + 출발역에서 탄 사람(출입설비·내릴 역 쪽으로 몰림).
+ * 앞 역에서 실어 온 사람이 없으면(노선 시작역, 앞 역이 모두 데이터 없는 역) 이미 타고 있던 사람을 칸마다 같게 둔다.
+ */
 function standingAtOrigin(
   input: CarScoreInput,
   minutes: number[],
-  exits: number[] | null,
+  riders: Riders,
 ): { standing: number[]; load: number | null } {
   const { carCount, direction, dayType, departMinute } = input;
   const origin = input.stops[0] as RouteStop;
@@ -173,8 +223,9 @@ function standingAtOrigin(
     ? ((ridership.boarding[slot] ?? 0) * FORMULA.directionShare * headway(dayType, slot)) / 60 / carCount
     : 0;
   const boarded = Math.min(standingAverage, boardingPerCar);
-  const standing = towardExits(carSpread(origin.fastExit[direction], carCount), exits).map(
-    (share) => standingAverage - boarded + boarded * carCount * share,
+  const aboard = riders.aboardAtOrigin ?? new Array<number>(carCount).fill(1 / carCount);
+  const standing = towardExits(carSpread(origin.fastExit[direction], carCount), riders.exits(0)).map(
+    (share, car) => ((standingAverage - boarded) * (aboard[car] ?? 0) + boarded * share) * carCount,
   );
   return { standing, load };
 }
@@ -191,15 +242,11 @@ function firstMiddleLoad({ stops, direction, dayType, departMinute }: CarScoreIn
 /**
  * 출발역에서 그 칸에 서 있던 나를 태우고 중간 역마다 칸별로 걷는다. 데이터 없는 역은 건너뛴다(서 있는 사람도 그대로 둔다).
  * 역마다: 서 있던 사람 일부가 내리고 → 앉아 있던 사람이 내린 자리를 지금 서 있는 사람이 나눠 앉고 → 탄 사람이 출입설비·내릴 역 쪽에 선다.
+ * 내리는 사람의 칸별 모양은 칸마다 들고 걸은 승객(`carryRiders`)에서, 총량은 그 역 승하차에서 가져온다. 실어 온 사람이 없으면 출입설비 분포다.
  * 서 있는 사람의 칸별 모양은 이 걷기로, 규모는 그 역을 떠나는 혼잡도로 맞춘다(혼잡도가 없으면 걷기 값 그대로).
  * 칸 점수 = Σ 가중치 × 그 역에서 처음 앉는 몫 = 1 − 서서 가는 기대 시간 ÷ 구간 소요 시간이다.
  */
-function rideAlong(
-  input: CarScoreInput,
-  minutes: number[],
-  standingAtStart: number[],
-  exits: (k: number) => number[] | null,
-) {
+function rideAlong(input: CarScoreInput, minutes: number[], standingAtStart: number[], riders: Riders) {
   const { carCount, direction, dayType } = input;
   const total = input.stops.length - 1;
   const totalMinutes = minutes[total] ?? 0;
@@ -226,12 +273,14 @@ function rideAlong(
     const seatedShare =
       previousLoad === null ? FORMULA.unknownSeatedShare : Math.min(1, SEATS_PER_CAR / Math.max(previousLoad, 1));
     const weight = (totalMinutes - (minutes[k] ?? 0)) / totalMinutes;
-    const boardingByCar = towardExits(flow.boarding, exits(k));
+    const boardingByCar = towardExits(flow.boarding, riders.exits(k));
+    const carried = riders.alighting(k);
+    const alightingByCar = carried ? carried.map((share) => share * sum(flow.alighting)) : flow.alighting;
 
     const freedByCar = new Array<number>(carCount).fill(0);
     for (let car = 0; car < carCount; car++) {
       // 열차 한 대·칸 하나에서 내리고 타는 사람.
-      const alighting = toPerTrain * (flow.alighting[car] ?? 0);
+      const alighting = toPerTrain * (alightingByCar[car] ?? 0);
       const freed = alighting * seatedShare;
       const standingNow = Math.max(0, (standing[car] ?? 0) - alighting * (1 - seatedShare));
       // 서 있는 사람이 없으면 빈자리가 있다는 뜻이라 바로 앉는다.

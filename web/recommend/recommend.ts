@@ -1,5 +1,5 @@
 import type { DayType, Direction, Periods, RefinedData, Route, RouteStop } from "@shared/refined-data";
-import { type BeyondStop, type CarScoreResult, minutesAlong, scoreCars } from "./car-score";
+import { type CarScoreResult, type LineStop, minutesAlong, scoreCars } from "./car-score";
 import { FORMULA_VERSION } from "./formula";
 
 /**
@@ -9,8 +9,10 @@ import { FORMULA_VERSION } from "./formula";
  * 노선은 두 역을 함께 담은 순서열에서 구간을 잘라 정한다(스펙 #2 "노선과 구간"). 공통 노선이 여럿이면 `routeChoices`로 알리고
  * 고른 노선이 없으면 정거장 수가 가장 적은 구간을 쓴다. 한 방향 순서열(6호선 응암순환)은 그 방향 구간만 만든다.
  * 칸 점수에는 도착역 너머 역(`beyond`)도 넘긴다. 중간 역에서 탄 사람이 내릴 역을 보고 칸을 고르기 때문이다(#23).
+ * 출발역 앞 역(`behind`)도 넘긴다. 출발역에 이미 타고 있던 사람의 칸 분포를 그 앞 역들에서 탄 사람으로 만들기 때문이다(#26).
  * 순환 노선은 한 역에서 탄 사람이 반 바퀴(⌊역 수 / 2⌋정거장)까지만 간다고 본다. 그보다 멀면 반대 방향을 탄다.
- * 갈래 노선은 구간을 담은 순서열(같은 방향) 모두의 너머 역을 합친다. 구간이 공통 구간이면 어느 갈래 열차든 탈 수 있어서다.
+ * 그래서 앞 역도 출발역 뒤까지 올 수 있는 반 바퀴 − 1정거장까지만 본다. 순환이 아니면 순서열 처음(끝)까지다.
+ * 갈래 노선은 구간을 담은 순서열(같은 방향) 모두의 너머 역·앞 역을 합친다. 구간이 공통 구간이면 어느 갈래 열차든 탈 수 있어서다.
  * 현재 시각·오늘 요일유형을 직접 읽지 않는다. 화면 훅이 구해 넘긴다.
  */
 
@@ -51,8 +53,11 @@ export type RecommendSuccess = {
 
 export type RecommendResult = RecommendSuccess | { status: "error"; error: RecommendError };
 
-/** 한 노선의 한 순서열에서 자른 구간. stops는 탈 순서(처음 = 출발역, 끝 = 도착역)이고 beyond는 그 순서열에서 도착역 너머 역이다. */
-type Segment = { route: Route; direction: Direction; stops: RouteStop[]; beyond: RouteStop[] };
+/**
+ * 한 노선의 한 순서열에서 자른 구간. stops는 탈 순서(처음 = 출발역, 끝 = 도착역)이고 beyond는 그 순서열에서 도착역 너머 역,
+ * behind는 출발역 앞 역(출발역에 가까운 역부터)이다.
+ */
+type Segment = { route: Route; direction: Direction; stops: RouteStop[]; beyond: RouteStop[]; behind: RouteStop[] };
 
 export function recommend(input: RecommendInput, data: RefinedData): RecommendResult {
   if (input.from === input.to) return { status: "error", error: "sameStation" };
@@ -65,7 +70,7 @@ export function recommend(input: RecommendInput, data: RefinedData): RecommendRe
   const score = scoreCars({
     carCount: route.carCount,
     stops,
-    ...beyondOf(segment, segments),
+    ...aroundOf(segment, segments),
     direction,
     dayType: input.dayType,
     departMinute: input.departMinute,
@@ -138,7 +143,12 @@ function segmentsOf(route: Route, from: string, to: string): Segment[] {
         : direction === "down"
           ? sequence.stops.slice(toIndex + 1)
           : sequence.stops.slice(0, toIndex).reverse();
-      segments.push({ route, direction, stops, beyond });
+      const behind = route.isLoop
+        ? walk(sequence.stops, fromIndex, -1, direction === "down" ? "up" : "down", loopReach(route) - 1).slice(1)
+        : direction === "down"
+          ? sequence.stops.slice(0, fromIndex).reverse()
+          : sequence.stops.slice(fromIndex + 1);
+      segments.push({ route, direction, stops, beyond, behind });
     }
   }
   return segments;
@@ -160,21 +170,32 @@ function walk(stops: RouteStop[], from: number, to: number, direction: Direction
 const loopReach = (route: Route) => Math.floor((route.sequences[0]?.stops.length ?? 0) / 2);
 
 /**
- * 도착역 너머 역(출발역부터 정거장 수·걸린 시간)과 한 역에서 탄 사람이 가는 가장 먼 정거장 수. 같은 노선·방향에 같은 역들로 된 구간
- * (갈래 노선의 공통 구간)은 순서열마다 너머 역이 달라 합친다. 같은 역은 한 번만 센다.
+ * 도착역 너머 역·출발역 앞 역(출발역부터 정거장 수·걸린 시간, 앞 역은 음수)과 한 역에서 탄 사람이 가는 가장 먼 정거장 수.
+ * 같은 노선·방향에 같은 역들로 된 구간(갈래 노선의 공통 구간)은 순서열마다 너머 역·앞 역이 달라 합친다. 같은 역은 한 번만 센다.
  */
-function beyondOf(picked: Segment, segments: Segment[]) {
+function aroundOf(picked: Segment, segments: Segment[]) {
   const key = (s: Segment) => s.stops.map((stop) => stop.name).join();
-  const beyond = new Map<string, BeyondStop>();
+  const beyond = new Map<string, LineStop>();
+  const behind = new Map<string, LineStop>();
   for (const s of segments) {
     if (s.route !== picked.route || s.direction !== picked.direction || key(s) !== key(picked)) continue;
-    const minutes = minutesAlong([...s.stops, ...s.beyond], s.direction);
-    s.beyond.forEach((stop, i) => {
-      const stopsAfter = picked.stops.length + i;
-      if (!beyond.has(stop.name)) beyond.set(stop.name, { stop, stopsAfter, minutesAfter: minutes[stopsAfter] ?? 0 });
+    // 앞 역부터 너머 역까지 탈 순서로 이어 시간을 센다. 출발역이 0정거장·0분이다.
+    const line = [...[...s.behind].reverse(), ...s.stops, ...s.beyond];
+    const minutes = minutesAlong(line, s.direction);
+    const originMinute = minutes[s.behind.length] ?? 0;
+    line.forEach((stop, i) => {
+      const stopsAfter = i - s.behind.length;
+      const around = stopsAfter < 0 ? behind : stopsAfter >= picked.stops.length ? beyond : null;
+      if (around && !around.has(stop.name)) {
+        around.set(stop.name, { stop, stopsAfter, minutesAfter: (minutes[i] ?? 0) - originMinute });
+      }
     });
   }
-  return { beyond: [...beyond.values()], reach: picked.route.isLoop ? loopReach(picked.route) : Infinity };
+  return {
+    beyond: [...beyond.values()],
+    behind: [...behind.values()],
+    reach: picked.route.isLoop ? loopReach(picked.route) : Infinity,
+  };
 }
 
 /** 고른 노선(없으면 전부)·고른 방향(순환 노선만) 안에서 정거장 수가 가장 적은 구간. 같으면 앞의 것(하행 먼저)이다. */

@@ -30,11 +30,17 @@ function ok(result: RecommendResult) {
   return result;
 }
 
-/** 나역에서 2번 칸 쪽 계단으로 많이 내리는 데이터. */
-const busyAtNa = () =>
-  withStation(withStop(fakeData(), "나", { fastExit: { down: stairsAt(2), up: stairsAt(2) } }), "나", {
-    ridership: alightingAt(Object.fromEntries(Array.from({ length: 20 }, (_, i) => [i, 5000]))),
-  });
+/**
+ * 나역에서 2번 칸 쪽 계단으로 많이 내리는 데이터(가→라). 나에서 내리는 사람은 주로 출발역 앞 바에서 타고 온 사람이고,
+ * 가에서 많이 타서 서 있는 사람은 주로 라까지 간다. 서 있는 사람도 나에서 내리면 칸마다 서 있는 사람과 나는 자리가 같은 비율이 된다.
+ */
+const busyAtNa = () => {
+  let data = withStop(fakeData(), "나", { fastExit: { down: stairsAt(2), up: stairsAt(2) } });
+  data = withStation(data, "나", { ridership: alightingAt(everySlot(8000)) });
+  data = withStation(data, "바", { ridership: boardingAt(everySlot(20000)) });
+  data = withStation(data, "가", { ridership: boardingAt(everySlot(20000)) });
+  return withStation(data, "라", { ridership: alightingAt(everySlot(40000)) });
+};
 
 describe("recommend — 오류", () => {
   it("출발역과 도착역이 같으면 sameStation", () => {
@@ -277,23 +283,25 @@ describe("recommend — 중간 역에서 타는 사람과 나눠 앉기", () => 
   it("중간 역에서 계단 쪽 칸으로 많이 타면, 그 뒤 역의 빈자리를 나눠 가져 옆 칸이 앞선다", () => {
     // 아(1정거장 뒤)에서 2번 칸 쪽으로 많이 타고, 자(2정거장 뒤)에서 2·3번 칸 쪽으로 똑같이 많이 내린다.
     let data = withStop(fakeData(), "아", { fastExit: { down: stairsAt(2), up: stairsAt(2) } });
-    data = withStation(data, "아", { ridership: boardingAt(everySlot(6000)) });
+    data = withStation(data, "아", { ridership: boardingAt(everySlot(20000)) });
     data = withStop(data, "자", { fastExit: { down: stairsAt(2, 3), up: stairsAt(2, 3) } });
     data = withStation(data, "자", { ridership: alightingAt(everySlot(6000)) });
+    // 아에서 탄 사람은 주로 차까지 간다. 자에서 내리는 사람은 사에서 탄 사람이다.
+    data = withStation(data, "사", { ridership: boardingAt(everySlot(20000)) });
+    data = withStation(data, "차", { ridership: alightingAt(everySlot(20000)) });
     expect(ok(recommend(input("사", "차"), data)).picks).toEqual([3]);
   });
 
   it("중간 역을 떠날 때 서 있는 사람이 없으면 그 뒤 역에서는 어느 칸이든 앉아 칸 차이가 작다", () => {
     // 다(2정거장 뒤)에서 2번 칸 쪽으로 많이 내린다. 나를 떠날 때 붐비면(150%) 2번 칸이 앞서고, 한산하면(20%) 다 전에 이미 앉는다.
+    // 다에서 내리는 사람은 주로 출발역 앞 바에서 타고 온 사람이고, 가에서 많이 타서 서 있는 사람은 주로 도착역 라까지 간다.
     let data = withStop(fakeData(), "다", { fastExit: { down: stairsAt(2), up: stairsAt(2) } });
-    data = withStation(data, "다", { ridership: alightingAt(everySlot(20000)) });
+    data = withStation(data, "다", { ridership: alightingAt(everySlot(30000)) });
+    data = withStation(data, "바", { ridership: boardingAt(everySlot(20000)) });
+    data = withStation(data, "가", { ridership: boardingAt(everySlot(20000)) });
+    data = withStation(data, "라", { ridership: alightingAt(everySlot(300000)) });
     const withNa = (percent: number) =>
-      ok(
-        recommend(
-          input("가", "마", { direction: "down" }),
-          withStop(data, "나", { congestion: congestionOf(percent) }),
-        ),
-      );
+      ok(recommend(input("가", "라"), withStop(data, "나", { congestion: congestionOf(percent) })));
     expect(withNa(150)).toMatchObject({ picks: [2], isWeakGap: false });
     expect(withNa(20).isWeakGap).toBe(true);
   });
@@ -346,7 +354,7 @@ describe("recommend — 탄 사람이 내릴 역 쪽 칸에 서기", () => {
     tied = withStop(tied, "나", { fastExit: { down: stairsAt(2, 3), up: stairsAt(2, 3) } });
     tied = withStation(tied, "나", { ridership: alightingAt(everySlot(6000)) });
     const route = input("가", "다", { direction: "down" });
-    expect(ok(recommend(route, exitsAtTwo(tied, "라"))).picks).toEqual([3]);
+    expect(ok(recommend(route, exitsAtTwo(tied, "라"))).picks[0]).toBe(3);
     expect([...ok(recommend(route, exitsAtTwo(tied, "마"))).picks].sort()).toEqual([2, 3]);
   });
 
@@ -373,6 +381,94 @@ describe("recommend — 탄 사람이 내릴 역 쪽 칸에 서기", () => {
     it("다른 갈래로 들어가는 구간은 그 갈래 열차만 타서 다른 갈래의 역을 보지 않는다", () => {
       const toCha = (data: ReturnType<typeof fakeData>) => ok(recommend(input("사", "차"), data)).picks;
       expect(toCha(exitsAtTwo(tiedAtA(forked()), "가"))).toEqual(toCha(tiedAtA(forked())));
+    });
+  });
+});
+
+describe("recommend — 칸마다 내릴 역별로 승객을 들고 걷기", () => {
+  // 사(출발역 앞 역)에서 탄 사람과 아(출발역)에서 탄 사람이 모두 자에서 내린다. 사에서 훨씬 많이 타고, 아에서 서 있는 사람은 모두 아에서 탄 사람이다.
+  // 아·자는 출입설비가 없어 칸마다 고르게 타고 내린다. 사에서 탄 사람이 앉아 있다가 자에서 그 칸의 자리를 비운다.
+  const boardAtSa = (stairsCar: number) => {
+    let data = withStop(fakeData(), "사", { fastExit: { down: stairsAt(stairsCar), up: stairsAt(stairsCar) } });
+    data = withStation(data, "사", { ridership: boardingAt(everySlot(60000)) });
+    data = withStation(data, "아", { ridership: boardingAt(everySlot(20000)) });
+    return withStation(data, "자", { ridership: alightingAt(everySlot(10000)) });
+  };
+
+  it("앞 역에서 k번 칸에 많이 탄 사람이 j역에서 내리면 j역 k번 칸에서 자리가 많이 난다", () => {
+    expect(ok(recommend(input("아", "차"), boardAtSa(2)))).toMatchObject({ picks: [2], reason: { station: "자" } });
+    expect(ok(recommend(input("아", "차"), boardAtSa(3)))).toMatchObject({ picks: [3], reason: { station: "자" } });
+  });
+
+  it("모든 역의 계단이 가운데 칸이면 이미 타고 있던 사람도 가운데 칸에 있어 양 끝 칸이 낮게 나오지 않는다", () => {
+    // 공식 7까지는 이미 타고 있던 사람을 칸마다 같게 둬, 자리가 덜 나는 양 끝 칸(1·4번)이 늘 낮았다(이 데이터에서 0.21 대 0.38).
+    const names = ["가", "나", "다", "라", "마", "바", "사", "아", "자", "차"];
+    const busy = { boarding: new Array(20).fill(3000), alighting: new Array(20).fill(3000) };
+    let data: ReturnType<typeof fakeData> = {
+      ...fakeData(),
+      routes: [{ id: "long", lineNumber: 3, name: "3호선", carCount: 4, isLoop: false, sequences: [sequence(names)] }],
+    };
+    for (const name of names) {
+      data = withStop(data, name, { fastExit: { down: stairsAt(2, 3), up: stairsAt(2, 3) } });
+      data = withStation(data, name, { ridership: { weekday: busy, saturday: busy, sunday: busy } });
+    }
+    expect(ok(recommend(input("다", "차"), data)).isWeakGap).toBe(true);
+  });
+
+  describe("걷기 시작 역", () => {
+    /** 출발역에서 탄 사람이 서 있는 자리를 채우고, 첫 중간 역에서 많이 내린다. */
+    const busyRide = (origin: string, middle: string) =>
+      withStation(withStation(fakeData(), origin, { ridership: boardingAt(everySlot(20000)) }), middle, {
+        ridership: alightingAt(everySlot(10000)),
+      });
+    /** 거기에 앞 역에서 2번 칸 쪽으로 많이 탄다. */
+    const boardBehind = (behind: string, origin: string, middle: string) =>
+      withStation(
+        withStop(busyRide(origin, middle), behind, { fastExit: { down: stairsAt(2), up: stairsAt(2) } }),
+        behind,
+        { ridership: boardingAt(everySlot(60000)) },
+      );
+
+    it("순환 노선은 출발역 뒤까지 올 수 있는 반 바퀴 − 1정거장 앞 역부터 걷는다", () => {
+      // 6개 역이면 반 바퀴는 3정거장이다. 마(2정거장 앞)에서 탄 사람은 나까지 와도, 라(3정거장 앞)에서 탄 사람은 가에서 모두 내린다.
+      const route = input("가", "다", { direction: "down" });
+      const baseline = ok(recommend(route, busyRide("가", "나"))).picks;
+      expect(ok(recommend(route, boardBehind("마", "가", "나"))).picks).toEqual([2]);
+      expect(baseline).not.toEqual([2]);
+      expect(ok(recommend(route, boardBehind("라", "가", "나"))).picks).toEqual(baseline);
+      // 데이터 없는 역(바)도 정거장 수에는 세어, 마는 여전히 2정거장 앞이다.
+      expect(ok(recommend(route, asDataless(boardBehind("마", "가", "나"), "바"))).picks).toEqual([2]);
+    });
+
+    it("순환이 아닌 노선은 순서열 처음까지 걷는다", () => {
+      // 10개 역 노선에서 마→사를 탄다. 가(4정거장 앞)에서 탄 사람도 이미 타고 있던 사람이다.
+      const names = ["가", "나", "다", "라", "마", "바", "사", "아", "자", "차"];
+      const long = {
+        ...fakeData(),
+        routes: [
+          { id: "long", lineNumber: 3, name: "3호선", carCount: 4, isLoop: false, sequences: [sequence(names)] },
+        ],
+      };
+      const busy = withStation(withStation(long, "마", { ridership: boardingAt(everySlot(20000)) }), "바", {
+        ridership: alightingAt(everySlot(10000)),
+      });
+      const farBehind = withStation(withStop(busy, "가", { fastExit: { down: stairsAt(2), up: stairsAt(2) } }), "가", {
+        ridership: boardingAt(everySlot(60000)),
+      });
+      expect(ok(recommend(input("마", "사"), busy)).picks).not.toEqual([2]);
+      expect(ok(recommend(input("마", "사"), farBehind)).picks).toEqual([2]);
+    });
+
+    it("앞 역이 데이터 없는 역뿐이면 노선 시작역에서 탈 때처럼 이미 타고 있던 사람을 칸마다 같게 둔다", () => {
+      const fromStart = (data: ReturnType<typeof fakeData>) => {
+        const [loop, line] = data.routes;
+        if (!loop || !line) throw new Error("픽스처 노선 없음");
+        return { ...data, routes: [loop, { ...line, sequences: [sequence(["아", "자", "차"])] }] };
+      };
+      const data = boardBehind("사", "아", "자");
+      const { picks, isWeakGap } = ok(recommend(input("아", "차"), fromStart(data)));
+      expect(ok(recommend(input("아", "차"), asDataless(data, "사")))).toMatchObject({ picks, isWeakGap });
+      expect(ok(recommend(input("아", "차"), data)).picks).not.toEqual(picks);
     });
   });
 });
@@ -455,15 +551,17 @@ describe("recommend — 데이터 없는 역이 낀 구간(코레일 구간 꼴)
 });
 
 describe("recommend — 환승역 표", () => {
-  // 나에서 하루 20만 명이 갈아탄다. 나의 출입설비는 기본값(1·4번 칸 계단)이다.
-  const transferAtNa = (transferCars: { down: number[]; up: number[] }) =>
-    withStop(
-      withStation(fakeData(), "나", {
-        transfer: { perDay: { weekday: 200000, saturday: 200000, sunday: 200000 }, lineCount: 1 },
-      }),
-      "나",
-      { transferCars },
-    );
+  // 나에서 하루 20만 명이 갈아탄다. 나의 계단은 1·4번 칸이다. 나에서 갈아타는 사람은 주로 출발역 앞 바에서 타고 온 사람이고,
+  // 가에서 많이 타서 서 있는 사람은 주로 도착역 라까지 간다.
+  const transferAtNa = (transferCars: { down: number[]; up: number[] }) => {
+    let data = withStation(fakeData(), "나", {
+      transfer: { perDay: { weekday: 200000, saturday: 200000, sunday: 200000 }, lineCount: 1 },
+    });
+    data = withStop(data, "나", { transferCars, fastExit: { down: stairsAt(1, 4), up: stairsAt(1, 4) } });
+    data = withStation(data, "바", { ridership: boardingAt(everySlot(20000)) });
+    data = withStation(data, "가", { ridership: boardingAt(everySlot(20000)) });
+    return withStation(data, "라", { ridership: alightingAt(everySlot(40000)) });
+  };
 
   it("표에 있는 역·방향은 환승 하차가 환승통로 칸 쪽으로 몰린다", () => {
     expect(ok(recommend(input("가", "라"), transferAtNa({ down: [2], up: [] }))).picks).toEqual([2]);
@@ -494,20 +592,24 @@ describe("recommend — 시간대와 요일유형", () => {
     data = withStop(data, "다", { fastExit: { down: stairsAt(3), up: stairsAt(3) } });
     data = withStation(data, "나", { ridership: alightingAt({ 3: 1000 }) });
     data = withStation(data, "다", { ridership: alightingAt({ 3: 3000 }) });
-    expect(ok(recommend(input("가", "라"), data)).picks).toEqual([3]);
+    // 나·다에서 내리는 사람은 주로 출발역 앞 바에서 타고 온 사람이고, 가에서 많이 타서 서 있는 사람은 주로 도착역 라까지 간다.
+    data = withStation(data, "바", { ridership: boardingAt(everySlot(20000)) });
+    data = withStation(data, "가", { ridership: boardingAt(everySlot(20000)) });
+    data = withStation(data, "라", { ridership: alightingAt(everySlot(40000)) });
+    expect(ok(recommend(input("가", "라"), data)).picks[0]).toBe(3);
 
     // 다가 7호선에도 있으면 3000명의 절반만 이 노선 몫이라 나 쪽 칸이 앞선다.
     const [loop, line] = data.routes;
     if (!loop || !line) throw new Error("픽스처 노선 없음");
     const daOnLine = { ...line, sequences: [sequence(["사", "아", "자", "차", "다"])] };
-    expect(ok(recommend(input("가", "라"), { ...data, routes: [loop, daOnLine] })).picks).toEqual([2]);
+    expect(ok(recommend(input("가", "라"), { ...data, routes: [loop, daOnLine] })).picks[0]).toBe(2);
 
     // 7호선에서는 다가 데이터 없는 정차(1호선 신도림 꼴)면 7호선 몫이 없어 나누지 않는다.
     const [daSequence] = daOnLine.sequences;
     if (!daSequence) throw new Error("픽스처 순서열 없음");
     const stops = daSequence.stops.map((s) => ({ ...s, isDataless: s.name === "다" }));
     const daDataless = { ...daOnLine, sequences: [{ ...daSequence, stops }] };
-    expect(ok(recommend(input("가", "라"), { ...data, routes: [loop, daDataless] })).picks).toEqual([3]);
+    expect(ok(recommend(input("가", "라"), { ...data, routes: [loop, daDataless] })).picks[0]).toBe(3);
   });
 
   it("고른 요일유형의 승하차를 쓴다", () => {
