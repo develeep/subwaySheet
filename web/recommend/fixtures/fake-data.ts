@@ -19,11 +19,11 @@ const LINE_STATIONS = ["사", "아", "자", "차"];
 const flat = (value: number) => new Array(20).fill(value);
 const byDay = <T>(make: () => T): ByDayType<T> => ({ weekday: make(), saturday: make(), sunday: make() });
 
-/** 계단 하나가 있는 방향. */
-export const stairsAt = (car: number): FastExitSide => ({
+/** 그 칸들에 계단이 있는 방향. */
+export const stairsAt = (...cars: number[]): FastExitSide => ({
   isMissing: false,
   isElevatorOnly: false,
-  facilities: [{ car, door: 2, kind: "stairs" }],
+  facilities: cars.map((car) => ({ car, door: 2, kind: "stairs" })),
 });
 
 export const elevatorOnlyAt = (facilities: Facility[]): FastExitSide => ({
@@ -37,6 +37,7 @@ export const MISSING_SIDE: FastExitSide = { isMissing: true, isElevatorOnly: fal
 function stop(name: string): RouteStop {
   return {
     name,
+    isDataless: false,
     // 혼잡도 75% = 칸당 120명. 좌석 54석이라 서 있는 사람이 있다.
     congestion: { down: byDay(() => flat(75)), up: byDay(() => flat(75)) },
     // 계단이 칸 1·4번에 있어 양 끝으로 고르게 내린다.
@@ -100,11 +101,30 @@ export function withStation(data: RefinedData, name: string, patch: Partial<Stat
   return { ...data, stations: { ...data.stations, [name]: { ...current, ...patch } } };
 }
 
+/** 원본이 하나도 없는 정차(코레일 구간 꼴)로 바꾼다. 같은 이름 역의 승하차도 비운다. */
+export function asDataless(data: RefinedData, name: string): RefinedData {
+  const stopPatch = {
+    isDataless: true,
+    congestion: { down: null, up: null },
+    fastExit: { down: MISSING_SIDE, up: MISSING_SIDE },
+  };
+  return withStation(withStop(data, name, stopPatch), name, { ridership: null });
+}
+
 /** 하차 인원을 시간대별로 정한다(나머지 시간대는 0). */
 export function alightingAt(slots: Record<number, number>): StationData["ridership"] {
   const values = Array.from({ length: 20 }, (_, i) => slots[i] ?? 0);
   return byDay(() => ({ boarding: flat(0), alighting: values }));
 }
+
+/** 타는 인원을 시간대별로 정한다(나머지 시간대와 하차는 0). */
+export function boardingAt(slots: Record<number, number>): StationData["ridership"] {
+  const values = Array.from({ length: 20 }, (_, i) => slots[i] ?? 0);
+  return byDay(() => ({ boarding: values, alighting: flat(0) }));
+}
+
+/** 시간대마다 같은 인원. */
+export const everySlot = (value: number) => Object.fromEntries(Array.from({ length: 20 }, (_, i) => [i, value]));
 
 export function congestionOf(value: number): RouteStop["congestion"] {
   return { down: byDay(() => flat(value)), up: byDay(() => flat(value)) };

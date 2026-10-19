@@ -1,11 +1,4 @@
-import {
-  CAN_SIT_TEXT,
-  DAY_TYPE_LABEL,
-  GRADE_LABEL,
-  GRADE_PIPS,
-  missingStationsText,
-  WEAK_GAP_TEXT,
-} from "@web/constants/seat-finder-copy";
+import { CAN_SIT_TEXT, DAY_TYPE_LABEL, missingRangesText, WEAK_GAP_TEXT } from "@web/constants/seat-finder-copy";
 import type { RecommendSuccess } from "@web/recommend/recommend";
 import styles from "./verdict-card.module.css";
 
@@ -52,14 +45,6 @@ export function VerdictCard({ from, to, result, clockText, onBack }: VerdictCard
           <span className={styles.carNumber}>{[...result.picks].sort((a, b) => a - b).join("·")}</span>
           번째 칸
         </h1>
-        <div className={styles.grade}>
-          <div className={styles.pips} aria-hidden="true">
-            {[1, 2, 3].map((n) => (
-              <span key={n} className={n <= GRADE_PIPS[result.grade] ? styles.pipOn : undefined} />
-            ))}
-          </div>
-          <span>앉을 가능성 {GRADE_LABEL[result.grade]}</span>
-        </div>
         <p className={styles.reason}>
           <em>
             {result.reason.stopsAfter}정거장 뒤 {result.reason.station}역
@@ -69,8 +54,8 @@ export function VerdictCard({ from, to, result, clockText, onBack }: VerdictCard
       </div>
       {result.canSitAtOrigin ? <p className={styles.note}>{CAN_SIT_TEXT}</p> : null}
       {result.isWeakGap ? <p className={styles.note}>{WEAK_GAP_TEXT}</p> : null}
-      {result.missingStations.length > 0 ? (
-        <p className={styles.note}>{missingStationsText(result.missingStations)}</p>
+      {result.missingRanges.length > 0 ? (
+        <p className={styles.note}>{missingRangesText(result.missingRanges)}</p>
       ) : null}
     </section>
   );

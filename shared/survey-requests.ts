@@ -20,7 +20,6 @@ export const recommendationRequestSchema = z
     departHour: z.int().min(0).max(23),
     dayType: z.enum(DAY_TYPES),
     picks: z.array(z.int().min(1)).min(1).max(2),
-    grade: z.enum(["high", "mid", "low"]),
     isWeakGap: z.boolean(),
     hasMissingStations: z.boolean(),
     period: z.strictObject({ start: ymd, end: ymd }),

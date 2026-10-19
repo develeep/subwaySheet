@@ -72,29 +72,6 @@
   font-variant-numeric: var(--font-numeric);
 }
 
-.grade {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  font-weight: 700;
-}
-
-.pips {
-  display: flex;
-  gap: var(--space-1);
-}
-
-.pips span {
-  width: 28px;
-  height: 8px;
-  border-radius: 4px;
-  background: var(--grade-pip-off);
-}
-
-.pips .pipOn {
-  background: var(--grade-pip-on);
-}
-
 .reason {
   margin: 0;
   padding-top: var(--space-2);
@@ -126,26 +103,5 @@
 @media (prefers-reduced-motion: no-preference) {
   .back:active {
     transform: scale(0.97);
-  }
-
-  /* 등급 막대가 왼쪽부터 하나씩 찬다(design/prototype.html .pips span.on). */
-  .pips .pipOn {
-    transform-origin: left;
-    animation: pip 0.3s 0.4s var(--motion-ease-standard) both;
-  }
-
-  .pips .pipOn:nth-child(2) {
-    animation-delay: 0.55s;
-  }
-
-  .pips .pipOn:nth-child(3) {
-    animation-delay: 0.7s;
-  }
-}
-
-@keyframes pip {
-  from {
-    transform: scaleX(0.3);
-    opacity: 0;
   }
 }

@@ -13,6 +13,8 @@ import { baseStationName, stationKey } from "./station-key";
  * 승하차 행이 없는 역번호(3호선 충무로 등)는 혼잡도 역명을 쓴다. 승하차·환승인원은 역 이름 단위로 붙인다.
  * 갈래·지선 승강장은 혼잡도 특수 행과 빠른하차 다음 역으로 가른다(`batch/routes.ts`의 정차 정의).
  * 환승역 표의 환승통로 칸은 노선·역·방향이 맞는 정차에 붙인다. 어느 정차에도 붙지 않는 행은 오타로 보고 멈춘다.
+ * 데이터 없는 역(코레일 구간 등, #10)은 원본에 역번호·이름이 없어 이름으로 정의하고 원본 값을 비운다. 그 역 이름에 데이터 있는
+ * 정차가 따로 있으면(1호선 신도림 = 2호선 신도림) 역 단위 값은 그 정차 쪽 것을 그대로 둔다.
  * **마지막에 스키마로 검증한다.** 형식이 어긋난 파일을 `public/data/`에 쓰지 않기 위해서다.
  */
 
@@ -24,8 +26,11 @@ type SideSource = {
   fastExitSide?: Direction;
 };
 
-/** 순서열의 정차. 역번호 하나, 또는 방향 칸마다 읽을 원본을 바꾼 정차. */
-export type StopDefinition = string | ({ code: string } & Partial<Record<Direction, SideSource>>);
+/** 순서열의 정차. 역번호 하나, 방향 칸마다 읽을 원본을 바꾼 정차, 또는 이름만 있는 데이터 없는 역. */
+export type StopDefinition =
+  | string
+  | ({ code: string } & Partial<Record<Direction, SideSource>>)
+  | { datalessName: string };
 
 type RouteDefinition = {
   id: string;
@@ -78,8 +83,12 @@ export function refine(raw: RawSources, config: RefineConfig): RefinedData {
     const line = lineLabel(route);
     const sequences = route.sequences.map((sequence) => {
       const defs = sequence.stops.map((def) => (typeof def === "string" ? { code: def } : def));
-      const names = defs.map(({ code }) => {
-        const key = stationKey(line, code);
+      const names = defs.map((def) => {
+        if ("datalessName" in def) {
+          stations[def.datalessName] ??= { ridership: null, transfer: null };
+          return def.datalessName;
+        }
+        const key = stationKey(line, def.code);
         const name = ridership.nameByKey.get(key) ?? congestion.get(key)?.name;
         if (!name) throw new Error(`${key} 역 이름을 어느 원본에서도 찾지 못했다`);
         stations[name] = {
@@ -94,6 +103,7 @@ export function refine(raw: RawSources, config: RefineConfig): RefinedData {
         return route.isLoop ? names[(next + names.length) % names.length] : names[next];
       };
       const stops = defs.map((def, i) => {
+        if ("datalessName" in def) return datalessStop(def.datalessName, route.carCount);
         const side = (direction: Direction) => {
           const source = def[direction] ?? {};
           const congestionKey = stationKey(line, source.congestionCode ?? def.code);
@@ -118,6 +128,7 @@ export function refine(raw: RawSources, config: RefineConfig): RefinedData {
         const up = side("up");
         return {
           name: names[i] ?? "",
+          isDataless: false,
           congestion: { down: down.congestion, up: up.congestion },
           fastExit: { down: down.fastExit, up: up.fastExit },
           transferCars: { down: transferCars("down"), up: transferCars("up") },
@@ -148,6 +159,17 @@ export function refine(raw: RawSources, config: RefineConfig): RefinedData {
     routes,
     stations,
   });
+}
+
+function datalessStop(name: string, carCount: number) {
+  const missing = toFastExitSide(undefined, undefined, carCount);
+  return {
+    name,
+    isDataless: true,
+    congestion: { down: null, up: null },
+    fastExit: { down: missing, up: missing },
+    transferCars: { down: [], up: [] },
+  };
 }
 
 /** 환승인원(data.go.kr 15062858): 연번, 출발역명, 평일, 토요일, 일요일. 역 단위 일평균이다. */

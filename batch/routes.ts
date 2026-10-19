@@ -3,7 +3,9 @@ import { TRANSFER_PASSAGES } from "./transfer-passages";
 
 /**
  * 배치 노선 설정 — `batch/main.ts`가 `refine`에 넘긴다. 손으로 관리하는 표다.
- * 서울교통공사 1~8호선 중 승하차·혼잡도가 있는 구간만 둔다(#6). 데이터 없는 역과 코레일 구간은 #10에서 더한다.
+ * 서울교통공사 1~8호선 노선과, 같은 열차가 다니는 코레일 구간·데이터 없는 역(7호선 부천 구간, 별내선, 진접선)을 둔다(#6, #10).
+ * 데이터 없는 역은 원본에 역번호가 없어 이름으로 넣는다(`dataless`). 순서와 이름은 위키백과 각 노선 문서의 역 목록·노선도
+ * (2026-10-19 확인)를 따랐고, 개통 예정 역(4호선 풍양·과천정보타운, 1호선 부성·풍기)은 뺐다. 급행은 다루지 않는다(완행 정거장).
  * 순서열은 하행(down) 순서의 역번호다. 하행은 빠른하차 `drtnInfo`(다음 역)로 확인했다:
  * 1호선은 청량리 → 서울역(역번호 감소), 성수지선은 신설동 → 성수, 신정지선은 신도림 → 까치산, 6호선 순환은 응암 → 역촌 → … → 구산.
  * 혼잡도는 2호선 내선·다른 호선 하선이 하행이다(종착역의 빈 방향으로 확인, `station-key.ts` DIRECTION_BY_SIDE).
@@ -11,6 +13,7 @@ import { TRANSFER_PASSAGES } from "./transfer-passages";
  */
 
 const range = (from: number, to: number) => Array.from({ length: to - from + 1 }, (_, i) => String(from + i));
+const dataless = (...names: string[]): StopDefinition[] => names.map((datalessName) => ({ datalessName }));
 
 /** 6호선 응암순환을 상행 전용 순서열로 탈 때: 순환 구간 열차는 실제로 하행으로 달리므로 하행 값을 `up` 칸에 읽는다. */
 const ridingLoopUp = (code: string): StopDefinition => ({ code, up: { congestionSide: "down", fastExitSide: "down" } });
@@ -18,6 +21,26 @@ const ridingLoopUp = (code: string): StopDefinition => ({ code, up: { congestion
 // 6호선 순환 구간(응암 다음 역부터, 도는 순서)과 본선(응암 → 신내).
 const EUNGAM_LOOP = range(2612, 2616);
 const LINE_6_MAIN = ["2611", ...range(2617, 2649)];
+// 1호선 코레일 구간. 연천 → 청량리(경원선), 서울역 → 구로(경부선)에서 인천(경인선)·신창(경부선·장항선)으로 갈라지고,
+// 병점에서 서동탄, 금천구청에서 광명으로 다시 갈라진다.
+const LINE_1_NORTH = [
+  ...dataless("연천", "전곡", "청산", "소요산", "동두천", "보산", "동두천중앙", "지행", "덕정"),
+  ...dataless("덕계", "양주", "녹양", "가능", "의정부", "회룡", "망월사", "도봉산", "도봉"),
+  ...dataless("방학", "창동", "녹천", "월계", "광운대", "석계", "신이문", "외대앞", "회기"),
+];
+// 동묘앞(159)은 나중에 생긴 역이라 동대문과 신설동 사이에 온다.
+const LINE_1_SEOUL = ["158", "157", "156", "159", "155", "154", "153", "152", "151", "150"];
+const LINE_1_TO_GURO = [
+  ...LINE_1_NORTH,
+  ...LINE_1_SEOUL,
+  ...dataless("남영", "용산", "노량진", "대방", "신길", "영등포", "신도림", "구로"),
+];
+const LINE_1_TO_GEUMCHEON = [...LINE_1_TO_GURO, ...dataless("가산디지털단지", "독산", "금천구청")];
+const LINE_1_TO_BYEONGJEOM = [
+  ...LINE_1_TO_GEUMCHEON,
+  ...dataless("석수", "관악", "안양", "명학", "금정", "군포", "당정"),
+  ...dataless("의왕", "성균관대", "화서", "수원", "세류", "병점"),
+];
 // 5호선 방화 → 천호. 강동에서 하남검단산 방면과 마천 방면으로 갈라진다.
 const LINE_5_TRUNK = range(2511, 2548);
 
@@ -29,8 +52,24 @@ export const ROUTE_CONFIG: RefineConfig = {
       name: "1호선",
       carCount: 10,
       isLoop: false,
-      // 동묘앞(159)은 나중에 생긴 역이라 동대문과 신설동 사이에 온다.
-      sequences: [{ stops: ["158", "157", "156", "159", "155", "154", "153", "152", "151", "150"] }],
+      sequences: [
+        {
+          stops: [
+            ...LINE_1_TO_GURO,
+            ...dataless("구일", "개봉", "오류동", "온수", "역곡", "소사", "부천", "중동", "송내", "부개", "부평"),
+            ...dataless("백운", "동암", "간석", "주안", "도화", "제물포", "도원", "동인천", "인천"),
+          ],
+        },
+        {
+          stops: [
+            ...LINE_1_TO_BYEONGJEOM,
+            ...dataless("세마", "오산대", "오산", "진위", "송탄", "서정리", "평택지제", "평택", "성환", "직산", "두정"),
+            ...dataless("천안", "봉명", "쌍용", "아산", "탕정", "배방", "온양온천", "신창"),
+          ],
+        },
+        { stops: [...LINE_1_TO_BYEONGJEOM, ...dataless("서동탄")] },
+        { stops: [...LINE_1_TO_GEUMCHEON, ...dataless("광명")] },
+      ],
     },
     {
       id: "2-main",
@@ -82,9 +121,42 @@ export const ROUTE_CONFIG: RefineConfig = {
         },
       ],
     },
-    { id: "3", lineNumber: 3, name: "3호선", carCount: 10, isLoop: false, sequences: [{ stops: range(309, 342) }] },
-    // 409 불암산은 승하차 원본에서 옛 이름 당고개다(`station-key.ts` RENAMED_STATIONS).
-    { id: "4", lineNumber: 4, name: "4호선", carCount: 10, isLoop: false, sequences: [{ stops: range(409, 434) }] },
+    {
+      id: "3",
+      lineNumber: 3,
+      name: "3호선",
+      carCount: 10,
+      isLoop: false,
+      // 대화~삼송은 코레일 일산선이다.
+      sequences: [
+        {
+          stops: [
+            ...dataless("대화", "주엽", "정발산", "마두", "백석", "대곡", "화정", "원당", "원흥", "삼송"),
+            ...range(309, 342),
+          ],
+        },
+      ],
+    },
+    {
+      id: "4",
+      lineNumber: 4,
+      name: "4호선",
+      carCount: 10,
+      isLoop: false,
+      // 진접~별내별가람은 진접선, 선바위 이남은 코레일 과천선·안산선이다.
+      // 409 불암산은 승하차 원본에서 옛 이름 당고개다(`station-key.ts` RENAMED_STATIONS).
+      sequences: [
+        {
+          stops: [
+            ...dataless("진접", "오남", "별내별가람"),
+            ...range(409, 434),
+            ...dataless("선바위", "경마공원", "대공원", "과천", "정부과천청사", "인덕원", "평촌"),
+            ...dataless("범계", "금정", "산본", "수리산", "대야미", "반월", "상록수", "한대앞"),
+            ...dataless("중앙", "고잔", "초지", "안산", "신길온천", "정왕", "오이도"),
+          ],
+        },
+      ],
+    },
     {
       id: "5",
       lineNumber: 5,
@@ -117,15 +189,40 @@ export const ROUTE_CONFIG: RefineConfig = {
         },
       ],
     },
-    { id: "7", lineNumber: 7, name: "7호선", carCount: 8, isLoop: false, sequences: [{ stops: range(2711, 2752) }] },
+    {
+      id: "7",
+      lineNumber: 7,
+      name: "7호선",
+      carCount: 8,
+      isLoop: false,
+      // 까치울~석남은 혼잡도·빠른하차가 없다. 까치울은 승하차 원본에 2024년 0명 행이 며칠만 있어 데이터 없는 역으로 둔다.
+      sequences: [
+        {
+          stops: [
+            ...range(2711, 2752),
+            ...dataless("까치울", "부천종합운동장", "춘의", "신중동", "부천시청", "상동", "삼산체육관", "굴포천"),
+            ...dataless("부평구청", "산곡", "석남"),
+          ],
+        },
+      ],
+    },
     {
       id: "8",
       lineNumber: 8,
       name: "8호선",
       carCount: 6,
       isLoop: false,
-      // 남위례(2828)는 복정과 산성 사이에 온다.
-      sequences: [{ stops: [...range(2810, 2821), "2828", ...range(2822, 2827)] }],
+      // 별내~장자호수공원은 별내선이다. 남위례(2828)는 복정과 산성 사이에 온다.
+      sequences: [
+        {
+          stops: [
+            ...dataless("별내", "다산", "동구릉", "구리", "장자호수공원"),
+            ...range(2810, 2821),
+            "2828",
+            ...range(2822, 2827),
+          ],
+        },
+      ],
     },
   ],
   // 그 역에서 만나는 노선 수(코레일·민자 노선과 같은 호선의 지선 포함). 환승인원(역 합계)을 노선 몫으로 나눌 때 쓴다.

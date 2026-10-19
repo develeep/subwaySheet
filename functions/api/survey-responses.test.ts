@@ -15,7 +15,6 @@ const record = {
   departHour: 8,
   dayType: "weekday",
   picks: [3, 8],
-  grade: "high",
   isWeakGap: false,
   hasMissingStations: true,
   period: { start: "2024-01-01", end: "2024-12-31" },

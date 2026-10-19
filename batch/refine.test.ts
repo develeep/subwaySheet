@@ -11,6 +11,11 @@ const stop = (name: string) => {
   return found;
 };
 
+const line4Stop = (name: string) =>
+  refined()
+    .routes.find((r) => r.id === "4")
+    ?.sequences[0]?.stops.find((s) => s.name === name);
+
 describe("refine", () => {
   it("정제 데이터 형식을 지킨다", () => {
     expect(() => refinedDataSchema.parse(refined())).not.toThrow();
@@ -38,9 +43,30 @@ describe("refine", () => {
 
   it("옛 역 이름(당고개)의 승하차가 현재 역 이름(불암산)에 붙는다", () => {
     const line4 = refined().routes.find((r) => r.id === "4");
-    expect(line4?.sequences[0]?.stops.map((s) => s.name)).toEqual(["불암산", "충무로"]);
+    expect(line4?.sequences[0]?.stops.map((s) => s.name)).toEqual(["진접", "불암산", "충무로", "시청", "선바위"]);
     expect(station("불암산")?.ridership?.weekday.alighting[0]).toBe(400);
     expect(station("당고개")).toBeUndefined();
+  });
+
+  it("데이터 없는 역은 이름으로 순서열에 넣고 원본 값을 비운다", () => {
+    expect(line4Stop("진접")).toEqual({
+      name: "진접",
+      isDataless: true,
+      congestion: { down: null, up: null },
+      fastExit: {
+        down: { isMissing: true, isElevatorOnly: false, facilities: [] },
+        up: { isMissing: true, isElevatorOnly: false, facilities: [] },
+      },
+      transferCars: { down: [], up: [] },
+    });
+    expect(station("진접")).toEqual({ ridership: null, transfer: null });
+    expect(line4Stop("불암산")?.isDataless).toBe(false);
+  });
+
+  it("같은 이름 역에 데이터 있는 정차가 있으면 그 역의 승하차·환승인원을 그대로 둔다", () => {
+    expect(line4Stop("시청")?.isDataless).toBe(true);
+    expect(station("시청")?.ridership?.weekday.alighting[0]).toBe(1050);
+    expect(station("시청")?.transfer).not.toBeNull();
   });
 
   it("환승역 승하차는 호선을 합쳐 역 단위로 쓴다", () => {
