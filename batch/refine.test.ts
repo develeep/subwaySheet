@@ -58,6 +58,7 @@ describe("refine", () => {
         up: { isMissing: true, isElevatorOnly: false, facilities: [] },
       },
       transferCars: { down: [], up: [] },
+      secondsFromPrevious: null,
     });
     expect(station("진접")).toEqual({ ridership: null, transfer: null });
     expect(line4Stop("불암산")?.isDataless).toBe(false);
@@ -168,6 +169,33 @@ describe("refine", () => {
     expect(() => refine(fixtureRawSources(), { ...FIXTURE_CONFIG, transferLineCounts: { 시청: 2 } })).toThrow(
       /을지로3가/,
     );
+  });
+});
+
+describe("refine — 역 사이 운행시간", () => {
+  const seconds = (routeId: string) =>
+    refined()
+      .routes.find((r) => r.id === routeId)
+      ?.sequences[0]?.stops.map((s) => s.secondsFromPrevious);
+
+  it("앞 정차에서 이 정차까지 초를 붙이고, 순환 노선의 처음 정차는 끝 정차에서 온 값이다", () => {
+    expect(seconds("2-main")).toEqual([150, 90, 60, 100]);
+  });
+
+  it("호선마다 따로 찾고, 처음 정차와 데이터 없는 역에 닿은 정차는 비운다", () => {
+    expect(seconds("3")).toEqual([null, 60]);
+    // 당고개는 옛 이름(불암산), "충무로 "는 공백을 뗀다. 진접·시청·선바위는 데이터 없는 역이다.
+    expect(seconds("4")).toEqual([null, null, 120, null, null]);
+  });
+
+  it("데이터 있는 이웃 정차의 운행시간이 원본에 없으면 멈춘다", () => {
+    const csv = ["머리", "1,2,시청,00:00,0,0", "2,2,을지로입구,01:30,0.7,0.7"].join("\n");
+    expect(() => refine({ ...fixtureRawSources(), interstationCsv: csv }, FIXTURE_CONFIG)).toThrow(/을지로4가~시청/);
+  });
+
+  it("소요시간 형식이 mm:ss가 아니면 멈춘다", () => {
+    const csv = ["머리", "1,2,시청,00:00,0,0", "2,2,을지로입구,1분30초,0.7,0.7"].join("\n");
+    expect(() => refine({ ...fixtureRawSources(), interstationCsv: csv }, FIXTURE_CONFIG)).toThrow(/소요시간/);
   });
 });
 

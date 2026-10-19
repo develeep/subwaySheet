@@ -5,6 +5,7 @@ import type { RawSources, RefineConfig } from "../refine";
  * 정상 행과 함께 칸 번호 형식 이상, 칸 수 초과, 엘리베이터뿐인 역(을지로3가), 계단 없이 에스컬레이터가 있는 역(을지로4가 하행),
  * 한 방향이 없는 역(을지로4가 상행), 다음 역이 다른 갈래 승강장 행(시청 하행), 공휴일 날짜를 넣었다.
  * 승하차는 옛 이름 행(4호선 당고개 = 불암산), 한 호선에 몰린 환승역(충무로는 4호선 행만 있음), 노선에 없는 호선 행(9호선)을 넣었다.
+ * 역 사이 운행시간은 원본처럼 앞 행 역에서 이 역까지 값이고, 순환을 닫는 행(을지로4가 → 시청), 옛 이름(당고개), 뒤에 공백 붙은 이름을 넣었다.
  * 계약 테스트(`batch/contract.test.ts`)도 이 픽스처를 쓴다.
  */
 
@@ -157,11 +158,28 @@ function fastExitItems(): unknown[] {
   ];
 }
 
+/** 역 사이 운행시간(OA-12034): 연번, 호선, 역명, 소요시간(앞 행 역에서 이 역까지 mm:ss), 역간거리, 호선별누계. */
+function interstationCsv(): string {
+  return [
+    "연번,호선,역명,소요시간,역간거리(km),호선별누계(km)",
+    "1,2,시청,00:00,0,0",
+    "2,2,을지로입구,01:30,0.7,0.7",
+    "3,2,을지로3가,01:00,0.8,1.5",
+    "4,2,을지로4가,01:40,0.6,2.1",
+    "5,2,시청,02:30,1.5,3.6",
+    "6,3,을지로3가,00:00,0,0",
+    "7,3,충무로,01:00,0.7,0.7",
+    "8,4,당고개,00:00,0,0",
+    "9,4,충무로 ,02:00,1.2,1.2",
+  ].join("\n");
+}
+
 export function fixtureRawSources(): RawSources {
   return {
     ridershipCsv: ridershipCsv(),
     congestion: { period: "2026-06", csv: congestionCsv() },
     transfer: { period: "2026-06", csv: transferCsv() },
     fastExitItems: fastExitItems(),
+    interstationCsv: interstationCsv(),
   };
 }

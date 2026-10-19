@@ -4,7 +4,7 @@
  * 추천 기록(#5)에 공식 버전이 남아 공식별로 결과를 나눠 비교한다.
  */
 
-export const FORMULA_VERSION = "6";
+export const FORMULA_VERSION = "7";
 
 /**
  * 칸당 좌석. 혼잡도 산정 기준의 좌석 수다(스펙 #2 "54로 시작"). OA-12928은 "승차인과 좌석수가 일치할 경우를 혼잡도 34%"로 정해
@@ -17,7 +17,8 @@ export const SEATS_PER_CAR = 54;
 export const FULL_LOAD_PER_CAR = 160;
 
 export const FORMULA = {
-  /** 정거장당 소요(분). 중간 역 k의 도착 시각 = 출발 시각 + k × 2분. 추정값, 2.5분으로 바꿔도 프로토타입 결과 같음. */
+  /** 역 사이 운행시간(OA-12034)이 없는 구간의 정거장당 소요(분). 데이터 없는 역에 닿은 구간(코레일 구간 등)에 쓴다. 추정값.
+   * 서울교통공사 1~8호선 역 사이는 1~4.5분이고 1분 30초가 가장 많다(`docs/research/interstation-time.md`). */
   minutesPerStop: 2.0,
   /** 탄 사람 가운데 내릴 역의 출입설비를 보고 칸을 고르는 몫 p_c. 나머지는 탄 역의 출입설비 쪽에 선다. 런던 오전 첨두 추정치
    * 44%(Fang 외 2019, `docs/research/boarding-car-choice.md`)로 시작한다. 0.3·0.6과의 비교는 ADR 0007. */
@@ -37,8 +38,7 @@ export const FORMULA = {
   shoulderHours: [6, 9, 17, 19] as readonly number[],
   nightFromHour: 22,
   /** 1등 칸이 평균 칸보다 서서 가는 시간(1 - 칸 점수)을 이 몫만큼도 줄이지 못하면 칸 차이 작음. 추정값.
-   * 실제 데이터 평일 08시(출발역에서 바로 앉는 구간 제외)에서 10정거장 이상 구간의 19~23%, 5~9정거장의 33%,
-   * 2~4정거장의 56%가 칸 차이 작음이다(ADR 0006). */
+   * 구간 길이별 칸 차이 작음 비율은 ADR 0006에 있다(정거장 기준 공식으로 잰 값이다). */
   weakBelowCut: 0.1,
   /** 2등 칸이 1등의 (1 - 이 값) 이상이면 함께 추천. */
   secondCarWithin: 0.1,

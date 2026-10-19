@@ -12,6 +12,7 @@ import { ROUTE_CONFIG } from "./routes";
  *   - raw/ridership-*.csv          승하차 OA-12921(기준 기간은 파일 안 날짜로 정한다)
  *   - raw/congestion-YYYYMM.csv    혼잡도 OA-12928
  *   - raw/transfer-YYYYMM.csv      환승인원 data.go.kr 15062858
+ *   - raw/interstation-*.csv       역 사이 운행시간 OA-12034(기준 시점이 파일 안에 없어 기간을 적지 않는다)
  * 같은 종류가 여럿이면 이름순 마지막 파일을 쓴다. 인코딩은 UTF-8, 아니면 EUC-KR(data.go.kr 기본)로 읽는다.
  */
 
@@ -45,6 +46,7 @@ function withPeriod(file: { path: string; period: string | undefined }) {
 const ridership = latestRaw(/^ridership-.*\.csv$/);
 const congestion = latestRaw(/^congestion-(\d{6})\.csv$/);
 const transfer = latestRaw(/^transfer-(\d{6})\.csv$/);
+const interstation = latestRaw(/^interstation-.*\.csv$/);
 const fastExitItems = await fetchFastExit();
 writeFileSync(join(RAW_DIR, "fast-exit.json"), JSON.stringify(fastExitItems));
 
@@ -54,6 +56,7 @@ const data = refine(
     congestion: withPeriod(congestion),
     transfer: withPeriod(transfer),
     fastExitItems,
+    interstationCsv: readText(interstation.path),
   },
   ROUTE_CONFIG,
 );

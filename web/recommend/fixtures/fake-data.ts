@@ -54,6 +54,8 @@ function stop(name: string): RouteStop {
       },
     },
     transferCars: { down: [], up: [] },
+    // 운행시간이 없으면 정거장당 기본값(FORMULA.minutesPerStop)으로 센다. 시간을 보는 테스트만 `withStop`으로 넣는다.
+    secondsFromPrevious: null,
   };
 }
 

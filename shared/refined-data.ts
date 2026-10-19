@@ -46,13 +46,16 @@ const carsSchema = z.array(z.number().int().min(1));
  * `down`·`up`은 그 순서열을 앞→뒤·뒤→앞으로 탈 때의 값이다. 갈래마다 승강장이 달라(5호선 강동) 순서열마다 따로 둔다.
  * `transferCars`는 환승역 표(`batch/transfer-passages.ts`)의 환승통로 칸이다. 갈아탈 호선마다 하나씩이고, 표에 없는 역·방향은 빈 배열이다.
  * `isDataless`는 원본이 하나도 없는 정차(코레일 구간·7호선 부천 구간·별내선·진접선, #10)다. 혼잡도·빠른하차가 비어 있고,
- * 같은 이름 역의 승하차(다른 호선 값, 예: 1호선 신도림)가 있어도 앱이 쓰지 않는다. 열차는 지나가므로 정거장 순서에는 든다. */
+ * 같은 이름 역의 승하차(다른 호선 값, 예: 1호선 신도림)가 있어도 앱이 쓰지 않는다. 열차는 지나가므로 정거장 순서에는 든다.
+ * `secondsFromPrevious`는 순서열 앞 정차(순환 노선의 처음 정차는 끝 정차)에서 이 정차까지 표준 운행시간(초, OA-12034)이다.
+ * 방향 구분이 없어 거꾸로 탈 때도 같은 값이다. 순환이 아닌 순서열의 처음 정차와 데이터 없는 역에 닿은 정차는 null이다. */
 const routeStopSchema = z.object({
   name: z.string().min(1),
   isDataless: z.boolean(),
   congestion: z.object({ down: byDayType(slotValuesSchema).nullable(), up: byDayType(slotValuesSchema).nullable() }),
   fastExit: z.object({ down: fastExitSideSchema, up: fastExitSideSchema }),
   transferCars: z.object({ down: carsSchema, up: carsSchema }),
+  secondsFromPrevious: z.number().int().positive().nullable(),
 });
 
 /** 역 순서열(하행 순서). `oneWay`가 있으면 그 방향으로만 탈 수 있다. 6호선 응암순환은 한 방향으로만 돌아서
