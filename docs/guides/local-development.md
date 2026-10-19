@@ -11,13 +11,28 @@
 - 설문까지 보려면 Cloudflare 로컬 실행 도구 wrangler로 빌드 결과(`dist/`), 설문 함수, 로컬 D1을 함께 띄웁니다.
 - 아래 명령은 wrangler 4.151.0으로 확인했습니다. wrangler는 레포 의존성이 아니라 `pnpm dlx`로 그때그때 받습니다.
 
-## 준비 (WSL)
+## 처음 세팅 (새 컴퓨터에서 한 번)
 
-Windows의 node가 먼저 잡히면 `tsc`가 깨집니다. 터미널마다 먼저 경로를 맞춥니다.
+Node는 `.nvmrc`(24.13.0), pnpm은 `package.json`의 `packageManager`(pnpm@12.11.2)로 고정합니다.
 
 ```bash
-export PATH=/root/.local/share/pnpm/bin:/root/.nvm/versions/node/v24.13.0/bin:$PATH
-cd /root/subwaySheet
+nvm install && nvm use
+corepack enable
+pnpm install
+cp .env.example .env
+```
+
+- `corepack enable`이 `packageManager`에 적힌 pnpm 버전을 씁니다. `pnpm -v`가 12.11.2인지 확인합니다.
+- `pnpm install`이 커밋 전 검사 훅(`simple-git-hooks`)도 겁니다.
+- `.env`의 `DATA_GO_KR_KEY`는 배치(`pnpm batch`)에만 필요합니다. 화면·테스트는 비워 둬도 됩니다.
+- Claude Code 플러그인은 `.claude/settings.json`에 있습니다. 레포를 처음 열면 설치·신뢰를 묻습니다.
+
+## 준비 (터미널마다)
+
+레포 폴더에서 `nvm use`로 `.nvmrc`의 Node를 잡습니다. WSL에서는 Windows의 node가 먼저 잡히면 `tsc`가 깨지므로 `which node`가 WSL 쪽 경로인지 확인합니다.
+
+```bash
+nvm use
 ```
 
 ## 1. 로컬 D1 설정 파일 (처음 한 번)
@@ -25,8 +40,10 @@ cd /root/subwaySheet
 마이그레이션을 적용하려면 wrangler 설정 파일에 D1 바인딩 `DB`가 있어야 합니다. 없으면 `Couldn't find a D1 DB with the name or binding 'DB'` 오류가 납니다.
 배포 설정 파일은 #12에서 정하므로, 로컬용은 레포 밖(홈 폴더)에 둡니다.
 
+레포 폴더에서 실행합니다(`$PWD`가 레포 경로로 들어갑니다).
+
 ```bash
-cat > ~/subway-wrangler.toml <<'EOF'
+cat > ~/subway-wrangler.toml <<EOF
 name = "subway-sheet"
 compatibility_date = "2026-07-01"
 
@@ -34,11 +51,11 @@ compatibility_date = "2026-07-01"
 binding = "DB"
 database_name = "subway-sheet"
 database_id = "local-dev"
-migrations_dir = "/root/subwaySheet/migrations"
+migrations_dir = "$PWD/migrations"
 EOF
 ```
 
-`database_id = "local-dev"`는 로컬용 이름일 뿐이고 실제 Cloudflare D1과 연결되지 않습니다. `migrations_dir`은 레포 위치에 맞게 고칩니다.
+`database_id = "local-dev"`는 로컬용 이름일 뿐이고 실제 Cloudflare D1과 연결되지 않습니다.
 
 ## 2. 로컬 D1에 표 만들기 (처음 한 번, 마이그레이션이 늘면 다시)
 
@@ -47,7 +64,7 @@ pnpm dlx wrangler@4.151.0 d1 migrations apply DB --local --config ~/subway-wrang
 ```
 
 - `0001_init.sql ✅`가 나오면 `migrations/0001_init.sql`의 표가 생긴 것입니다. 적용한 파일은 D1 안의 `d1_migrations` 표에 기록됩니다.
-- DB 파일은 `~/.subway-d1-state`에 남습니다. 레포 안 `.wrangler/`는 `.gitignore`에 없어 실수로 커밋될 수 있으니 쓰지 않습니다.
+- DB 파일은 `~/.subway-d1-state`에 남습니다. 레포 안 `.wrangler/`는 wrangler 임시 폴더라 `.gitignore`로 뺐습니다.
 
 ## 3. 빌드하고 띄우기
 
