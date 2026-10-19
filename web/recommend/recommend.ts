@@ -1,5 +1,5 @@
 import type { DayType, Direction, Periods, RefinedData, Route, RouteStop } from "@shared/refined-data";
-import { type CarScoreResult, scoreCars } from "./car-score";
+import { type BeyondStop, type CarScoreResult, minutesAlong, scoreCars } from "./car-score";
 import { FORMULA_VERSION } from "./formula";
 
 /**
@@ -160,16 +160,18 @@ function walk(stops: RouteStop[], from: number, to: number, direction: Direction
 const loopReach = (route: Route) => Math.floor((route.sequences[0]?.stops.length ?? 0) / 2);
 
 /**
- * 도착역 너머 역(출발역부터 정거장 수)과 한 역에서 탄 사람이 가는 가장 먼 정거장 수. 같은 노선·방향에 같은 역들로 된 구간
+ * 도착역 너머 역(출발역부터 정거장 수·걸린 시간)과 한 역에서 탄 사람이 가는 가장 먼 정거장 수. 같은 노선·방향에 같은 역들로 된 구간
  * (갈래 노선의 공통 구간)은 순서열마다 너머 역이 달라 합친다. 같은 역은 한 번만 센다.
  */
 function beyondOf(picked: Segment, segments: Segment[]) {
   const key = (s: Segment) => s.stops.map((stop) => stop.name).join();
-  const beyond = new Map<string, { stop: RouteStop; stopsAfter: number }>();
+  const beyond = new Map<string, BeyondStop>();
   for (const s of segments) {
     if (s.route !== picked.route || s.direction !== picked.direction || key(s) !== key(picked)) continue;
+    const minutes = minutesAlong([...s.stops, ...s.beyond], s.direction);
     s.beyond.forEach((stop, i) => {
-      if (!beyond.has(stop.name)) beyond.set(stop.name, { stop, stopsAfter: picked.stops.length + i });
+      const stopsAfter = picked.stops.length + i;
+      if (!beyond.has(stop.name)) beyond.set(stop.name, { stop, stopsAfter, minutesAfter: minutes[stopsAfter] ?? 0 });
     });
   }
   return { beyond: [...beyond.values()], reach: picked.route.isLoop ? loopReach(picked.route) : Infinity };

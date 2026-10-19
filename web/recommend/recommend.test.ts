@@ -237,6 +237,42 @@ describe("recommend — 추천 칸과 화면 규칙", () => {
   });
 });
 
+describe("recommend — 역 사이 운행시간", () => {
+  it("중간 역 도착 시각을 역 사이 운행시간으로 센다(거꾸로 타면 뒤 정차의 값)", () => {
+    // 나는 08시대에만 2번 칸 쪽으로, 다는 08시대에만 3번 칸 쪽으로 많이 내린다. 7시 55분 출발.
+    let data = withStop(fakeData(), "나", { fastExit: { down: stairsAt(2), up: stairsAt(2) } });
+    data = withStop(data, "다", { fastExit: { down: stairsAt(3), up: stairsAt(3) } });
+    data = withStation(data, "나", { ridership: alightingAt({ 3: 5000 }) });
+    data = withStation(data, "다", { ridership: alightingAt({ 3: 5000 }) });
+    const depart = { departMinute: 7 * 60 + 55 };
+    // 운행시간이 없으면 정거장당 2분: 가→나 7시 57분, 다 7시 59분이라 아무 데서도 많이 내리지 않는다.
+    expect(ok(recommend(input("가", "라", depart), data)).isWeakGap).toBe(true);
+    // 가→나 10분이면 나에 8시 5분, 다에 8시 7분에 닿아 일찍 앉는 나 쪽 2번 칸이 앞선다.
+    const longToNa = withStop(data, "나", { secondsFromPrevious: 600 });
+    expect(ok(recommend(input("가", "라", depart), longToNa)).picks[0]).toBe(2);
+    // 라→가(상행)에서 라→다는 라의 값(앞 정차 다에서 라까지)이다. 다에 8시 5분, 나에 8시 7분.
+    const longToRa = withStop(data, "라", { secondsFromPrevious: 600 });
+    expect(ok(recommend(input("라", "가", { ...depart, direction: "up" }), longToRa)).picks[0]).toBe(3);
+  });
+
+  it("역 사이가 긴 구간 뒤에서 앉으면 그만큼 가중치가 줄어 일찍 앉는 칸이 앞선다", () => {
+    // 아(1정거장 뒤)에서 2번 칸 쪽으로, 자(2정거장 뒤)에서 3번 칸 쪽으로 더 많이 내린다. 사→아·자→차는 2분이다.
+    let data = withStop(fakeData(), "아", {
+      fastExit: { down: stairsAt(2), up: stairsAt(2) },
+      secondsFromPrevious: 120,
+    });
+    data = withStop(data, "차", { secondsFromPrevious: 120 });
+    data = withStation(data, "아", { ridership: alightingAt(everySlot(2000)) });
+    data = withStop(data, "자", { fastExit: { down: stairsAt(3), up: stairsAt(3) } });
+    data = withStation(data, "자", { ridership: alightingAt(everySlot(4500)) });
+    const withGap = (seconds: number) =>
+      ok(recommend(input("사", "차"), withStop(data, "자", { secondsFromPrevious: seconds }))).picks;
+    // 아→자가 1분이면 자에서 앉아도 거의 끝까지 앉아 가 3번 칸, 15분이면 아에서 앉는 2번 칸이 앞선다.
+    expect(withGap(60)).toEqual([3]);
+    expect(withGap(900)).toEqual([2]);
+  });
+});
+
 describe("recommend — 중간 역에서 타는 사람과 나눠 앉기", () => {
   it("중간 역에서 계단 쪽 칸으로 많이 타면, 그 뒤 역의 빈자리를 나눠 가져 옆 칸이 앞선다", () => {
     // 아(1정거장 뒤)에서 2번 칸 쪽으로 많이 타고, 자(2정거장 뒤)에서 2·3번 칸 쪽으로 똑같이 많이 내린다.
