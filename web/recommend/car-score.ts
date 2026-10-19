@@ -60,8 +60,6 @@ export function scoreCars(input: CarScoreInput): CarScoreResult | null {
   };
 }
 
-const stopAt = ({ stops }: CarScoreInput, k: number) => stops[k] as RouteStop;
-
 /** 그 역 승하차(요일유형) 중 이 노선 몫. 승하차가 없으면 null. */
 function routeShare({ stations, dayType, routeCounts }: CarScoreInput, name: string) {
   const ridership = stations[name]?.ridership?.[dayType];
@@ -73,7 +71,7 @@ function routeShare({ stations, dayType, routeCounts }: CarScoreInput, name: str
 /** 출발역에서 칸마다 서 있는 사람 = 이미 타고 있던 사람(칸마다 같게) + 출발역에서 탄 사람(출입설비 쪽으로 몰림). */
 function standingAtOrigin(input: CarScoreInput): { standing: number[]; load: number | null } {
   const { carCount, direction, dayType, departMinute } = input;
-  const origin = stopAt(input, 0);
+  const origin = input.stops[0] as RouteStop;
   const slot = slotOfMinute(departMinute);
   const load = loadAt(origin, direction, dayType, slot);
   const standingAverage = load === null ? 0 : Math.max(0, load - SEATS_PER_CAR);
@@ -97,7 +95,7 @@ function freedSeats(input: CarScoreInput) {
   const missingStations: string[] = [];
   const evenlySpreadStations: string[] = [];
   for (let k = 1; k < total; k++) {
-    const stop = stopAt(input, k);
+    const stop = input.stops[k] as RouteStop;
     const fastExitSide = stop.fastExit[direction];
     const station = stations[stop.name];
     const ridership = routeShare(input, stop.name);
@@ -110,7 +108,7 @@ function freedSeats(input: CarScoreInput) {
     const slot = slotOfMinute(departMinute + k * FORMULA.minutesPerStop);
     const alighting = (ridership.alighting[slot] ?? 0) + transferAlighting(station, dayType, slot);
     const perTrain = (alighting * FORMULA.directionShare * headway(dayType, slot)) / 60;
-    const previousLoad = loadAt(stopAt(input, k - 1), direction, dayType, slot);
+    const previousLoad = loadAt(input.stops[k - 1] as RouteStop, direction, dayType, slot);
     const seatedShare =
       previousLoad === null ? FORMULA.unknownSeatedShare : Math.min(1, SEATS_PER_CAR / Math.max(previousLoad, 1));
     const weight = (total - k) / (total - 1);

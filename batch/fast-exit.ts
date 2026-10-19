@@ -67,8 +67,7 @@ export function toFastExitSide(
   carCount: number,
 ): FastExitSide {
   const list = (facilities ?? [])
-    .filter((f) => f.car <= carCount)
-    .filter((f) => nextStation !== undefined && (f.toward === null || f.toward === nextStation))
+    .filter((f) => f.car <= carCount && nextStation !== undefined && (f.toward === null || f.toward === nextStation))
     .map(({ car, door, kind }) => ({ car, door, kind }))
     .sort((a, b) => a.car - b.car || a.door - b.door);
   return {
