@@ -20,8 +20,8 @@ export async function onRequestPost(context: Context): Promise<Response> {
     const id = crypto.randomUUID();
     await context.env.DB.prepare(
       "INSERT INTO recommendations (id, route_id, from_station, to_station, direction, depart_hour, day_type, picks, " +
-        "grade, is_weak_gap, has_missing_stations, period_start, period_end, formula_version, car_count, stop_count, " +
-        "created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        "is_weak_gap, has_missing_stations, period_start, period_end, formula_version, car_count, stop_count, " +
+        "created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
     )
       .bind(
         id,
@@ -32,7 +32,6 @@ export async function onRequestPost(context: Context): Promise<Response> {
         input.departHour,
         input.dayType,
         JSON.stringify(input.picks),
-        input.grade,
         input.isWeakGap ? 1 : 0,
         input.hasMissingStations ? 1 : 0,
         input.period.start,

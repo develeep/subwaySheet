@@ -13,7 +13,6 @@ const validRecord = {
   departHour: 8,
   dayType: "weekday",
   picks: [3],
-  grade: "mid",
   isWeakGap: false,
   hasMissingStations: false,
   period: { start: "2024-01-01", end: "2024-12-31" },
@@ -52,7 +51,6 @@ describe("추천 기록 만들기", () => {
       depart_hour: 8,
       day_type: "weekday",
       picks: "[3]",
-      grade: "mid",
       is_weak_gap: 0,
       has_missing_stations: 0,
       period_start: "2024-01-01",
@@ -60,11 +58,12 @@ describe("추천 기록 만들기", () => {
       formula_version: "1",
     });
     expect(row?.created_at).toEqual(expect.stringMatching(/^\d{4}-\d{2}-\d{2}T/));
+    expect(row).not.toHaveProperty("grade");
   });
 
   it.each([
     ["JSON이 아닌 본문", "not json"],
-    ["빠진 필드", { ...validRecord, grade: undefined }],
+    ["빠진 필드", { ...validRecord, isWeakGap: undefined }],
     ["모르는 필드", { ...validRecord, ip: "203.0.113.7" }],
     ["칸 수를 넘는 추천 칸", { ...validRecord, picks: [11] }],
     ["추천 칸 0번", { ...validRecord, picks: [0] }],

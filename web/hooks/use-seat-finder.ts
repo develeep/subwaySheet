@@ -131,7 +131,6 @@ export function useSeatFinder() {
       departHour: Math.floor(departMinute / 60),
       dayType: success.dayType,
       picks: success.picks,
-      grade: success.grade,
       isWeakGap: success.isWeakGap,
       hasMissingStations: success.missingRanges.length > 0,
       period: success.periods.ridership,

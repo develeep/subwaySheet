@@ -6,7 +6,7 @@ import { type RecommendSuccess, recommend, stationOptions } from "./recommend";
 /**
  * 프로토타입 회귀 — 실제 정제 데이터(`public/data/refined-data.json`)로 프로토타입 FINDINGS 표의 2호선 평일 결과를 재현한다(스펙 #2).
  * 프로토타입에는 환승역 표가 없어서, 표를 비운 데이터로 재현한다. 표를 채운 결과는 "환승역 표 반영"에서 따로 본다(#7).
- * 데이터를 다시 만들거나 공식을 바꿔 이 테스트가 깨지면, 바뀐 이유를 PR에 적는다.
+ * 데이터를 다시 만들거나 공식을 바꿔 이 테스트가 깨지면, 바뀐 이유를 PR에 적는다. 공식 5·6에서 달라진 구간은 "중간 역 경쟁 반영"에 둔다.
  * 아래 "1~8호선 노선"은 같은 실제 데이터로 노선 순서열(갈래·지선·응암순환)이 맞게 들어갔는지 본다(#6).
  * "데이터 없는 역과 코레일 구간"은 코레일 구간·데이터 없는 역이 낀 구간을 있는 역만으로 계산하는지 본다(#10).
  */
@@ -34,26 +34,34 @@ function weekday(from: string, to: string, hour: number, routeId?: string, sourc
 describe("프로토타입 회귀 (2호선 평일, 환승역 표 비움)", () => {
   const prototype = (from: string, to: string, hour: number) => weekday(from, to, hour, undefined, withoutTable);
 
-  it("신도림→강남 08시는 3번 칸", () => {
-    expect(prototype("신도림", "강남", 8).picks[0]).toBe(3);
-  });
-
   it("강남→신도림 18시는 3·8번 칸", () => {
     expect([...prototype("강남", "신도림", 18).picks].sort()).toEqual([3, 8]);
   });
+});
 
-  it("사당→시청 08시는 4번 칸(4·7번 안에서)", () => {
-    const { picks } = prototype("사당", "시청", 8);
-    expect(picks[0]).toBe(4);
-    expect(picks.every((car) => car === 4 || car === 7)).toBe(true);
+// 공식 5(ADR 0006)에서 달라진 18~20정거장 구간. 중간 역에서 계단 쪽 칸으로 탄 사람과 나눠 앉아 칸끼리 차이가 줄었다.
+// 공식 6(ADR 0007)에서는 탄 사람의 44%가 내릴 역 출입설비 쪽에 서서 아래 두 구간이 더 바뀌었다.
+describe("중간 역 경쟁 반영 (2호선 평일, 환승역 표 비움, 공식 6)", () => {
+  const ridden = (from: string, to: string, hour: number) => weekday(from, to, hour, undefined, withoutTable);
+
+  it("사당→시청 08시는 4·7번 칸이지만 칸 차이 작음(프로토타입 4번 칸)", () => {
+    expect(ridden("사당", "시청", 8)).toMatchObject({ picks: [4, 7], isWeakGap: true });
   });
 
-  it("잠실→신도림 08시는 3·8번 칸 안에서", () => {
-    expect(prototype("잠실", "신도림", 8).picks.every((car) => car === 3 || car === 8)).toBe(true);
+  it("신도림→강남 08시는 6번 칸이 1등이고 3번 칸이 2등(프로토타입·공식 5는 3번 칸)", () => {
+    expect(ridden("신도림", "강남", 8).picks).toEqual([6, 3]);
   });
 
-  it("홍대입구→잠실 08시는 칸 차이 작음", () => {
-    expect(prototype("홍대입구", "잠실", 8).isWeakGap).toBe(true);
+  it("잠실→신도림 08시는 8번 칸이 1등이고 2등은 4번 칸(프로토타입 3·8번 칸)", () => {
+    expect(ridden("잠실", "신도림", 8).picks).toEqual([8, 4]);
+  });
+
+  it("홍대입구→잠실 08시는 을지로입구 쪽 6번 칸, 2등은 9번 칸(프로토타입 칸 차이 작음, 공식 5는 2등 4번 칸)", () => {
+    expect(ridden("홍대입구", "잠실", 8)).toMatchObject({
+      picks: [6, 9],
+      isWeakGap: false,
+      reason: { station: "을지로입구" },
+    });
   });
 });
 
@@ -66,14 +74,13 @@ describe("환승역 표 반영 (2호선 평일, #7)", () => {
     expect(weekday("신도림", "강남", 8)).toMatchObject({ picks: [4], reason: { station: "대림" } });
   });
 
-  it("사당→시청 08시는 대림 7호선(7번 칸)·신도림 신정지선(6번 칸) 환승통로 쪽 7번 칸", () => {
-    expect(weekday("사당", "시청", 8)).toMatchObject({ picks: [7], reason: { station: "대림" } });
+  it("사당→시청 08시는 대림 7호선 환승통로(7번 칸) 쪽 7번 칸(칸 차이 작음)", () => {
+    expect(weekday("사당", "시청", 8)).toMatchObject({ picks: [7, 6], isWeakGap: true, reason: { station: "대림" } });
   });
 
-  it("홍대입구→잠실 08시는 동대문역사문화공원 환승통로(4호선 9번·5호선 6번 칸) 덕에 칸 차이가 생긴다", () => {
+  it("홍대입구→잠실 08시는 동대문역사문화공원 4호선 환승통로(9번 칸) 덕에 2등 칸이 4번에서 9번으로 바뀐다", () => {
     expect(weekday("홍대입구", "잠실", 8)).toMatchObject({
-      picks: [9, 6],
-      isWeakGap: false,
+      picks: [6, 9],
       reason: { station: "동대문역사문화공원" },
     });
   });

@@ -63,7 +63,7 @@ EOF
 pnpm dlx wrangler@4.151.0 d1 migrations apply DB --local --config ~/subway-wrangler.toml --persist-to ~/.subway-d1-state
 ```
 
-- `0001_init.sql ✅`가 나오면 `migrations/0001_init.sql`의 표가 생긴 것입니다. 적용한 파일은 D1 안의 `d1_migrations` 표에 기록됩니다.
+- `0001_init.sql ✅`처럼 `migrations/`의 파일마다 ✅가 나오면 표가 만들어진 것입니다. 적용한 파일은 D1 안의 `d1_migrations` 표에 기록됩니다.
 - DB 파일은 `~/.subway-d1-state`에 남습니다. 레포 안 `.wrangler/`는 wrangler 임시 폴더라 `.gitignore`로 뺐습니다.
 
 ## 3. 빌드하고 띄우기
