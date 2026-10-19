@@ -41,7 +41,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "전곡",
@@ -65,7 +66,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "청산",
@@ -89,7 +91,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "소요산",
@@ -113,7 +116,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "동두천",
@@ -137,7 +141,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "보산",
@@ -161,7 +166,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "동두천중앙",
@@ -185,7 +191,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "지행",
@@ -209,7 +216,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "덕정",
@@ -233,7 +241,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "덕계",
@@ -257,7 +266,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "양주",
@@ -281,7 +291,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "녹양",
@@ -305,7 +316,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "가능",
@@ -329,7 +341,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "의정부",
@@ -353,7 +366,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "회룡",
@@ -377,7 +391,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "망월사",
@@ -401,7 +416,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "도봉산",
@@ -425,7 +441,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "도봉",
@@ -449,7 +466,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "방학",
@@ -473,7 +491,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "창동",
@@ -497,7 +516,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "녹천",
@@ -521,7 +541,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "월계",
@@ -545,7 +566,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "광운대",
@@ -569,7 +591,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "석계",
@@ -593,7 +616,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "신이문",
@@ -617,7 +641,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "외대앞",
@@ -641,7 +666,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "회기",
@@ -665,7 +691,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "청량리",
@@ -739,7 +766,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "제기동",
@@ -803,7 +831,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "신설동",
@@ -857,7 +886,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "동묘앞",
@@ -951,7 +981,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "동대문",
@@ -1005,7 +1036,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 60
             },
             {
               "name": "종로5가",
@@ -1089,7 +1121,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "종로3가",
@@ -1173,7 +1206,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "종각",
@@ -1257,7 +1291,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "시청",
@@ -1341,7 +1376,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 120
             },
             {
               "name": "서울역",
@@ -1445,7 +1481,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 120
             },
             {
               "name": "남영",
@@ -1469,7 +1506,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "용산",
@@ -1493,7 +1531,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "노량진",
@@ -1517,7 +1556,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "대방",
@@ -1541,7 +1581,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "신길",
@@ -1565,7 +1606,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "영등포",
@@ -1589,7 +1631,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "신도림",
@@ -1613,7 +1656,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "구로",
@@ -1637,7 +1681,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "구일",
@@ -1661,7 +1706,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "개봉",
@@ -1685,7 +1731,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "오류동",
@@ -1709,7 +1756,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "온수",
@@ -1733,7 +1781,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "역곡",
@@ -1757,7 +1806,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "소사",
@@ -1781,7 +1831,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "부천",
@@ -1805,7 +1856,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "중동",
@@ -1829,7 +1881,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "송내",
@@ -1853,7 +1906,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "부개",
@@ -1877,7 +1931,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "부평",
@@ -1901,7 +1956,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "백운",
@@ -1925,7 +1981,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "동암",
@@ -1949,7 +2006,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "간석",
@@ -1973,7 +2031,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "주안",
@@ -1997,7 +2056,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "도화",
@@ -2021,7 +2081,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "제물포",
@@ -2045,7 +2106,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "도원",
@@ -2069,7 +2131,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "동인천",
@@ -2093,7 +2156,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "인천",
@@ -2117,7 +2181,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             }
           ]
         },
@@ -2146,7 +2211,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "전곡",
@@ -2170,7 +2236,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "청산",
@@ -2194,7 +2261,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "소요산",
@@ -2218,7 +2286,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "동두천",
@@ -2242,7 +2311,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "보산",
@@ -2266,7 +2336,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "동두천중앙",
@@ -2290,7 +2361,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "지행",
@@ -2314,7 +2386,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "덕정",
@@ -2338,7 +2411,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "덕계",
@@ -2362,7 +2436,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "양주",
@@ -2386,7 +2461,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "녹양",
@@ -2410,7 +2486,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "가능",
@@ -2434,7 +2511,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "의정부",
@@ -2458,7 +2536,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "회룡",
@@ -2482,7 +2561,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "망월사",
@@ -2506,7 +2586,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "도봉산",
@@ -2530,7 +2611,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "도봉",
@@ -2554,7 +2636,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "방학",
@@ -2578,7 +2661,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "창동",
@@ -2602,7 +2686,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "녹천",
@@ -2626,7 +2711,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "월계",
@@ -2650,7 +2736,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "광운대",
@@ -2674,7 +2761,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "석계",
@@ -2698,7 +2786,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "신이문",
@@ -2722,7 +2811,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "외대앞",
@@ -2746,7 +2836,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "회기",
@@ -2770,7 +2861,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "청량리",
@@ -2844,7 +2936,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "제기동",
@@ -2908,7 +3001,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "신설동",
@@ -2962,7 +3056,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "동묘앞",
@@ -3056,7 +3151,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "동대문",
@@ -3110,7 +3206,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 60
             },
             {
               "name": "종로5가",
@@ -3194,7 +3291,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "종로3가",
@@ -3278,7 +3376,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "종각",
@@ -3362,7 +3461,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "시청",
@@ -3446,7 +3546,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 120
             },
             {
               "name": "서울역",
@@ -3550,7 +3651,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 120
             },
             {
               "name": "남영",
@@ -3574,7 +3676,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "용산",
@@ -3598,7 +3701,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "노량진",
@@ -3622,7 +3726,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "대방",
@@ -3646,7 +3751,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "신길",
@@ -3670,7 +3776,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "영등포",
@@ -3694,7 +3801,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "신도림",
@@ -3718,7 +3826,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "구로",
@@ -3742,7 +3851,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "가산디지털단지",
@@ -3766,7 +3876,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "독산",
@@ -3790,7 +3901,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "금천구청",
@@ -3814,7 +3926,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "석수",
@@ -3838,7 +3951,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "관악",
@@ -3862,7 +3976,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "안양",
@@ -3886,7 +4001,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "명학",
@@ -3910,7 +4026,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "금정",
@@ -3934,7 +4051,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "군포",
@@ -3958,7 +4076,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "당정",
@@ -3982,7 +4101,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "의왕",
@@ -4006,7 +4126,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "성균관대",
@@ -4030,7 +4151,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "화서",
@@ -4054,7 +4176,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "수원",
@@ -4078,7 +4201,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "세류",
@@ -4102,7 +4226,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "병점",
@@ -4126,7 +4251,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "세마",
@@ -4150,7 +4276,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "오산대",
@@ -4174,7 +4301,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "오산",
@@ -4198,7 +4326,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "진위",
@@ -4222,7 +4351,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "송탄",
@@ -4246,7 +4376,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "서정리",
@@ -4270,7 +4401,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "평택지제",
@@ -4294,7 +4426,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "평택",
@@ -4318,7 +4451,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "성환",
@@ -4342,7 +4476,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "직산",
@@ -4366,7 +4501,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "두정",
@@ -4390,7 +4526,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "천안",
@@ -4414,7 +4551,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "봉명",
@@ -4438,7 +4576,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "쌍용",
@@ -4462,7 +4601,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "아산",
@@ -4486,7 +4626,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "탕정",
@@ -4510,7 +4651,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "배방",
@@ -4534,7 +4676,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "온양온천",
@@ -4558,7 +4701,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "신창",
@@ -4582,7 +4726,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             }
           ]
         },
@@ -4611,7 +4756,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "전곡",
@@ -4635,7 +4781,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "청산",
@@ -4659,7 +4806,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "소요산",
@@ -4683,7 +4831,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "동두천",
@@ -4707,7 +4856,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "보산",
@@ -4731,7 +4881,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "동두천중앙",
@@ -4755,7 +4906,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "지행",
@@ -4779,7 +4931,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "덕정",
@@ -4803,7 +4956,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "덕계",
@@ -4827,7 +4981,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "양주",
@@ -4851,7 +5006,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "녹양",
@@ -4875,7 +5031,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "가능",
@@ -4899,7 +5056,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "의정부",
@@ -4923,7 +5081,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "회룡",
@@ -4947,7 +5106,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "망월사",
@@ -4971,7 +5131,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "도봉산",
@@ -4995,7 +5156,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "도봉",
@@ -5019,7 +5181,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "방학",
@@ -5043,7 +5206,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "창동",
@@ -5067,7 +5231,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "녹천",
@@ -5091,7 +5256,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "월계",
@@ -5115,7 +5281,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "광운대",
@@ -5139,7 +5306,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "석계",
@@ -5163,7 +5331,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "신이문",
@@ -5187,7 +5356,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "외대앞",
@@ -5211,7 +5381,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "회기",
@@ -5235,7 +5406,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "청량리",
@@ -5309,7 +5481,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "제기동",
@@ -5373,7 +5546,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "신설동",
@@ -5427,7 +5601,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "동묘앞",
@@ -5521,7 +5696,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "동대문",
@@ -5575,7 +5751,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 60
             },
             {
               "name": "종로5가",
@@ -5659,7 +5836,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "종로3가",
@@ -5743,7 +5921,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "종각",
@@ -5827,7 +6006,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "시청",
@@ -5911,7 +6091,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 120
             },
             {
               "name": "서울역",
@@ -6015,7 +6196,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 120
             },
             {
               "name": "남영",
@@ -6039,7 +6221,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "용산",
@@ -6063,7 +6246,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "노량진",
@@ -6087,7 +6271,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "대방",
@@ -6111,7 +6296,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "신길",
@@ -6135,7 +6321,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "영등포",
@@ -6159,7 +6346,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "신도림",
@@ -6183,7 +6371,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "구로",
@@ -6207,7 +6396,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "가산디지털단지",
@@ -6231,7 +6421,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "독산",
@@ -6255,7 +6446,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "금천구청",
@@ -6279,7 +6471,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "석수",
@@ -6303,7 +6496,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "관악",
@@ -6327,7 +6521,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "안양",
@@ -6351,7 +6546,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "명학",
@@ -6375,7 +6571,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "금정",
@@ -6399,7 +6596,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "군포",
@@ -6423,7 +6621,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "당정",
@@ -6447,7 +6646,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "의왕",
@@ -6471,7 +6671,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "성균관대",
@@ -6495,7 +6696,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "화서",
@@ -6519,7 +6721,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "수원",
@@ -6543,7 +6746,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "세류",
@@ -6567,7 +6771,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "병점",
@@ -6591,7 +6796,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "서동탄",
@@ -6615,7 +6821,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             }
           ]
         },
@@ -6644,7 +6851,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "전곡",
@@ -6668,7 +6876,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "청산",
@@ -6692,7 +6901,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "소요산",
@@ -6716,7 +6926,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "동두천",
@@ -6740,7 +6951,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "보산",
@@ -6764,7 +6976,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "동두천중앙",
@@ -6788,7 +7001,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "지행",
@@ -6812,7 +7026,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "덕정",
@@ -6836,7 +7051,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "덕계",
@@ -6860,7 +7076,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "양주",
@@ -6884,7 +7101,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "녹양",
@@ -6908,7 +7126,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "가능",
@@ -6932,7 +7151,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "의정부",
@@ -6956,7 +7176,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "회룡",
@@ -6980,7 +7201,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "망월사",
@@ -7004,7 +7226,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "도봉산",
@@ -7028,7 +7251,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "도봉",
@@ -7052,7 +7276,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "방학",
@@ -7076,7 +7301,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "창동",
@@ -7100,7 +7326,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "녹천",
@@ -7124,7 +7351,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "월계",
@@ -7148,7 +7376,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "광운대",
@@ -7172,7 +7401,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "석계",
@@ -7196,7 +7426,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "신이문",
@@ -7220,7 +7451,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "외대앞",
@@ -7244,7 +7476,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "회기",
@@ -7268,7 +7501,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "청량리",
@@ -7342,7 +7576,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "제기동",
@@ -7406,7 +7641,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "신설동",
@@ -7460,7 +7696,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "동묘앞",
@@ -7554,7 +7791,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "동대문",
@@ -7608,7 +7846,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 60
             },
             {
               "name": "종로5가",
@@ -7692,7 +7931,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "종로3가",
@@ -7776,7 +8016,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "종각",
@@ -7860,7 +8101,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "시청",
@@ -7944,7 +8186,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 120
             },
             {
               "name": "서울역",
@@ -8048,7 +8291,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 120
             },
             {
               "name": "남영",
@@ -8072,7 +8316,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "용산",
@@ -8096,7 +8341,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "노량진",
@@ -8120,7 +8366,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "대방",
@@ -8144,7 +8391,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "신길",
@@ -8168,7 +8416,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "영등포",
@@ -8192,7 +8441,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "신도림",
@@ -8216,7 +8466,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "구로",
@@ -8240,7 +8491,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "가산디지털단지",
@@ -8264,7 +8516,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "독산",
@@ -8288,7 +8541,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "금천구청",
@@ -8312,7 +8566,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "광명",
@@ -8336,7 +8591,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             }
           ]
         }
@@ -8444,7 +8700,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "을지로입구",
@@ -8528,7 +8785,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "을지로3가",
@@ -8572,7 +8830,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 60
             },
             {
               "name": "을지로4가",
@@ -8646,7 +8905,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 60
             },
             {
               "name": "동대문역사문화공원",
@@ -8730,7 +8990,8 @@
               "transferCars": {
                 "down": [9, 6],
                 "up": [2, 5]
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "신당",
@@ -8814,7 +9075,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "상왕십리",
@@ -8898,7 +9160,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 60
             },
             {
               "name": "왕십리",
@@ -9007,7 +9270,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 60
             },
             {
               "name": "한양대",
@@ -9045,7 +9309,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "뚝섬",
@@ -9129,7 +9394,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "성수",
@@ -9183,7 +9449,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 60
             },
             {
               "name": "건대입구",
@@ -9252,7 +9519,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "구의",
@@ -9311,7 +9579,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 120
             },
             {
               "name": "강변",
@@ -9395,7 +9664,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 60
             },
             {
               "name": "잠실나루",
@@ -9469,7 +9739,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 120
             },
             {
               "name": "잠실",
@@ -9553,7 +9824,8 @@
               "transferCars": {
                 "down": [10],
                 "up": [1]
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "잠실새내",
@@ -9637,7 +9909,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "종합운동장",
@@ -9721,7 +9994,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "삼성",
@@ -9805,7 +10079,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "선릉",
@@ -9879,7 +10154,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "역삼",
@@ -9963,7 +10239,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "강남",
@@ -10047,7 +10324,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 60
             },
             {
               "name": "교대",
@@ -10131,7 +10409,8 @@
               "transferCars": {
                 "down": [1],
                 "up": [10]
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "서초",
@@ -10215,7 +10494,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 60
             },
             {
               "name": "방배",
@@ -10284,7 +10564,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 120
             },
             {
               "name": "사당",
@@ -10383,7 +10664,8 @@
               "transferCars": {
                 "down": [6],
                 "up": [5]
-              }
+              },
+              "secondsFromPrevious": 150
             },
             {
               "name": "낙성대",
@@ -10467,7 +10749,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 120
             },
             {
               "name": "서울대입구",
@@ -10571,7 +10854,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "봉천",
@@ -10675,7 +10959,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 60
             },
             {
               "name": "신림",
@@ -10759,7 +11044,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "신대방",
@@ -10863,7 +11149,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 120
             },
             {
               "name": "구로디지털단지",
@@ -10947,7 +11234,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "대림",
@@ -11031,7 +11319,8 @@
               "transferCars": {
                 "down": [7],
                 "up": [4]
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "신도림",
@@ -11145,7 +11434,8 @@
               "transferCars": {
                 "down": [2, 6],
                 "up": [7, 5]
-              }
+              },
+              "secondsFromPrevious": 150
             },
             {
               "name": "문래",
@@ -11229,7 +11519,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 120
             },
             {
               "name": "영등포구청",
@@ -11308,7 +11599,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 60
             },
             {
               "name": "당산",
@@ -11382,7 +11674,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "합정",
@@ -11471,7 +11764,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 150
             },
             {
               "name": "홍대입구",
@@ -11535,7 +11829,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "신촌",
@@ -11619,7 +11914,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 120
             },
             {
               "name": "이대",
@@ -11713,7 +12009,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 60
             },
             {
               "name": "아현",
@@ -11797,7 +12094,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 60
             },
             {
               "name": "충정로",
@@ -11891,7 +12189,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             }
           ]
         }
@@ -11943,7 +12242,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "용두",
@@ -12007,7 +12307,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "신답",
@@ -12061,7 +12362,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "용답",
@@ -12115,7 +12417,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "성수",
@@ -12147,7 +12450,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 180
             }
           ]
         }
@@ -12193,7 +12497,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "도림천",
@@ -12257,7 +12562,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "양천구청",
@@ -12321,7 +12627,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 150
             },
             {
               "name": "신정네거리",
@@ -12385,7 +12692,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 180
             },
             {
               "name": "까치산",
@@ -12417,7 +12725,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 150
             }
           ]
         }
@@ -12455,7 +12764,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "주엽",
@@ -12479,7 +12789,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "정발산",
@@ -12503,7 +12814,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "마두",
@@ -12527,7 +12839,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "백석",
@@ -12551,7 +12864,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "대곡",
@@ -12575,7 +12889,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "화정",
@@ -12599,7 +12914,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "원당",
@@ -12623,7 +12939,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "원흥",
@@ -12647,7 +12964,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "삼송",
@@ -12671,7 +12989,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "지축",
@@ -12735,7 +13054,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "구파발",
@@ -12809,7 +13129,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 180
             },
             {
               "name": "연신내",
@@ -12893,7 +13214,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 120
             },
             {
               "name": "불광",
@@ -12977,7 +13299,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "녹번",
@@ -13061,7 +13384,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "홍제",
@@ -13145,7 +13469,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 120
             },
             {
               "name": "무악재",
@@ -13229,7 +13554,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "독립문",
@@ -13323,7 +13649,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "경복궁",
@@ -13427,7 +13754,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 120
             },
             {
               "name": "안국",
@@ -13531,7 +13859,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "종로3가",
@@ -13605,7 +13934,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "을지로3가",
@@ -13709,7 +14039,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 60
             },
             {
               "name": "충무로",
@@ -13773,7 +14104,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 60
             },
             {
               "name": "동대입구",
@@ -13857,7 +14189,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "약수",
@@ -13931,7 +14264,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 60
             },
             {
               "name": "금호",
@@ -14015,7 +14349,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 60
             },
             {
               "name": "옥수",
@@ -14099,7 +14434,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 60
             },
             {
               "name": "압구정",
@@ -14183,7 +14519,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 120
             },
             {
               "name": "신사",
@@ -14267,7 +14604,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 120
             },
             {
               "name": "잠원",
@@ -14351,7 +14689,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "고속터미널",
@@ -14515,7 +14854,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "교대",
@@ -14609,7 +14949,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 120
             },
             {
               "name": "남부터미널",
@@ -14693,7 +15034,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "양재",
@@ -14777,7 +15119,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 120
             },
             {
               "name": "매봉",
@@ -14841,7 +15184,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 120
             },
             {
               "name": "도곡",
@@ -14925,7 +15269,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "대치",
@@ -15019,7 +15364,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 60
             },
             {
               "name": "학여울",
@@ -15083,7 +15429,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 60
             },
             {
               "name": "대청",
@@ -15147,7 +15494,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "일원",
@@ -15211,7 +15559,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "수서",
@@ -15305,7 +15654,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 120
             },
             {
               "name": "가락시장",
@@ -15429,7 +15779,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 120
             },
             {
               "name": "경찰병원",
@@ -15533,7 +15884,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 60
             },
             {
               "name": "오금",
@@ -15601,7 +15953,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 60
             }
           ]
         }
@@ -15639,7 +15992,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "오남",
@@ -15663,7 +16017,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "별내별가람",
@@ -15687,7 +16042,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "불암산",
@@ -15761,7 +16117,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "상계",
@@ -15835,7 +16192,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "노원",
@@ -15919,7 +16277,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "창동",
@@ -16008,7 +16367,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 120
             },
             {
               "name": "쌍문",
@@ -16097,7 +16457,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "수유",
@@ -16181,7 +16542,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 120
             },
             {
               "name": "미아",
@@ -16265,7 +16627,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "미아사거리",
@@ -16349,7 +16712,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 120
             },
             {
               "name": "길음",
@@ -16433,7 +16797,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "성신여대입구",
@@ -16517,7 +16882,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 120
             },
             {
               "name": "한성대입구",
@@ -16601,7 +16967,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "혜화",
@@ -16685,7 +17052,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "동대문",
@@ -16809,7 +17177,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 120
             },
             {
               "name": "동대문역사문화공원",
@@ -16953,7 +17322,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 60
             },
             {
               "name": "충무로",
@@ -17102,7 +17472,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 120
             },
             {
               "name": "명동",
@@ -17196,7 +17567,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 60
             },
             {
               "name": "회현",
@@ -17330,7 +17702,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 60
             },
             {
               "name": "서울역",
@@ -17434,7 +17807,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "숙대입구",
@@ -17498,7 +17872,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "삼각지",
@@ -17582,7 +17957,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "신용산",
@@ -17666,7 +18042,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 60
             },
             {
               "name": "이촌",
@@ -17710,7 +18087,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "동작",
@@ -17754,7 +18132,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 180
             },
             {
               "name": "총신대입구",
@@ -17818,7 +18197,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 150
             },
             {
               "name": "사당",
@@ -17892,7 +18272,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "남태령",
@@ -17956,7 +18337,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "선바위",
@@ -17980,7 +18362,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "경마공원",
@@ -18004,7 +18387,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "대공원",
@@ -18028,7 +18412,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "과천",
@@ -18052,7 +18437,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "정부과천청사",
@@ -18076,7 +18462,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "인덕원",
@@ -18100,7 +18487,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "평촌",
@@ -18124,7 +18512,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "범계",
@@ -18148,7 +18537,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "금정",
@@ -18172,7 +18562,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "산본",
@@ -18196,7 +18587,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "수리산",
@@ -18220,7 +18612,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "대야미",
@@ -18244,7 +18637,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "반월",
@@ -18268,7 +18662,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "상록수",
@@ -18292,7 +18687,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "한대앞",
@@ -18316,7 +18712,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "중앙",
@@ -18340,7 +18737,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "고잔",
@@ -18364,7 +18762,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "초지",
@@ -18388,7 +18787,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "안산",
@@ -18412,7 +18812,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "신길온천",
@@ -18436,7 +18837,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "정왕",
@@ -18460,7 +18862,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "오이도",
@@ -18484,7 +18887,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             }
           ]
         }
@@ -18536,7 +18940,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "개화산",
@@ -18590,7 +18995,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "김포공항",
@@ -18694,7 +19100,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 100
             },
             {
               "name": "송정",
@@ -18758,7 +19165,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 130
             },
             {
               "name": "마곡",
@@ -18822,7 +19230,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "발산",
@@ -18886,7 +19295,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 100
             },
             {
               "name": "우장산",
@@ -18950,7 +19360,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "화곡",
@@ -19024,7 +19435,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "까치산",
@@ -19108,7 +19520,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "신정",
@@ -19182,7 +19595,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 110
             },
             {
               "name": "목동",
@@ -19246,7 +19660,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "오목교",
@@ -19320,7 +19735,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "양평",
@@ -19384,7 +19800,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "영등포구청",
@@ -19478,7 +19895,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "영등포시장",
@@ -19542,7 +19960,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "신길",
@@ -19641,7 +20060,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "여의도",
@@ -19725,7 +20145,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "여의나루",
@@ -19789,7 +20210,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "마포",
@@ -19853,7 +20275,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 120
             },
             {
               "name": "공덕",
@@ -19957,7 +20380,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "애오개",
@@ -20021,7 +20445,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "충정로",
@@ -20085,7 +20510,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "서대문",
@@ -20149,7 +20575,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 60
             },
             {
               "name": "광화문",
@@ -20243,7 +20670,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "종로3가",
@@ -20367,7 +20795,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 100
             },
             {
               "name": "을지로4가",
@@ -20466,7 +20895,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 100
             },
             {
               "name": "동대문역사문화공원",
@@ -20520,7 +20950,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "청구",
@@ -20584,7 +21015,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "신금호",
@@ -20668,7 +21100,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "행당",
@@ -20732,7 +21165,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "왕십리",
@@ -20796,7 +21230,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "마장",
@@ -20860,7 +21295,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 60
             },
             {
               "name": "답십리",
@@ -20924,7 +21360,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 100
             },
             {
               "name": "장한평",
@@ -20978,7 +21415,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 100
             },
             {
               "name": "군자",
@@ -21072,7 +21510,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 100
             },
             {
               "name": "아차산",
@@ -21136,7 +21575,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "광나루",
@@ -21200,7 +21640,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 110
             },
             {
               "name": "천호",
@@ -21264,7 +21705,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 130
             },
             {
               "name": "강동",
@@ -21333,7 +21775,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "길동",
@@ -21397,7 +21840,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "굽은다리",
@@ -21456,7 +21900,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "명일",
@@ -21515,7 +21960,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "고덕",
@@ -21579,7 +22025,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 100
             },
             {
               "name": "상일동",
@@ -21638,7 +22085,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 100
             },
             {
               "name": "강일",
@@ -21732,7 +22180,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 110
             },
             {
               "name": "미사",
@@ -21806,7 +22255,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 110
             },
             {
               "name": "하남풍산",
@@ -21890,7 +22340,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 150
             },
             {
               "name": "하남시청",
@@ -21974,7 +22425,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 110
             },
             {
               "name": "하남검단산",
@@ -22032,7 +22484,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 150
             }
           ]
         },
@@ -22075,7 +22528,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "개화산",
@@ -22129,7 +22583,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "김포공항",
@@ -22233,7 +22688,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 100
             },
             {
               "name": "송정",
@@ -22297,7 +22753,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 130
             },
             {
               "name": "마곡",
@@ -22361,7 +22818,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "발산",
@@ -22425,7 +22883,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 100
             },
             {
               "name": "우장산",
@@ -22489,7 +22948,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "화곡",
@@ -22563,7 +23023,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "까치산",
@@ -22647,7 +23108,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "신정",
@@ -22721,7 +23183,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 110
             },
             {
               "name": "목동",
@@ -22785,7 +23248,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "오목교",
@@ -22859,7 +23323,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "양평",
@@ -22923,7 +23388,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "영등포구청",
@@ -23017,7 +23483,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "영등포시장",
@@ -23081,7 +23548,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "신길",
@@ -23180,7 +23648,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "여의도",
@@ -23264,7 +23733,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "여의나루",
@@ -23328,7 +23798,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "마포",
@@ -23392,7 +23863,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 120
             },
             {
               "name": "공덕",
@@ -23496,7 +23968,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "애오개",
@@ -23560,7 +24033,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "충정로",
@@ -23624,7 +24098,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "서대문",
@@ -23688,7 +24163,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 60
             },
             {
               "name": "광화문",
@@ -23782,7 +24258,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "종로3가",
@@ -23906,7 +24383,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 100
             },
             {
               "name": "을지로4가",
@@ -24005,7 +24483,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 100
             },
             {
               "name": "동대문역사문화공원",
@@ -24059,7 +24538,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "청구",
@@ -24123,7 +24603,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "신금호",
@@ -24207,7 +24688,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "행당",
@@ -24271,7 +24753,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "왕십리",
@@ -24335,7 +24818,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "마장",
@@ -24399,7 +24883,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 60
             },
             {
               "name": "답십리",
@@ -24463,7 +24948,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 100
             },
             {
               "name": "장한평",
@@ -24517,7 +25003,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 100
             },
             {
               "name": "군자",
@@ -24611,7 +25098,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 100
             },
             {
               "name": "아차산",
@@ -24675,7 +25163,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "광나루",
@@ -24739,7 +25228,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 110
             },
             {
               "name": "천호",
@@ -24803,7 +25293,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 130
             },
             {
               "name": "강동",
@@ -24877,7 +25368,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "둔촌동",
@@ -24941,7 +25433,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 110
             },
             {
               "name": "올림픽공원",
@@ -25020,7 +25513,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 100
             },
             {
               "name": "방이",
@@ -25084,7 +25578,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "오금",
@@ -25188,7 +25683,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "개롱",
@@ -25252,7 +25748,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "거여",
@@ -25316,7 +25813,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "마천",
@@ -25369,7 +25867,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             }
           ]
         }
@@ -25432,7 +25931,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "불광",
@@ -25501,7 +26001,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "독바위",
@@ -25550,7 +26051,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "연신내",
@@ -25599,7 +26101,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 130
             },
             {
               "name": "구산",
@@ -25648,7 +26151,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "응암",
@@ -25707,7 +26211,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 120
             },
             {
               "name": "새절",
@@ -25781,7 +26286,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "증산",
@@ -25855,7 +26361,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "디지털미디어시티",
@@ -25949,7 +26456,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "월드컵경기장",
@@ -26033,7 +26541,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "마포구청",
@@ -26097,7 +26606,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "망원",
@@ -26151,7 +26661,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "합정",
@@ -26230,7 +26741,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "상수",
@@ -26304,7 +26816,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "광흥창",
@@ -26388,7 +26901,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "대흥",
@@ -26452,7 +26966,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "공덕",
@@ -26556,7 +27071,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "효창공원앞",
@@ -26640,7 +27156,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "삼각지",
@@ -26724,7 +27241,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "녹사평",
@@ -26828,7 +27346,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 100
             },
             {
               "name": "이태원",
@@ -26892,7 +27411,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "한강진",
@@ -26956,7 +27476,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "버티고개",
@@ -27020,7 +27541,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "약수",
@@ -27089,7 +27611,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "청구",
@@ -27143,7 +27666,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "신당",
@@ -27267,7 +27791,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "동묘앞",
@@ -27381,7 +27906,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 60
             },
             {
               "name": "창신",
@@ -27445,7 +27971,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "보문",
@@ -27509,7 +28036,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "안암",
@@ -27573,7 +28101,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "고려대",
@@ -27657,7 +28186,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "월곡",
@@ -27736,7 +28266,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 100
             },
             {
               "name": "상월곡",
@@ -27790,7 +28321,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "돌곶이",
@@ -27854,7 +28386,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "석계",
@@ -27948,7 +28481,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "태릉입구",
@@ -28042,7 +28576,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "화랑대",
@@ -28106,7 +28641,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "봉화산",
@@ -28170,7 +28706,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "신내",
@@ -28218,7 +28755,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 270
             }
           ]
         },
@@ -28255,7 +28793,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "연신내",
@@ -28308,7 +28847,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "독바위",
@@ -28361,7 +28901,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 130
             },
             {
               "name": "불광",
@@ -28434,7 +28975,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "역촌",
@@ -28487,7 +29029,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "응암",
@@ -28546,7 +29089,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 100
             },
             {
               "name": "새절",
@@ -28620,7 +29164,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "증산",
@@ -28694,7 +29239,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "디지털미디어시티",
@@ -28788,7 +29334,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "월드컵경기장",
@@ -28872,7 +29419,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "마포구청",
@@ -28936,7 +29484,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "망원",
@@ -28990,7 +29539,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "합정",
@@ -29069,7 +29619,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "상수",
@@ -29143,7 +29694,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "광흥창",
@@ -29227,7 +29779,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "대흥",
@@ -29291,7 +29844,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "공덕",
@@ -29395,7 +29949,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "효창공원앞",
@@ -29479,7 +30034,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "삼각지",
@@ -29563,7 +30119,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "녹사평",
@@ -29667,7 +30224,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 100
             },
             {
               "name": "이태원",
@@ -29731,7 +30289,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "한강진",
@@ -29795,7 +30354,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "버티고개",
@@ -29859,7 +30419,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "약수",
@@ -29928,7 +30489,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "청구",
@@ -29982,7 +30544,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "신당",
@@ -30106,7 +30669,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "동묘앞",
@@ -30220,7 +30784,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 60
             },
             {
               "name": "창신",
@@ -30284,7 +30849,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "보문",
@@ -30348,7 +30914,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "안암",
@@ -30412,7 +30979,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "고려대",
@@ -30496,7 +31064,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "월곡",
@@ -30575,7 +31144,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 100
             },
             {
               "name": "상월곡",
@@ -30629,7 +31199,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "돌곶이",
@@ -30693,7 +31264,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "석계",
@@ -30787,7 +31359,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "태릉입구",
@@ -30881,7 +31454,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "화랑대",
@@ -30945,7 +31519,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "봉화산",
@@ -31009,7 +31584,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "신내",
@@ -31057,7 +31633,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 270
             }
           ]
         }
@@ -31109,7 +31686,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "도봉산",
@@ -31183,7 +31761,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 270
             },
             {
               "name": "수락산",
@@ -31242,7 +31821,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 140
             },
             {
               "name": "마들",
@@ -31306,7 +31886,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 120
             },
             {
               "name": "노원",
@@ -31410,7 +31991,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "중계",
@@ -31494,7 +32076,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "하계",
@@ -31558,7 +32141,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "공릉",
@@ -31632,7 +32216,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "태릉입구",
@@ -31706,7 +32291,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 60
             },
             {
               "name": "먹골",
@@ -31770,7 +32356,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "중화",
@@ -31854,7 +32441,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "상봉",
@@ -31928,7 +32516,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 110
             },
             {
               "name": "면목",
@@ -31992,7 +32581,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "사가정",
@@ -32056,7 +32646,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "용마산",
@@ -32120,7 +32711,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "중곡",
@@ -32184,7 +32776,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "군자",
@@ -32238,7 +32831,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "어린이대공원",
@@ -32302,7 +32896,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "건대입구",
@@ -32386,7 +32981,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "자양",
@@ -32450,7 +33046,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "청담",
@@ -32504,7 +33101,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 150
             },
             {
               "name": "강남구청",
@@ -32568,7 +33166,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "학동",
@@ -32632,7 +33231,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "논현",
@@ -32696,7 +33296,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "반포",
@@ -32760,7 +33361,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "고속터미널",
@@ -32874,7 +33476,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "내방",
@@ -32938,7 +33541,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 150
             },
             {
               "name": "이수",
@@ -33032,7 +33636,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "남성",
@@ -33096,7 +33701,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "숭실대입구",
@@ -33160,7 +33766,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 150
             },
             {
               "name": "상도",
@@ -33224,7 +33831,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "장승배기",
@@ -33308,7 +33916,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 150
             },
             {
               "name": "신대방삼거리",
@@ -33382,7 +33991,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 110
             },
             {
               "name": "보라매",
@@ -33446,7 +34056,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "신풍",
@@ -33510,7 +34121,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 140
             },
             {
               "name": "대림",
@@ -33604,7 +34216,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 120
             },
             {
               "name": "남구로",
@@ -33668,7 +34281,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "가산디지털단지",
@@ -33732,7 +34346,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "철산",
@@ -33796,7 +34411,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 120
             },
             {
               "name": "광명사거리",
@@ -33860,7 +34476,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 110
             },
             {
               "name": "천왕",
@@ -33924,7 +34541,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 120
             },
             {
               "name": "온수",
@@ -34008,7 +34626,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 140
             },
             {
               "name": "까치울",
@@ -34032,7 +34651,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "부천종합운동장",
@@ -34056,7 +34676,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "춘의",
@@ -34080,7 +34701,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "신중동",
@@ -34104,7 +34726,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "부천시청",
@@ -34128,7 +34751,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "상동",
@@ -34152,7 +34776,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "삼산체육관",
@@ -34176,7 +34801,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "굴포천",
@@ -34200,7 +34826,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "부평구청",
@@ -34224,7 +34851,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "산곡",
@@ -34248,7 +34876,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "석남",
@@ -34272,7 +34901,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             }
           ]
         }
@@ -34310,7 +34940,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "다산",
@@ -34334,7 +34965,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "동구릉",
@@ -34358,7 +34990,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "구리",
@@ -34382,7 +35015,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "장자호수공원",
@@ -34406,7 +35040,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "암사역사공원",
@@ -34470,7 +35105,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": null
             },
             {
               "name": "암사",
@@ -34534,7 +35170,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "천호",
@@ -34598,7 +35235,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             },
             {
               "name": "강동구청",
@@ -34657,7 +35295,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 80
             },
             {
               "name": "몽촌토성",
@@ -34721,7 +35360,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 120
             },
             {
               "name": "잠실",
@@ -34785,7 +35425,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "석촌",
@@ -34849,7 +35490,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 110
             },
             {
               "name": "송파",
@@ -34908,7 +35550,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "가락시장",
@@ -35012,7 +35655,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "문정",
@@ -35076,7 +35720,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "장지",
@@ -35140,7 +35785,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "복정",
@@ -35209,7 +35855,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "남위례",
@@ -35257,7 +35904,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 110
             },
             {
               "name": "산성",
@@ -35351,7 +35999,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 100
             },
             {
               "name": "남한산성입구",
@@ -35415,7 +36064,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 130
             },
             {
               "name": "단대오거리",
@@ -35479,7 +36129,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "신흥",
@@ -35543,7 +36194,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "수진",
@@ -35607,7 +36259,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 70
             },
             {
               "name": "모란",
@@ -35655,7 +36308,8 @@
               "transferCars": {
                 "down": [],
                 "up": []
-              }
+              },
+              "secondsFromPrevious": 90
             }
           ]
         }

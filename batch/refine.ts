@@ -3,6 +3,7 @@ import { refineCongestion } from "./congestion";
 import { parseCsv } from "./csv";
 import { mapDayTypes } from "./day-type";
 import { refineFastExit, toFastExitSide } from "./fast-exit";
+import { refineInterstation } from "./interstation";
 import { refineRidership } from "./ridership";
 import { baseStationName, stationKey } from "./station-key";
 
@@ -13,6 +14,7 @@ import { baseStationName, stationKey } from "./station-key";
  * 승하차 행이 없는 역번호(3호선 충무로 등)는 혼잡도 역명을 쓴다. 승하차·환승인원은 역 이름 단위로 붙인다.
  * 갈래·지선 승강장은 혼잡도 특수 행과 빠른하차 다음 역으로 가른다(`batch/routes.ts`의 정차 정의).
  * 환승역 표의 환승통로 칸은 노선·역·방향이 맞는 정차에 붙인다. 어느 정차에도 붙지 않는 행은 오타로 보고 멈춘다.
+ * 역 사이 운행시간은 순서열의 이웃 정차 이름으로 찾는다. 데이터 있는 이웃 정차의 값이 없으면 멈춘다(역 이름이 바뀐 것을 놓치지 않으려고).
  * 데이터 없는 역(코레일 구간 등, #10)은 원본에 역번호·이름이 없어 이름으로 정의하고 원본 값을 비운다. 그 역 이름에 데이터 있는
  * 정차가 따로 있으면(1호선 신도림 = 2호선 신도림) 역 단위 값은 그 정차 쪽 것을 그대로 둔다.
  * **마지막에 스키마로 검증한다.** 형식이 어긋난 파일을 `public/data/`에 쓰지 않기 위해서다.
@@ -67,6 +69,8 @@ export type RawSources = {
   congestion: { period: string; csv: string };
   transfer: { period: string; csv: string };
   fastExitItems: unknown[];
+  /** 역 사이 운행시간 OA-12034 CSV. */
+  interstationCsv: string;
 };
 
 export function refine(raw: RawSources, config: RefineConfig): RefinedData {
@@ -76,6 +80,7 @@ export function refine(raw: RawSources, config: RefineConfig): RefinedData {
   const congestion = refineCongestion(raw.congestion.csv);
   const fastExit = refineFastExit(raw.fastExitItems, lineLabels);
   const transferPerDay = readTransfer(raw.transfer.csv);
+  const secondsBetween = refineInterstation(raw.interstationCsv);
 
   const stations: Record<string, StationData> = {};
   const usedPassages = new Set<TransferPassage>();
@@ -101,6 +106,16 @@ export function refine(raw: RawSources, config: RefineConfig): RefinedData {
       const nextName = (i: number, direction: Direction) => {
         const next = i + (direction === "down" ? 1 : -1);
         return route.isLoop ? names[(next + names.length) % names.length] : names[next];
+      };
+      // 앞 정차에서 이 정차까지 운행시간. 둘 중 하나가 데이터 없는 역이면 비운다.
+      const secondsFromPrevious = (i: number) => {
+        const previous = i > 0 ? i - 1 : route.isLoop ? defs.length - 1 : -1;
+        const previousDef = defs[previous];
+        if (!previousDef || "datalessName" in previousDef || "datalessName" in (defs[i] ?? {})) return null;
+        const [a = "", b = ""] = [names[previous], names[i]];
+        const seconds = secondsBetween(route.lineNumber, a, b);
+        if (seconds === undefined) throw new Error(`역 사이 운행시간 원본에 ${line} ${a}~${b} 행이 없다`);
+        return seconds;
       };
       const stops = defs.map((def, i) => {
         if ("datalessName" in def) return datalessStop(def.datalessName, route.carCount);
@@ -132,6 +147,7 @@ export function refine(raw: RawSources, config: RefineConfig): RefinedData {
           congestion: { down: down.congestion, up: up.congestion },
           fastExit: { down: down.fastExit, up: up.fastExit },
           transferCars: { down: transferCars("down"), up: transferCars("up") },
+          secondsFromPrevious: secondsFromPrevious(i),
         };
       });
       return { oneWay: sequence.oneWay ?? null, stops };
@@ -169,6 +185,7 @@ function datalessStop(name: string, carCount: number) {
     congestion: { down: null, up: null },
     fastExit: { down: missing, up: missing },
     transferCars: { down: [], up: [] },
+    secondsFromPrevious: null,
   };
 }
 
