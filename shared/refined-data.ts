@@ -11,8 +11,8 @@ export const DAY_TYPES = ["weekday", "saturday", "sunday"] as const;
 export type DayType = (typeof DAY_TYPES)[number];
 
 /**
- * 방향. 노선 역 순서열의 앞→뒤가 `down`이다. 공공데이터 하행과 같고, 2호선은 하행 = 역번호 증가 = 혼잡도 내선이다
- * (프로토타입 FINDINGS, 스펙 #2 "방향 맞추기").
+ * 방향. 역 순서열의 앞→뒤가 `down`이다. 공공데이터 하행과 같고, 2호선은 하행 = 역번호 증가 = 혼잡도 내선이다
+ * (프로토타입 FINDINGS, 스펙 #2 "방향 맞추기"). 한 방향으로만 도는 순서열은 예외다(아래 sequenceSchema).
  */
 export type Direction = "down" | "up";
 
@@ -40,20 +40,31 @@ const fastExitSideSchema = z.object({
   facilities: z.array(facilitySchema),
 });
 
-/** 노선 위의 역. 혼잡도는 칸당 정원 대비 %(OA-12928)를 1시간 시간대로 합친 값이고, 없으면 null이다. */
+/** 순서열 위의 역. 혼잡도는 칸당 정원 대비 %(OA-12928)를 1시간 시간대로 합친 값이고, 없으면 null이다.
+ * `down`·`up`은 그 순서열을 앞→뒤·뒤→앞으로 탈 때의 값이다. 갈래마다 승강장이 달라(5호선 강동) 순서열마다 따로 둔다. */
 const routeStopSchema = z.object({
   name: z.string().min(1),
   congestion: z.object({ down: byDayType(slotValuesSchema).nullable(), up: byDayType(slotValuesSchema).nullable() }),
   fastExit: z.object({ down: fastExitSideSchema, up: fastExitSideSchema }),
 });
 
+/** 역 순서열(하행 순서). `oneWay`가 있으면 그 방향으로만 탈 수 있다. 6호선 응암순환은 한 방향으로만 돌아서
+ * 순환 구간을 앞에 둔 하행 전용 순서열과, 뒤집어 둔 상행 전용 순서열 둘로 나타낸다. 상행 전용 쪽 순환 구간 역의 `up`에는
+ * 실제 운행 방향(하행) 값이 들어간다(`batch/routes.ts`). */
+const sequenceSchema = z.object({
+  oneWay: z.enum(["down", "up"]).nullable(),
+  stops: z.array(routeStopSchema).min(2),
+});
+
+/** 노선. 열차가 갈아타지 않고 다니는 길이고 칸 수가 하나다(CONTEXT.md "노선"). 갈라지는 노선(5호선)은 순서열이 여럿이다.
+ * `isLoop`는 순서열(하나)의 끝이 처음으로 이어지는 순환(2호선 본선)이다. */
 const routeSchema = z.object({
   id: z.string().min(1),
   lineNumber: z.number().int().min(1),
   name: z.string().min(1),
   carCount: z.number().int().min(1),
   isLoop: z.boolean(),
-  stops: z.array(routeStopSchema).min(2),
+  sequences: z.array(sequenceSchema).min(1),
 });
 
 /** 역 단위 값. 승하차는 요일유형별 하루 평균 인원(OA-12921), 환승인원은 일평균과 그 역에서 만나는 노선 수. */
@@ -82,6 +93,7 @@ export const refinedDataSchema = z.object({
 export type Facility = z.infer<typeof facilitySchema>;
 export type FastExitSide = z.infer<typeof fastExitSideSchema>;
 export type RouteStop = z.infer<typeof routeStopSchema>;
+export type RouteSequence = z.infer<typeof sequenceSchema>;
 export type Route = z.infer<typeof routeSchema>;
 export type StationData = z.infer<typeof stationSchema>;
 export type Periods = z.infer<typeof periodsSchema>;

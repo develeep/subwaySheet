@@ -71,6 +71,8 @@ export function SeatFinderPage() {
             from={finder.from}
             to={finder.to}
             lineNumber={success?.route.lineNumber ?? null}
+            routeChoices={success?.routeChoices ?? []}
+            selectedRouteId={success?.route.id ?? null}
             towardStation={success?.towardStation ?? null}
             canChangeDirection={Boolean(success?.oppositeDirection)}
             errorText={finder.errorText}
@@ -78,6 +80,7 @@ export function SeatFinderPage() {
             onPickTo={() => finder.openSheet("to")}
             onSwap={finder.swapStations}
             onFlipDirection={finder.flipDirection}
+            onPickRoute={finder.pickRoute}
           />
           <div className={styles.dock}>
             <button className={styles.primary} type="button" disabled={!success} onClick={finder.showResult}>

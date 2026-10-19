@@ -105,6 +105,41 @@
   background: var(--color-fill);
 }
 
+/* 노선 칩 줄(design/prototype.html .chip·.ln-dot 모양, 간격은 가까운 간격 토큰). 고른 칩은 탭 선택 면 토큰으로 칠한다(day-type-choices와 같다). */
+.routeChips {
+  min-width: 0;
+  margin: 0;
+  border: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-4) 0;
+}
+
+.routeChip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 40px;
+  padding: 0 var(--space-3) 0 var(--space-2);
+  border: 0;
+  border-radius: var(--radius-control);
+  background: var(--color-fill);
+  font-weight: 600;
+  transition:
+    background-color var(--motion-fast),
+    transform var(--motion-fast);
+}
+
+.routeChip:hover {
+  background: var(--color-fill-hover);
+}
+
+.routeChip[aria-pressed="true"] {
+  background: var(--tab-indicator-bg);
+  color: var(--tab-active-text);
+}
+
 /* 방면 줄 */
 .meta {
   display: flex;
@@ -168,6 +203,7 @@
 /* 누르면 살짝 줄어든다(design/prototype.html). 움직임 줄이기 설정이면 끈다. */
 @media (prefers-reduced-motion: no-preference) {
   .stopButton:active,
+  .routeChip:active,
   .swap:active,
   .flip:active {
     transform: scale(0.97);

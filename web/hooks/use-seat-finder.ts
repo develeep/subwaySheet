@@ -11,7 +11,9 @@ import { useEffect, useRef, useState } from "react";
 
 /**
  * useSeatFinder — 구간 선택 → 칸 추천 화면의 상태와 동작. `web/pages/seat-finder-page.tsx`만 부른다.
- * 정제 데이터를 한 번 읽고, 출발역·도착역·방향·시각·요일유형이 바뀔 때마다 추천 모듈 `recommend`를 다시 부른다(계산은 모두 그쪽).
+ * 정제 데이터를 한 번 읽고, 출발역·도착역·노선·방향·시각·요일유형이 바뀔 때마다 추천 모듈 `recommend`를 다시 부른다(계산은 모두 그쪽).
+ * 노선 칩과 방향은 사용자가 고른 값만 들고 있다(기본값은 추천 모듈이 정한다). 역을 새로 고르면 둘 다 비우고,
+ * 맞바꾸기는 같은 두 역이라 노선은 두고 방향만 비운다.
  * 결과를 성공(`success`)과 오류 문구(`errorText`)로 나눠 주어 페이지는 그리기만 한다.
  * 시각과 요일유형의 기본값은 화면을 연 순간 값이다. 화면을 열어 둔 채 시간이 지나도 저절로 다시 읽지 않고, 시각 시트의 "지금"을 누를 때만 시계를 다시 읽는다.
  * 결과 단계로 넘어갈 때마다 추천 기록을 남기고(`showResult`), 받은 id로 "도착했어요" 설문을 보낸다.
@@ -40,6 +42,7 @@ export function useSeatFinder() {
   const [dayType, setDayType] = useState<DayType>(openedClock.dayType);
   const [from, setFrom] = useState(INITIAL_FROM);
   const [to, setTo] = useState(INITIAL_TO);
+  const [routeId, setRouteId] = useState<string | undefined>(undefined);
   const [direction, setDirection] = useState<Direction | undefined>(undefined);
   const [step, setStep] = useState<Step>("segment");
   const [sheetTarget, setSheetTarget] = useState<SheetTarget | null>(null);
@@ -63,7 +66,7 @@ export function useSeatFinder() {
   }, []);
 
   const data = dataState.status === "ok" ? dataState.data : null;
-  const result = data ? recommend({ from, to, direction, departMinute, dayType }, data) : null;
+  const result = data ? recommend({ from, to, routeId, direction, departMinute, dayType }, data) : null;
   const success = result?.status === "ok" ? result : null;
   const errorText = result?.status === "error" ? ERROR_TEXT[result.error] : null;
   const sheetTitle = sheetTarget ? SHEET_TITLE[sheetTarget] : null;
@@ -90,8 +93,14 @@ export function useSeatFinder() {
   function pickStation(name: string) {
     if (sheetTarget === "from") setFrom(name);
     if (sheetTarget === "to") setTo(name);
+    setRouteId(undefined);
     setDirection(undefined);
     setSheetTarget(null);
+  }
+
+  function pickRoute(id: string) {
+    setRouteId(id);
+    setDirection(undefined);
   }
 
   function pickDayType(picked: DayType) {
@@ -221,6 +230,7 @@ export function useSeatFinder() {
     openSheet,
     closeSheet,
     pickStation,
+    pickRoute,
     pickDayType,
     pickTime,
     pickNowTime,

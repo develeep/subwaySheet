@@ -1,4 +1,12 @@
-import type { ByDayType, Facility, FastExitSide, RefinedData, RouteStop, StationData } from "@shared/refined-data";
+import type {
+  ByDayType,
+  Facility,
+  FastExitSide,
+  RefinedData,
+  RouteSequence,
+  RouteStop,
+  StationData,
+} from "@shared/refined-data";
 
 /**
  * 추천 모듈 테스트용 가짜 정제 데이터. 칸 4개짜리 순환 노선 "가~바"(6개 역)와 일반 노선 "사~차"(4개 역)가 있다.
@@ -47,6 +55,10 @@ function stop(name: string): RouteStop {
   };
 }
 
+export function sequence(names: string[], oneWay: RouteSequence["oneWay"] = null): RouteSequence {
+  return { oneWay, stops: names.map(stop) };
+}
+
 function station(): StationData {
   return { ridership: byDay(() => ({ boarding: flat(100), alighting: flat(100) })), transfer: null };
 }
@@ -61,8 +73,8 @@ export function fakeData(): RefinedData {
       fastExit: "2024-12-31",
     },
     routes: [
-      { id: "loop", lineNumber: 2, name: "2호선", carCount: 4, isLoop: true, stops: LOOP_STATIONS.map(stop) },
-      { id: "line", lineNumber: 7, name: "7호선", carCount: 4, isLoop: false, stops: LINE_STATIONS.map(stop) },
+      { id: "loop", lineNumber: 2, name: "2호선", carCount: 4, isLoop: true, sequences: [sequence(LOOP_STATIONS)] },
+      { id: "line", lineNumber: 7, name: "7호선", carCount: 4, isLoop: false, sequences: [sequence(LINE_STATIONS)] },
     ],
     stations: Object.fromEntries(names.map((name) => [name, station()])),
   };
@@ -73,7 +85,10 @@ export function withStop(data: RefinedData, name: string, patch: Partial<RouteSt
     ...data,
     routes: data.routes.map((route) => ({
       ...route,
-      stops: route.stops.map((s) => (s.name === name ? { ...s, ...patch } : s)),
+      sequences: route.sequences.map((seq) => ({
+        ...seq,
+        stops: seq.stops.map((s) => (s.name === name ? { ...s, ...patch } : s)),
+      })),
     })),
   };
 }
