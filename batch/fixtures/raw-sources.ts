@@ -22,6 +22,7 @@ export const FIXTURE_CONFIG: RefineConfig = {
     { id: "4", lineNumber: 4, name: "4호선", carCount: 10, isLoop: false, sequences: [{ stops: ["409", "423"] }] },
   ],
   transferLineCounts: { 시청: 2, 을지로3가: 2 },
+  transferPassages: [],
 };
 
 const STATIONS = [

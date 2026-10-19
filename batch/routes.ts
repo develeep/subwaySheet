@@ -1,4 +1,5 @@
 import type { RefineConfig, StopDefinition } from "./refine";
+import { TRANSFER_PASSAGES } from "./transfer-passages";
 
 /**
  * 배치 노선 설정 — `batch/main.ts`가 `refine`에 넘긴다. 손으로 관리하는 표다.
@@ -206,4 +207,5 @@ export const ROUTE_CONFIG: RefineConfig = {
     홍대입구: 3,
     효창공원앞: 2,
   },
+  transferPassages: TRANSFER_PASSAGES,
 };

@@ -1,7 +1,7 @@
 import { refinedDataSchema } from "@shared/refined-data";
 import { describe, expect, it } from "vitest";
 import { FIXTURE_CONFIG, fixtureRawSources } from "./fixtures/raw-sources";
-import { refine } from "./refine";
+import { refine, type TransferPassage } from "./refine";
 
 const refined = () => refine(fixtureRawSources(), FIXTURE_CONFIG);
 const station = (name: string) => refined().stations[name];
@@ -103,6 +103,39 @@ describe("refine", () => {
       lineCount: 2,
     });
     expect(station("을지로입구")?.transfer).toBeNull();
+  });
+
+  it("환승역 표의 환승통로 칸을 그 노선·역·방향 정차에 붙이고, 표에 없는 역·방향은 비운다", () => {
+    const passage = { station: "을지로3가", routeId: "2-main", toLine: "3호선", source: "픽스처" };
+    const data = refine(fixtureRawSources(), {
+      ...FIXTURE_CONFIG,
+      transferPassages: [
+        { ...passage, direction: "down", car: 10 },
+        { ...passage, direction: "up", car: 1 },
+      ],
+    });
+    const stops = data.routes[0]?.sequences[0]?.stops;
+    expect(stops?.find((s) => s.name === "을지로3가")?.transferCars).toEqual({ down: [10], up: [1] });
+    expect(stops?.find((s) => s.name === "시청")?.transferCars).toEqual({ down: [], up: [] });
+    // 3호선 을지로3가는 표에 없다.
+    expect(data.routes[1]?.sequences[0]?.stops[0]?.transferCars).toEqual({ down: [], up: [] });
+  });
+
+  it("환승역 표의 행이 어느 정차에도 붙지 않거나 칸 수를 넘으면 멈춘다", () => {
+    const row: TransferPassage = {
+      station: "을지로3가",
+      routeId: "2-main",
+      direction: "down",
+      toLine: "3호선",
+      car: 3,
+      source: "픽스처",
+    };
+    const withRow = (patch: Partial<TransferPassage>) =>
+      refine(fixtureRawSources(), { ...FIXTURE_CONFIG, transferPassages: [{ ...row, ...patch }] });
+    expect(() => withRow({ station: "을지로" })).toThrow(/을지로/);
+    expect(() => withRow({ routeId: "3" })).not.toThrow();
+    expect(() => withRow({ routeId: "4" })).toThrow(/을지로3가/);
+    expect(() => withRow({ car: 11 })).toThrow(/칸/);
   });
 
   it("노선 수 표에 없는 환승역이 있으면 멈춘다", () => {

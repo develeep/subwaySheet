@@ -52,6 +52,7 @@ function stop(name: string): RouteStop {
         facilities: [1, 4].map((car) => ({ car, door: 1, kind: "stairs" })),
       },
     },
+    transferCars: { down: [], up: [] },
   };
 }
 
